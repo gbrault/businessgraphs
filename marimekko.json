@@ -1,12 +1,12 @@
 {
-"title":"Top Players (>={{ratio_thresold}}%MS) ranking for Automation Markets {{size}} $Bn",
+"title":"Top Players (>={{ratio_thresold}}%MS) ranking for Automation Markets {{size}} {{currency}}{{display}}",
 "size":104991.775070619,
 "currency":"$",
 "display":"Bn",
-"internal":"Kn",
+"internal":"Mn",
 "ratio_threshold":3,
 "rows":[
-{"title":"01- DCS",
+{"title":"DCS",
 "size":13521.0076579863,
 "box":{"Top":72,"Left":14.4,"Width":191.1831,"Height":52.77472},
 "cols":[
@@ -20,7 +20,7 @@
 {"title":"Other","size":8.9585510903023,"box":{"Top":72,"Left":1370.112,"Width":107.0453,"Height":52.77472}}
 ]
 },
-{"title":"03-2 PLC",
+{"title":"PLC",
 "size":12691.3622285877,
 "box":{"Top":124.7747,"Left":14.4,"Width":191.1831,"Height":49.53646},
 "cols":[
@@ -34,7 +34,7 @@
 {"title":"Other","size":8.86434079898935,"box":{"Top":124.7747,"Left":1371.236,"Width":105.9196,"Height":49.53646}}
 ]
 },
-{"title":"04- C&S + Safety",
+{"title":"C&S + Safety",
 "size":11505.79935835,
 "box":{"Top":174.3112,"Left":14.4,"Width":191.1831,"Height":44.90905},
 "cols":[
@@ -45,7 +45,7 @@
 {"title":"Other","size":56.5443633573636,"box":{"Top":174.3112,"Left":801.5116,"Width":675.6453,"Height":44.90905}}
 ]
 },
-{"title":"02-2 Drives LV",
+{"title":"Drives LV",
 "size":10855.8402495674,
 "box":{"Top":219.2202,"Left":14.4,"Width":191.1831,"Height":42.37213},
 "cols":[
@@ -61,7 +61,7 @@
 {"title":"Other","size":13.5263296721213,"box":{"Top":219.2202,"Left":1315.533,"Width":161.6254,"Height":42.37213}}
 ]
 },
-{"title":"02-1 Motor Starters & Contactors",
+{"title":"Motor Starters & Contactors",
 "size":9626.01295823741,
 "box":{"Top":261.5923,"Left":14.4,"Width":191.1831,"Height":37.57189},
 "cols":[
@@ -75,7 +75,7 @@
 {"title":"Other","size":11.4309941428695,"box":{"Top":261.5923,"Left":1340.572,"Width":136.5883,"Height":37.57189}}
 ]
 },
-{"title":"02-3 Motion",
+{"title":"Motion",
 "size":7144.0655628348,
 "box":{"Top":299.1642,"Left":14.4,"Width":191.1831,"Height":27.88441},
 "cols":[
@@ -91,7 +91,7 @@
 {"title":"Other","size":17.358945098706,"box":{"Top":299.1642,"Left":1269.741,"Width":207.4211,"Height":27.88441}}
 ]
 },
-{"title":"03-3 CNC",
+{"title":"CNC",
 "size":6406,
 "box":{"Top":327.0486,"Left":14.4,"Width":191.1831,"Height":25.0037},
 "cols":[
@@ -103,7 +103,7 @@
 {"title":"Other","size":6.77489853262566,"box":{"Top":327.0486,"Left":1396.213,"Width":80.95276,"Height":25.0037}}
 ]
 },
-{"title":"01- Control Valves",
+{"title":"Control Valves",
 "size":6391.20415256226,
 "box":{"Top":352.0523,"Left":14.4,"Width":191.1831,"Height":24.94591},
 "cols":[
@@ -117,7 +117,7 @@
 {"title":"Other","size":26.4151577472496,"box":{"Top":352.0523,"Left":1161.532,"Width":315.6332,"Height":24.94591}}
 ]
 },
-{"title":"04- Sensors",
+{"title":"Sensors",
 "size":5959.25179609301,
 "box":{"Top":376.9982,"Left":14.4,"Width":191.1831,"Height":23.25992},
 "cols":[
@@ -132,7 +132,7 @@
 {"title":"Other","size":30.7734642555335,"box":{"Top":376.9982,"Left":1109.453,"Width":367.7105,"Height":23.25992}}
 ]
 },
-{"title":"01- Instruments",
+{"title":"Instruments",
 "size":5588.124369909,
 "box":{"Top":400.2581,"Left":14.4,"Width":191.1831,"Height":21.81134},
 "cols":[
@@ -145,7 +145,7 @@
 {"title":"Other","size":8.53547612774264,"box":{"Top":400.2581,"Left":1375.177,"Width":101.9899,"Height":21.81134}}
 ]
 },
-{"title":"03-1 OP & IPC",
+{"title":"OP & IPC",
 "size":4487.52458389885,
 "box":{"Top":422.0695,"Left":14.4,"Width":191.1831,"Height":17.51551},
 "cols":[
@@ -159,7 +159,7 @@
 {"title":"Other","size":27.150302798399,"box":{"Top":422.0695,"Left":1152.751,"Width":324.4175,"Height":17.51551}}
 ]
 },
-{"title":"01- Analyzers",
+{"title":"Analyzers",
 "size":3742.42356028276,
 "box":{"Top":439.5851,"Left":14.4,"Width":191.1831,"Height":14.60732},
 "cols":[
@@ -173,7 +173,7 @@
 {"title":"Other","size":59.9418206293855,"box":{"Top":439.5851,"Left":760.9349,"Width":716.2414,"Height":14.60732}}
 ]
 },
-{"title":"02-2 Drives MV",
+{"title":"Drives MV",
 "size":2838.45627148598,
 "box":{"Top":454.1923,"Left":14.4,"Width":191.1831,"Height":11.07898},
 "cols":[
@@ -187,7 +187,7 @@
 {"title":"Other","size":7.05420190325142,"box":{"Top":454.1923,"Left":1392.895,"Width":84.29024,"Height":11.07898}}
 ]
 },
-{"title":"01- Safety Systems",
+{"title":"Safety Systems",
 "size":2371.70232082347,
 "box":{"Top":465.2713,"Left":14.4,"Width":191.1831,"Height":9.257165},
 "cols":[
@@ -202,7 +202,7 @@
 {"title":"Other","size":13.389499525798,"box":{"Top":465.2713,"Left":1317.204,"Width":159.9904,"Height":9.257165}}
 ]
 },
-{"title":"03-3 Vision",
+{"title":"Vision",
 "size":1863,
 "box":{"Top":474.5284,"Left":14.4,"Width":191.1831,"Height":7.271575},
 "cols":[

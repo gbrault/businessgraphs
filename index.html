@@ -4,7 +4,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="w3/w3.css">
-<link rel="stylesheet" href="railroad.css">
 <link rel="icon" href="favicon.ico" type="image/x-icon" />
 <link rel="stylesheet" href="codemirror/codemirror.css">
 <link rel="stylesheet" href="codemirror/foldgutter.css">
@@ -22,7 +21,11 @@
 <script src="codemirror/gfm.js"></script>
 <script src="codemirror/foldgutter.js"></script>
 <script src="codemirror/brace-fold.js"></script>
-
+<script lang="javascript" src="libs/jquery.min.js"></script>
+<script lang="javascript" src="libs/jszip.min.js"></script>
+<script lang="javascript" src="libs/filesaver.min.js"></script>
+<script lang="javascript" src="dist/pptxgen.js"></script>
+<script lang="javascript" src="dist/pptxgen.shapes.js"></script>
 <style type="text/css">
   .border {
     border: 1px solid #d7d4f0;
@@ -39,7 +42,7 @@
 
 <header class="w3-container w3-teal">
   <!-- <span class="w3-opennav w3-xlarge w3-layout-cell" onclick="w3_open()">&#9776;</span> -->   
-  <h1 class="w3-layout-cell" >&nbsp;SQLITE Grammar and Syntax validation</h1>
+  <h1 class="w3-layout-cell" >&nbsp;Business Graph PowerPoint Generator</h1>
 </header>
 <div class="w3-container">
 	<div class="w3-panel w3-card-2">
@@ -59,7 +62,7 @@
 				<a id="a_jsonm" href="#" onclick="toggleShow('jsonm');return false;" class="w3-btn w3-grey w3-text-white">{{jsonm}}</a>
 			</small>
 		</nav>	
-		<!-- ebnf srfb grammar editor (read from file) -->
+		<!-- json marimekko editor (read from file) -->
 		<div id="d_jsonm" class="w3-container">
 			<textarea id="jsonm" cols='150' rows='25'>
 			</textarea>
@@ -69,84 +72,17 @@
 	<div class="w3-panel w3-card-2">
 		<nav class="w3-navbar" >
 			<small>
-				<a id="a_ebnfsh" href="#" onclick="toggleShow('ebnfsh');return false;" class="w3-btn w3-grey w3-text-white">{{ebnfsh}}</a>
-				<a id="a_refresh" href="#" onclick="refreshebnf();return false;" class="w3-btn w3-grey w3-text-white">refresh ebnf</a>
+				<a id="a_jscode" href="#" onclick="toggleShow('jscode');return false;" class="w3-btn w3-grey w3-text-white">{{jscode}}</a>
+				<a id="a_refresh" href="#" onclick="execute_code();return false;" class="w3-btn w3-grey w3-text-white">execute code</a>
 			</small>
 		</nav>
-		<!-- EBNF Railroad (generated) -->
-		<div id="EBNFRailroad" class="w3-container border w3-responsive">
-		</div>
-	</div>
-
-	
-	<div class="w3-panel w3-card-2">
-		<nav class="w3-navbar" >
-			<small>
-				<a id="a_ebnfsqlite" href="#" onclick="toggleShow('ebnfsqlite');return false;" class="w3-btn w3-grey w3-text-white">{{ebnfsqlite}}</a>
-			</small>
-		</nav>	
-		<!-- sqlite ebnf grammar editor (read from file) -->
-		<div id="d_ebnfsqlite" class="w3-container">
-			<textarea id="ebnfsqlite" cols='150' rows='25'>
+		<!-- javascript code to generate pptx -->
+		<div id="d_jscode" class="w3-container">
+			<textarea id="jscode" cols='150' rows='25'>
 			</textarea>
 		</div>
-	</div>
-	
-	<div class="w3-panel w3-card-2">
-		<nav class="w3-navbar" >
-			<small>
-				<a id="a_sqlitesrfb" href="#" onclick="toggleShow('sqlitesrfb');return false;" class="w3-btn w3-grey w3-text-white">{{sqlitesrfb}}</a>
-				<a id="a_validate" href="#" onclick="validate();return false;" class="w3-btn w3-grey w3-text-white">validate sqlite grammar</a>
-			</small>
-		</nav>	
-		<!-- sqlite srfb grammar editor (generated) -->
-		<div id="d_sqlitesrfb" class="w3-container border">
-			<textarea id="sqlitesrfb" cols='150' rows='25'>
-			</textarea>
 		</div>
 	</div>
-
-	<div class="w3-panel w3-card-2">
-		<nav class="w3-navbar" >
-			<small>	
-				<a id="a_sqlitesh" href="#" onclick="toggleShow('sqlitesh');return false;" class="w3-btn w3-grey w3-text-white">{{sqlitesh}}</a>
-				<a id="a_refresh" href="#" onclick="refreshsqlite();return false;" class="w3-btn w3-grey w3-text-white">refresh sqlite</a>
-				<a id="a_print" href="#" onclick="printsqlite();return false;" class="w3-btn w3-grey w3-text-white">print sqlite railroad</a>
-			</small>
-		</nav>	
-		<!-- SQLITE Railroad (generated) -->
-			<div id="SQLITERailroad" class="w3-container border w3-responsive">
-		</div>
-	</div>
-	
-	<div class="w3-panel w3-card-2">	
-		<nav class="w3-navbar" >
-			<small>
-				<a id="a_sqlite" href="#" onclick="toggleShow('sqlite');return false;" class="w3-btn w3-grey w3-text-white">{{sqlite}}</a>
-			</small>
-		</nav>	
-		<!-- sqlite editor (read from file) -->
-		<div id="d_sqlite" class="w3-container border">
-			<textarea id="sqlite" cols='150' rows='25'>
-			</textarea>
-		</div>
-	</div>
-	<div id="de_compilegraph" class="w3-panel w3-card-2">	
-    	<nav class="w3-navbar" >
-			<small>
-				<a id="a_validatesql" href="#" onclick="validatesql();return false;" class="w3-btn w3-grey w3-text-white">validate sqlite expression</a>
-				<a id="a_compilegraph" href="#" onclick="growshrink('compilegraph');return false;" class="w3-btn w3-grey w3-text-white">{{compilegraph}}</a>
-			</small>
-		</nav>
-		<div id="d_compilegraph" style="width:100%;height:100%;" >
-			<!-- SQLITE validation (generated) -->
-			<div id="VSQLITE" class="w3-container border w3-responsive" style="width:100%;height:100%;">
-			</div>	
-		</div>
-	</div>
-	
-</div>
-
 <footer class="w3-container w3-teal">
 <small>Copyright &copy; Gilbert Brault 2016,2017
 &nbsp;&nbsp;&nbsp;license&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://creativecommons.org/licenses/by/4.0/"><img src="images/cc.logo.white.svg" width="5%"/></a>
@@ -169,13 +105,13 @@ window.e_jsonm = CodeMirror.fromTextArea(document.getElementById("jsonm"), {
         continueComments: "Enter",	
 });
 
-w3.getHttpData("ebnf.js", function(text){
+w3.getHttpData("marimekko.json", function(text){
 	window.e_jsonm.getDoc().setValue(text);
 });
-w3.displayObject("a_jsonm",{jsonm:"hide EBNF SRFB Editor"});
+w3.displayObject("a_jsonm",{jsonm:"hide marimekko json Editor"});
 var jsonm=true;
 
-window.e_ebnfsqlite = CodeMirror.fromTextArea(document.getElementById("ebnfsqlite"), {
+window.e_jscode = CodeMirror.fromTextArea(document.getElementById("jscode"), {
 		mode: "javascript",
         lineNumbers: true,
         lineWrapping: true,
@@ -186,96 +122,12 @@ window.e_ebnfsqlite = CodeMirror.fromTextArea(document.getElementById("ebnfsqlit
         continueComments: "Enter",	
 });
 
-w3.getHttpData("ebnfsqlite.txt", function(text){
-	window.e_ebnfsqlite.getDoc().setValue(text);
+w3.getHttpData("jscode.js", function(text){
+	window.e_jscode.getDoc().setValue(text);
 });
-w3.displayObject("a_ebnfsqlite",{ebnfsqlite:"hide EBNF SQLITE Editor"});
-var ebnfsqlite=true;
+w3.displayObject("a_jscode",{jscode:"hide javascript Editor"});
+var jscode=true;
 
-var ebnfsh =true;
-w3.displayObject("a_ebnfsh",{ebnfsh:"hide EBNF railroad"});
-
-window.e_sqlitesrfb = CodeMirror.fromTextArea(document.getElementById("sqlitesrfb"), {
-		mode: "javascript",
-        lineNumbers: true,
-        lineWrapping: true,
-        matchBrackets: true,
-        foldGutter: false,
-        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-        extraKeys: {"Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }},
-        continueComments: "Enter",	
-});
-
-w3.displayObject("a_sqlitesrfb",{sqlitesrfb:"hide SQLITE SRFB grammar Editor"});
-var sqlitesrfb=true;
-
-var sqlitesh =true;
-w3.displayObject("a_sqlitesh",{sqlitesh:"hide SQLITE railroad"});
-
-
-window.e_sqlite = CodeMirror.fromTextArea(document.getElementById("sqlite"), {
-		mode: "sql",
-        lineNumbers: true,
-        lineWrapping: true,
-        matchBrackets: true,
-        foldGutter: false,
-        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-        extraKeys: {"Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }},
-        continueComments: "Enter",	
-});
-
-w3.getHttpData("sqlite.txt", function(text){
-	window.e_sqlite.getDoc().setValue(text);
-});
-w3.displayObject("a_sqlite",{sqlite:"hide SQLITE Editor"});
-var sqlite=true;
-
-w3.displayObject("a_compilegraph",{compilegraph:"Grow"});
-var compilegraph=true;
-
-window.md={};
-
-w3.getHttpData("ebnf.json", function(text){
-	window.md.ebnf=JSON.parse(text);
-	// replace(window.md.ebnf,"\\n","  \n");
-});
-
-w3.getHttpData("sqlite.json", function(text){
-	window.md.sqlite=JSON.parse(text);
-	// replace(window.md.sqlite,"\\n","  \n");
-});
-
-function replace(o,regx,s){
-	var keys=Object.keys(o);
-	var r = new RegExp(regx,"gm");
-	for(var k in keys){
-		o[keys[k]].doc=o[keys[k]].doc.replace(r,s);
-	}
-}
-
-function growshrink(id){
-	eval("var a=window."+id+";");
-	// w3.toggleShow("#d_"+id);
-	if(a){
-		eval("window."+id+"=false;");
-		var l={};
-		l[id]="Shrink";
-		w3.displayObject("a_"+id,l);
-		w3.addStyle("#de_"+id,'position','absolute');
-		w3.addStyle("#de_"+id,'top',0);
-		w3.addStyle("#de_"+id,'bottom',0);
-		w3.addStyle("#de_"+id,'width','100%');
-		w3.addStyle("#de_"+id,'height','100%');
-		w3.addStyle("#de_"+id,'background-color','white');
-		w3.addStyle("#de_"+id,'z-index',10);
-	} else {
-		eval("window."+id+"=true;");
-		var l={};
-		l[id]="Grow";
-		w3.displayObject("a_"+id,l);
-		w3.addStyle("#de_"+id,'position','inherit');
-	}
-}
 
 function toggleShow(id){
 	switch(id){
@@ -292,418 +144,34 @@ function toggleShow(id){
 			w3.toggleShow("#d_"+id);
 			jsonm = !jsonm;
 			if(jsonm){
-				w3.displayObject("a_"+id,{jsonm:"hide EBNF SRFB Editor"});
+				w3.displayObject("a_"+id,{jsonm:"hide marimekko Editor"});
 			} else {
-				w3.displayObject("a_"+id,{jsonm:"show EBNF SRFB Editor"});
+				w3.displayObject("a_"+id,{jsonm:"show marimekko Editor"});
 			}
 			break;
-		case 'ebnfsqlite':
+		case 'jscode':
 			w3.toggleShow("#d_"+id);
-			ebnfsqlite = !ebnfsqlite;
-			if(ebnfsqlite){
-				w3.displayObject("a_"+id,{ebnfsqlite:"hide EBNF SQLITE Editor"});
+			jscode = !jscode;
+			if(jscode){
+				w3.displayObject("a_"+id,{jscode:"hide javascript Editor"});
 			} else {
-				w3.displayObject("a_"+id,{ebnfsqlite:"show EBNF SQLITE Editor"});
+				w3.displayObject("a_"+id,{jscode:"show javascript Editor"});
 			}
 			break;
-		case 'ebnfsh':
+		case 'jscode':
 			w3.toggleShow("#EBNFRailroad");
-			ebnfsh = !ebnfsh;
-			if(ebnfsh){
-				w3.displayObject("a_"+id,{ebnfsh:"hide EBNF railroad"});
+			jscode = !jscode;
+			if(jscode){
+				w3.displayObject("a_"+id,{jscode:"hide EBNF railroad"});
 			} else {
-				w3.displayObject("a_"+id,{ebnfsh:"show EBNF railroad"});
+				w3.displayObject("a_"+id,{jscode:"show EBNF railroad"});
 			}
 			break;			
-		case 'sqlitesrfb':
-			w3.toggleShow("#d_"+id);
-			sqlite = !sqlite;
-			if(sqlite){
-				w3.displayObject("a_"+id,{sqlitesrfb:"hide SQLITE SRFB Grammar Editor"});
-			} else {
-				w3.displayObject("a_"+id,{sqlitesrfb:"show SQLITE SRFB grammar Editor"});
-			}
-			break;
-			
-		case 'sqlitesh':
-			w3.toggleShow("#SQLITERailroad");
-			sqlitesh = !sqlitesh;
-			if(sqlitesh){
-				w3.displayObject("a_"+id,{sqlitesh:"hide SQLITE railroad"});
-			} else {
-				w3.displayObject("a_"+id,{sqlitesh:"show SQLITE railroad"});
-			}
-			break;			
-		case 'sqlite':
-			w3.toggleShow("#d_"+id);
-			sqlite = !sqlite;
-			if(sqlite){
-				w3.displayObject("a_"+id,{sqlite:"hide SQLITE Editor"});
-			} else {
-				w3.displayObject("a_"+id,{sqlite:"show SQLITE Editor"});
-			}
-			break;
 	}
 }
 
-function refreshebnf(){
-	var error=document.getElementById('error');
-	var result=document.getElementById('EBNFRailroad');
-	refresh('ebnf',result,error,e_jsonm,'EBNFRailroad');
-}
-
-function refreshsqlite(){
-	var error=document.getElementById('error');
-	var result=document.getElementById('SQLITERailroad');
-	refresh('sqlite',result,error,e_sqlitesrfb,'SQLITERailroad');
-}
-
-function doc(type,node){
-	if(type==="NonTerminal"){
-		window.location.href = "#";
-		window.location.href = "#"+"title_"+node;
-	}
-}
-
-function refresh(name,result,error,editor,resultid){
-	root.context.language={};
-	root.context.bnf=[];
-	root.context.grammar=name;
-	window.results.title=[];
-	window.results.graph=[];
-	window.results.walk=[];
-	window.results.context=root.context;
-	window.results.state="notset";
-	window.results.error=error;
-	window.results.context.normalize=SRFB.normalize;
-	window.Show=SRFB.Show.bind(window.results);
-	result.innerHTML="";
-	error.innerHTML="";
-	var diags = editor.getValue();
-	var scriptref;
-
-	//jslint for errors
-	var source = diags;
-	source+="\nfunction Show(){}\n";
-	for(var fn=0; fn<root.Railroad.fnames.length;fn++){
-		source+="\nfunction "+root.Railroad.fnames[fn]+"(){}\n";
-	}
-	
-	/* verify javascript */
-	var eresult;
-	var options={};
-	var jserror=false;
-	// var jscheck = jslint(source);  => using jslint library
-	// error = jscheck.stop;
-	
-	/* using esprima */
-	try {
-		eresult = esprima.parse(source, options);
-	} catch (e) {
-		jserror=true;
-		error.innerHTML  = e.name + ': ' + e.message;;
-	}
-	/* end using esprima */
-
-	if(!jserror){
-
-	// prepare graphing
-	results.state='graphing';
-	root.Railroad.SetExports(root.Railroad.graphing,root.Railroad.fnames);
-	// comments should be within /* */  double // don't work
-	try{
-		scriptref = SRFB.injectjs(diags,error);
-	} catch(e){
-		error.innerHTML="<pre>"+
-					    e.stack+"\n"+
-						"</pre>";
-		return;
-	}      
-	scriptref.outerHTML="";
-
-	// prepare json
-	results.state='walking';
-    root.Railroad.SetExports(root.Railroad.walking,root.Railroad.fnames);
-    try{
-		scriptref = SRFB.injectjs(diags,error);
-	} catch(e){
-		error.innerHTML="<pre>"+
-					    e.stack+"\n"+
-						"</pre>";
-		return;
-	}
-	scriptref.outerHTML="";
-
-	// prepare generating
-	results.state='generating';
-	root.Railroad.SetExports(root.Railroad.generating,root.Railroad.fnames);
-	try{
-		scriptref = SRFB.injectjs(diags,error);
-	} catch(e){
-		error.innerHTML="<pre>"+
-					    e.stack+"\n"+
-						"</pre>";
-		return;
-	}
-	scriptref.outerHTML="";
-
-    // render results
-	// header general documentation
-			var spang = window.document.createElement('a');
-			spang.setAttribute('id',"span_"+name);
-			spang.setAttribute('style','display:none;');
-			result.appendChild(spang);
-	// edit link
-			var a = window.document.createElement('a');
-			a.setAttribute('href','#');
-			a.setAttribute('id',"e_"+name);
-			a.setAttribute('class','w3-layout-cell');
-			a.setAttribute('onclick','editgen("'+name+'");return false;');
-			var icon = window.document.createElement('i'); 
-			icon.setAttribute('class','material-icons w3-tiny');
-			var ih = window.document.createTextNode('edit');
-			icon.appendChild(ih);
-			a.appendChild(icon);
-			result.appendChild(a);			
-	// general documentation
-			var txt = window.document.createElement('textarea');
-			txt.setAttribute('id',"txt_"+name);
-			txt.setAttribute('hidden','');
-			var gd = window.md[name]			
-			if((gd.gendoc===undefined)||(gd.gendoc===null)||(gd.gendoc.length==0)) gd.gendoc=name;
-			txt.value=gd.gendoc;
-			result.appendChild(txt);
-			var converter = new showdown.Converter();
-			converter.setFlavor('github');
-			var html = converter.makeHtml(gd.gendoc);
-			var doc = window.document.createElement('section');
-			doc.setAttribute('id',"doc_"+name);
-			doc.setAttribute('class','w3-layout-cell w3-layout-middle');
-			doc.innerHTML=html;
-			result.appendChild(doc);	
-    for(var i=0; i<results.graph.length;i++){
-			var d = window.md[name][results.title[i]];
-			if(d===undefined){
-				d={"title":results.title[i],doc:results.title[i]}
-				window.md[name][results.title[i]]=d;
-			}
-	// home icon link
-			var section = window.document.createElement('div');
-			section.setAttribute('class','w3-container');
-			var a = window.document.createElement('a');
-			a.setAttribute('href','#'+resultid);
-			a.setAttribute('id',"a_"+name+"_"+results.title[i]);
-			a.setAttribute('class','w3-layout-cell');
-			var icon = window.document.createElement('i'); 
-			icon.setAttribute('class','material-icons w3-tiny');
-			var ih = window.document.createTextNode('home');
-			icon.appendChild(ih);
-			a.appendChild(icon);
-			section.appendChild(a);
-	// edit link
-			var a = window.document.createElement('a');
-			a.setAttribute('href','#');
-			a.setAttribute('id',"e_"+name+"_"+results.title[i]);
-			a.setAttribute('class','w3-layout-cell');
-			a.setAttribute('onclick','edit("'+name+'","'+results.title[i]+'");return false;');
-			var icon = window.document.createElement('i'); 
-			icon.setAttribute('class','material-icons w3-tiny');
-			var ih = window.document.createTextNode('edit');
-			icon.appendChild(ih);
-			a.appendChild(icon);
-			section.appendChild(a);			
-	// title
-			var dtitle = window.document.createElement('div');
-			dtitle.setAttribute('id',"title_"+name+"_"+results.title[i]);
-			dtitle.setAttribute('class','w3-layout-cell');
-			var bold = window.document.createElement('b');
-			var span = window.document.createElement('span');
-			span.setAttribute('class','w3-margin-left');
-			span.setAttribute('id',"span_"+name+"_"+results.title[i]);
-			var tspan = window.document.createTextNode(d.title);
-			span.appendChild(tspan)
-			bold.appendChild(span);
-			dtitle.appendChild(bold);
-			section.appendChild(dtitle);
-            var div = window.document.createElement('div');
-			div.setAttribute('class','w3-container');	
-			div.setAttribute('class','w3-responsive');	
-	// documentation
-			var txt = window.document.createElement('textarea');
-			txt.setAttribute('id',"txt_"+name+"_"+results.title[i]);
-			txt.setAttribute('hidden','');			
-			if((d.doc===undefined)||(d.doc===null)||(d.doc.length==0)) d.doc=results.title[i];
-			txt.value=d.doc;
-			div.appendChild(txt);
-			var converter = new showdown.Converter();
-			converter.setFlavor('github');
-			var html = converter.makeHtml(d.doc);
-			var doc = window.document.createElement('section');
-			doc.setAttribute('id',"doc_"+name+"_"+results.title[i]);
-			doc.setAttribute('class','w3-layout-cell w3-layout-middle');
-			doc.innerHTML=html;
-			div.appendChild(doc);
-	// railroad
-			var graphout = window.document.createElement('aside');
-			graphout.setAttribute('class','w3-layout-cell  w3-layout-middle');
-            graphout.appendChild(results.graph[i].toSVG());
-            div.appendChild(graphout);
-			section.appendChild(div);
-			result.appendChild(section);
-    } 
-	} else {
-		// display warnings (//jslint)
-		/*
-		var content="<pre>";		
-		for(var i=0; i<jscheck.warnings.length; i++){
-			var w = jscheck.warnings[i];
-			content+=w.line+":"+w.column+" "+w.message+"\n";
-		}
-		content+="</pre>";
-		error.innerHTML=content;
-		*/
-	}        
-}
-
-function edit(grammar,item){
-	// toggle title contenteditable
-	var span = window.document.getElementById("span_"+grammar+"_"+item);
-	var editable = span.contentEditable;
-	if((editable===undefined)||(editable===null)||(editable=="inherit")){
-		if((window.editor!==undefined)&&(window.editor!==null)) return;
-		span.contentEditable="true";
-		window.needToConfirm=true;
-		span.focus();
-		// span.scrollIntoView(true);
-		window.editor = CodeMirror.fromTextArea(window.document.getElementById("txt_"+grammar+"_"+item), {
-				mode: 'gfm',
-				lineNumbers: true,
-				theme: "default"
-			});
-	} else {		
-		window.md[grammar][item].title = span.innerText;
-		window.md[grammar][item].doc=window.editor.getValue();
-		var converter = new showdown.Converter();
-		converter.setFlavor('github');
-		var html = converter.makeHtml(window.editor.getValue());
-		var doc = window.document.getElementById("doc_"+grammar+"_"+item);
-		doc.innerHTML=html;
-		span.contentEditable="inherit";
-		window.editor.toTextArea();
-		window.editor=null;
-	}	
-}
-
-function editgen(grammar){	
-	// toggle title contenteditable
-	var span = window.document.getElementById("span_"+grammar);
-	var editable = span.contentEditable;
-	if((editable===undefined)||(editable===null)||(editable=="inherit")){
-		if((window.editor!==undefined)&&(window.editor!==null)) return;
-		span.contentEditable="true";
-		span.focus();
-		window.needToConfirm=true;
-		// span.scrollIntoView(true);
-		window.editor = CodeMirror.fromTextArea(window.document.getElementById("txt_"+grammar), {
-				mode: 'gfm',
-				lineNumbers: true,
-				theme: "default"
-			});
-	} else {
-		window.md[grammar].gendoc=window.editor.getValue();
-		var converter = new showdown.Converter();
-		converter.setFlavor('github');
-		var html = converter.makeHtml(window.editor.getValue());
-		var doc = window.document.getElementById("doc_"+grammar);
-		doc.innerHTML=html;
-		span.contentEditable="inherit";
-		window.editor.toTextArea();
-		window.editor=null;
-	}	
-}
-
-function download(content, filename, contentType)
-{
-    if(!contentType) contentType = 'application/octet-stream';
-        var a = document.createElement('a');
-        var blob = new Blob([content], {'type':contentType});
-        a.href = window.URL.createObjectURL(blob);
-        a.download = filename;
-        a.click();
-}
-
-function validate(){
-	var error=document.getElementById('error');
-	var expression = window.e_ebnfsqlite.getValue();
-	SRFB.validate('syntax_', results, error, expression, null, false,true);
-	window.e_sqlitesrfb.getDoc().setValue(results.context.SRFBfromEBNF);
-}
-
-function validatesql(){
-	var error=document.getElementById('error');
-	var expression = window.e_sqlite.getValue();
-	var VSQLITE = window.document.getElementById("VSQLITE");
-	SRFB.validate('sql_stmt', results, error, expression, VSQLITE, true,false);
-}
-
-var needToConfirm=false;
-window.onbeforeunload = function() {
-    if (needToConfirm) {
-		var error = window.document.getElementById('error');
-		error.innerText="You might want to save your changes";
-		download(JSON.stringify(window.md.ebnf),"ebnf.json","application/json");
-		download(JSON.stringify(window.md.sqlite),"sqlite.json","application/json");
-		return "do you want to save?";
-    }
-	
-};
-function printsqlite(){
-	var div = "SQLITERailroad";
-	var title = "SQLITE Syntax"
-	printdoc(div,title)
-}
-
-function printdoc(div,title){
-	// get railroad and w3 css file content
-	// get grammar railroad content
-	// do some pruning
-	// put all that in an html file
-	// donwload this file
-	w3.getHttpData("railroad.css", function(div,title,text){
-		var html="<!DOCTYPE html>\n<html>\n<head>\n\<title>"+title+"</title>\n";
-		var css = text;
-		w3.getHttpData("w3/w3.css", function(div,title,css,text){
-		    html +="<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/icon?family=Material+Icons\">";
-			html +="<style>"+css+text+"</style>";
-			html +="</head>\n</body>\n";
-			var sqlite = window.document.getElementById(div);
-			var div = window.document.createElement('div');
-			div.innerHTML = sqlite.outerHTML;
-			// prune div
-			var alla = div.getElementsByTagName("a");
-			for(var i=0; i<alla.length; i++){
-				if (alla[i].id.startsWith("e_")){
-					alla[i].remove();
-				}
-			}
-			// add a nice header
-			var header ="<header class=\"w3-container w3-teal\"> \n";
-			header +="<h1 class=\"w3-layout-cell\">&nbsp;"+title+"</h1> \n";
-			header +="</header>\n";
-			html += header;
-			html+=div.innerHTML;
-			div.remove();
-			// add the doc function
-			html+="\n<script>\n"+doc.toString()+"</"+"script>\n";
-			var footer = "<footer class=\"w3-container w3-teal\">\n";
-			footer += "<small>Copyright &copy; Gilbert Brault 2016,2017\n";
-			footer += "</small>\n";
-			footer+="</footer>\n";
-			html += footer;
-			html+="</body>\n</html>\n";
-			download(html,"sqliterailroad.html","text/html");
-		}.bind(null,div,title,css));
-	}.bind(null,div,title));	
+function execute_code(){
+	eval(window.e_jscode.getDoc().getValue());
 }
 </script>
      
