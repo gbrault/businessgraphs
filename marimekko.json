@@ -7,7 +7,11 @@
 "ratio_threshold":3,
 "shortTitle":{	"Siemens":"SIE","Schneider Electric":"SU","ABB":"ABB","Rockwell Automation":"ROK","Yokogawa":"YOK","Emerson Process Management":"EMR",
           	"Other":"OTH","Mitsubishi Electric":"MIE","Omron":"OMR","GE":"GE","Honeywell":"HON","B&R":"B&R","Danfoss":"DAN","Delta Electronics":"DEL",
-             	"Yaskawa":"YAS","Hitachi":"HIT","Eaton":"EAT","Bosch Rexroth":"BOR","Danaher Industrial":"DAN"},
+             	"Yaskawa":"YAS","Hitachi":"HIT","Eaton":"EAT","Bosch Rexroth":"BOR","Danaher Industrial":"DAN","Lenze":"LEN","FANUC":"FAN","Heidenhain":"HEI",
+             	"GSK CNC EQUIPMENT":"GSK","Flowserve Flow Control Division":"FLO","Samson":"SAM","Nihon Koso":"NIH","CCI":"CCI","Metso Automation":"MET",
+             	"Sick":"SIC","Pepperl+Fuchs":"P+F","Balluff":"BAL","Keyence":"KEY","Turck":"TUR","IFM Electronics":"IFM","Endress+Hauser":"E+H","Krohne":"KRO",
+             	"Advantech":"ADV","Beckhoff":"BEC","Ametek":"AME","Mettler-Toledo":"MET","Toshiba":"TOS","TMEIC":"TME","HIMA":"HIM","Cognex":"COG",
+                    "National Instruments":"NI","Teledyne":"TLD"},
 "rows":[
 {"title":"DCS",
 "size":13521.0076579863,
