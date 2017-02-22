@@ -178,20 +178,12 @@ function execute_code(){
 var jsonfile = document.getElementById('jsonfile');
 jsonfile.addEventListener('change', function(e) {
         var file = jsonfile.files[0];
-        var textType = /text.*/;
-
-        if (file.type.match(textType)) {
-            var reader = new FileReader();
-
-            reader.onload = function(e) {
+        var reader = new FileReader();
+	reader.onload = function(e) {
                 window.e_jsonm.getDoc().setValue(reader.result);
-            }
-
-            reader.readAsText(file);    
-        } else {
-            div_error.innerText="File not supported!";
         }
-    });
+        reader.readAsText(file);    
+ });
 </script>
      
 </body>
