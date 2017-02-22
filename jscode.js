@@ -1,6 +1,7 @@
 var inch = 2.54;
 var scalex = 50;
-var scaley = 26; 
+var scaley = 26;
+var offsetx = 2;
 function getTimestamp() {
 	var dateNow = new Date();
 	var dateMM = dateNow.getMonth() + 1; dateDD = dateNow.getDate(); dateYY = dateNow.getFullYear(), h = dateNow.getHours(); m = dateNow.getMinutes();
@@ -45,9 +46,20 @@ for(var rows=0; rows<marimekko.rows.length; rows++){
                                              w:marimekko.rows[rows].box.Width/scalex/inch, 
                                              h:marimekko.rows[rows].box.Height/scaley/inch,
                                              fill:'FFFFFF',
-											 line: '5B9BD5',
+					     line: '5B9BD5',
                                              align:'c',
                                              font_size:8 });
+  for(var cols=0; cols<marimekko.rows[rows].cols.length; cols++){
+	    		slide.addText(marimekko.rows[rows].cols[cols].title, { shape:pptx.shapes.RECTANGLE, 
+                                             		x:((marimekko.rows[rows].cols[cols].box.Left/scalex)-offsetx)/inch, 
+                                             		y:marimekko.rows[rows].cols[cols].box.Top/scaley/inch, 
+                                             		w:marimekko.rows[rows].cols[cols].box.Width/scalex/inch, 
+                                             		h:marimekko.rows[rows].cols[cols].box.Height/scaley/inch,
+                                             		fill:'FFFFFF',
+											 		line: '5B9BD5',
+                                             		align:'c',
+                                             		font_size:8 });    
+  }	
 }
 
 pptx.save('Marimekko'+'_'+getTimestamp());
