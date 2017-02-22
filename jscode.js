@@ -1,3 +1,4 @@
+/* all units in cm */
 var inch = 2.54;
 var scalex = 50;
 var scaley = 26;
@@ -46,20 +47,35 @@ for(var rows=0; rows<marimekko.rows.length; rows++){
                                              w:marimekko.rows[rows].box.Width/scalex/inch, 
                                              h:marimekko.rows[rows].box.Height/scaley/inch,
                                              fill:'FFFFFF',
-					     line: '5B9BD5',
+											 line: '5B9BD5',
                                              align:'c',
                                              font_size:8 });
   for(var cols=0; cols<marimekko.rows[rows].cols.length; cols++){
-	    		slide.addText(marimekko.rows[rows].cols[cols].title, { shape:pptx.shapes.RECTANGLE, 
+        var fs=11,title,wcm,hcm;
+        wcm = marimekko.rows[rows].cols[cols].box.Width/scalex;
+        hcm=marimekko.rows[rows].cols[cols].box.Height/scaley;
+        if(hcm<1){
+          	fs=6;
+        } else if(hcm<2){
+          fs=8;
+        }
+    	title=marimekko.rows[rows].cols[cols].title;
+        if(wcm<2){
+          	title=marimekko.shortTitle[title];
+            if(title==undefined){
+              	title=marimekko.rows[rows].cols[cols].title.substr(0,3);
+            }
+        }
+  		slide.addText(, { shape:pptx.shapes.RECTANGLE, 
                                              		x:((marimekko.rows[rows].cols[cols].box.Left/scalex)-offsetx)/inch, 
                                              		y:marimekko.rows[rows].cols[cols].box.Top/scaley/inch, 
-                                             		w:marimekko.rows[rows].cols[cols].box.Width/scalex/inch, 
-                                             		h:marimekko.rows[rows].cols[cols].box.Height/scaley/inch,
+                                             		w:wcm/inch, 
+                                             		h:hcm/inch,
                                              		fill:'FFFFFF',
 											 		line: '5B9BD5',
                                              		align:'c',
-                                             		font_size:8 });    
-  }	
+                                             		font_size:fs });    
+  }
 }
 
 pptx.save('Marimekko'+'_'+getTimestamp());
