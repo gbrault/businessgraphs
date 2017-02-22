@@ -11,6 +11,7 @@
 "internal":"Mn",
 "ratio_threshold":3,
 "shortTitleRows":{},
+"Colors":{"Schneider Electric":"33CC33"},
 "shortTitleCols":{	"Siemens":"SIE","Schneider Electric":"SU","ABB":"ABB","Rockwell Automation":"ROK","Yokogawa":"YOK","Emerson Process Management":"EMR",
           		"Other":"OTH","Mitsubishi Electric":"MIE","Omron":"OMR","GE":"GE","Honeywell":"HON","B&R":"B&R","Danfoss":"DAN","Delta Electronics":"DEL",
              	"Yaskawa":"YAS","Hitachi":"HIT","Eaton":"EAT","Bosch Rexroth":"BOR","Danaher Industrial":"DAN","Lenze":"LEN","FANUC":"FAN","Heidenhain":"HEI",

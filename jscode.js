@@ -9,6 +9,7 @@ var scaley = marimekko.scaley;
 var offsetx = marimekko.offsetx;
 var lwidth = marimekko.lwidth;
 var lheight = marimekko.lheight;
+var colors = marimekko.Colors;
 var pptx = new PptxGenJS();
 pptx.setLayout({ name:'A4', width:(lwidth/inch), height:(lheight/inch)});
 var optsTitle = { color:'9F9F9F', marginPt:3, border:[0,0,{pt:'1',color:'CFCFCF'},0] };
@@ -41,11 +42,11 @@ for(var rows=0; rows<marimekko.rows.length; rows++){
 	var fs=11,title,wcm,hcm;
     wcm = marimekko.rows[rows].box.Width/scalex;
     hcm=marimekko.rows[rows].box.Height/scaley;
-    if((hcm<0.5)||(wcm<0.5)){
+    if((hcm<0.5)||(wcm<1)){
      	fs=4;
-    } else if((hcm<1)||(wcm<1)){
+    } else if((hcm<1)||(wcm<1.5)){
        fs=6;
-    } else if((hcm<1.5)||(wcm<1.5)){
+    } else if((hcm<1.5)||(wcm<2)){
        fs=8;
     }
     title=marimekko.rows[rows].title;
@@ -69,11 +70,11 @@ for(var rows=0; rows<marimekko.rows.length; rows++){
         var fs=11,title,wcm,hcm;
         wcm = marimekko.rows[rows].cols[cols].box.Width/scalex;
         hcm=marimekko.rows[rows].cols[cols].box.Height/scaley;
-        if((hcm<0.5)||(wcm<0.5)){
+        if((hcm<0.5)||(wcm<1)){
           	fs=4;
-        } else if((hcm<1)||(wcm<1)){
+        } else if((hcm<1)||(wcm<1.5)){
           fs=6;
-        } else if((hcm<1.5)||(wcm<1.5)){
+        } else if((hcm<1.5)||(wcm<2)){
           fs=8;
         }
     	title=marimekko.rows[rows].cols[cols].title;
@@ -84,12 +85,16 @@ for(var rows=0; rows<marimekko.rows.length; rows++){
             }
         }
     	title += " "+Math.round(marimekko.rows[rows].cols[cols].size)+"%";
+        var color = colors[marimekko.rows[rows].cols[cols].title];
+        if (color==undefined){
+          	color = 'FFFFFF';
+        }
   		slide.addText(title, { shape:pptx.shapes.RECTANGLE, 
                                              		x:((marimekko.rows[rows].cols[cols].box.Left/scalex)-offsetx)/inch, 
                                              		y:marimekko.rows[rows].cols[cols].box.Top/scaley/inch, 
                                              		w:wcm/inch, 
                                              		h:hcm/inch,
-                                             		fill:'FFFFFF',
+                                             		fill:color,
 							line: '5B9BD5',
                                              		align:'c',
                                              		font_size:fs });    
