@@ -30,6 +30,10 @@
   .border {
     border: 1px solid #d7d4f0;
   }
+  .custom-upload input {
+    left: -9999px; 
+    position: absolute;
+  }
 </style>
 <body>
 <!--
@@ -60,7 +64,7 @@
 		<nav class="w3-navbar" >
 			<small>
 				<a id="a_jsonm" href="#" onclick="toggleShow('jsonm');return false;" class="w3-btn w3-grey w3-text-white">{{jsonm}}</a>
-				 <input type="file" id="jsonfile">
+				<label class="custom-upload w3-btn w3-grey w3-text-white"><input type="file" id="jsonfile">Input File to Render</label>
 			</small>
 		</nav>	
 		<!-- json marimekko editor (read from file) -->
@@ -74,6 +78,7 @@
 		<nav class="w3-navbar" >
 			<small>
 				<a id="a_jscode" href="#" onclick="toggleShow('jscode');return false;" class="w3-btn w3-grey w3-text-white">{{jscode}}</a>
+				<label class="custom-upload w3-btn w3-grey w3-text-white"><input type="file" id="codefile">Input File to Execute</label>
 				<a id="a_refresh" href="#" onclick="execute_code();return false;" class="w3-btn w3-grey w3-text-white">execute code</a>
 			</small>
 		</nav>
@@ -177,12 +182,21 @@ function execute_code(){
 }
 var jsonfile = document.getElementById('jsonfile');
 jsonfile.addEventListener('change', function(e) {
-        var file = jsonfile.files[0];
-        var reader = new FileReader();
+    var file = jsonfile.files[0];
+    var reader = new FileReader();
 	reader.onload = function(e) {
-                window.e_jsonm.getDoc().setValue(reader.result);
-        }
-        reader.readAsText(file);    
+        window.e_jsonm.getDoc().setValue(reader.result);
+    }
+    reader.readAsText(file);    
+ });
+var codefile = document.getElementById('codefile');
+codefile.addEventListener('change', function(e) {
+    var file = codefile.files[0];
+    var reader = new FileReader();
+	reader.onload = function(e) {
+        window.e_jscode.getDoc().setValue(reader.result);
+    }
+    reader.readAsText(file);    
  });
 </script>
      
