@@ -5,8 +5,9 @@
 "display":"Bn",
 "internal":"Mn",
 "ratio_threshold":3,
-"tickers":{"Siemens":"SIE","Schneider Electric":"SU","ABB":"ABB","Rockwell Automation":"ROK","Yokogawa":"YOK","Emerson Process Management":"EMR",
-          },
+"shortTitle":{	"Siemens":"SIE","Schneider Electric":"SU","ABB":"ABB","Rockwell Automation":"ROK","Yokogawa":"YOK","Emerson Process Management":"EMR",
+          	"Other":"OTH","Mitsubishi Electric":"MIE","Omron":"OMR","GE":"GE","Honeywell":"HON","B&R":"B&R","Danfoss":"DAN","Delta Electronics":"DEL",
+             	"Yaskawa":"YAS","Hitachi":"HIT","Eaton":"EAT","Bosch Rexroth":"BOR","Danaher Industrial":"DAN"},
 "rows":[
 {"title":"DCS",
 "size":13521.0076579863,
