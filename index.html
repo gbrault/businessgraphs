@@ -94,6 +94,7 @@
 
 var derror=true;
 w3.displayObject("a_error",{error:"hide Error panel"});
+var div_error=document.getElementById("error");
 
 window.e_jsonm = CodeMirror.fromTextArea(document.getElementById("jsonm"), {
 		mode: "javascript",
@@ -183,12 +184,12 @@ jsonfile.addEventListener('change', function(e) {
             var reader = new FileReader();
 
             reader.onload = function(e) {
-                window.e_jscode.getDoc().setValue(reader.result);
+                window.e_jsonm.getDoc().setValue(reader.result);
             }
 
             reader.readAsText(file);    
         } else {
-            window.e_jscode.getDoc().setValue("File not supported!");
+            div_error.innerText="File not supported!";
         }
     });
 </script>
