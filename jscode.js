@@ -66,7 +66,7 @@ for(var rows=0; rows<marimekko.rows.length; rows++){
               	title=marimekko.rows[rows].cols[cols].title.substr(0,3);
             }
         }
-  		slide.addText(, { shape:pptx.shapes.RECTANGLE, 
+  		slide.addText(title, { shape:pptx.shapes.RECTANGLE, 
                                              		x:((marimekko.rows[rows].cols[cols].box.Left/scalex)-offsetx)/inch, 
                                              		y:marimekko.rows[rows].cols[cols].box.Top/scaley/inch, 
                                              		w:wcm/inch, 
