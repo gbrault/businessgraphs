@@ -54,13 +54,15 @@ for(var rows=0; rows<marimekko.rows.length; rows++){
         var fs=11,title,wcm,hcm;
         wcm = marimekko.rows[rows].cols[cols].box.Width/scalex;
         hcm=marimekko.rows[rows].cols[cols].box.Height/scaley;
-        if(hcm<1){
-          	fs=6;
-        } else if(hcm<2){
+        if(hcm<0.5){
+          	fs=4;
+        } else if(hcm<1){
+          fs=6;
+        } else if(hcm<1.5){
           fs=8;
         }
     	title=marimekko.rows[rows].cols[cols].title;
-        if(wcm<2){
+        if(wcm<2.5){
           	title=marimekko.shortTitle[title];
             if(title==undefined){
               	title=marimekko.rows[rows].cols[cols].title.substr(0,3);
