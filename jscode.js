@@ -65,7 +65,7 @@ for(var rows=0; rows<marimekko.rows.length; rows++){
                                              w:wcm/inch, 
                                              h:hcm/inch,
                                              fill:'FFFFFF',
-											 line: '5B9BD5',
+					     line: '5B9BD5',
                                              align:'c',
                                              font_size:fs });
   for(var cols=0; cols<marimekko.rows[rows].cols.length; cols++){
@@ -93,7 +93,7 @@ for(var rows=0; rows<marimekko.rows.length; rows++){
                                              		w:wcm/inch, 
                                              		h:hcm/inch,
                                              		fill:'FFFFFF',
-											 		line: '5B9BD5',
+							line: '5B9BD5',
                                              		align:'c',
                                              		font_size:fs });    
   }
