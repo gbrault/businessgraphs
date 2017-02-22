@@ -1,19 +1,16 @@
 /* all units in cm */
 var inch = 2.54;
-var scalex = 51;
-var scaley = 26;
-var offsetx = 1.8;
-function getTimestamp() {
-	var dateNow = new Date();
-	var dateMM = dateNow.getMonth() + 1; dateDD = dateNow.getDate(); dateYY = dateNow.getFullYear(), h = dateNow.getHours(); m = dateNow.getMinutes();
-	return dateNow.getFullYear() +''+ (dateMM<=9 ? '0' + dateMM : dateMM) +''+ (dateDD<=9 ? '0' + dateDD : dateDD) + (h<=9 ? '0' + h : h) + (m<=9 ? '0' + m : m);
-}
 debugger;
 
 var sMarimekko = window.e_jsonm.getDoc().getValue();
 var marimekko = JSON.parse(sMarimekko);
+var scalex = marimekko.scalex;
+var scaley = marimekko.scaley;
+var offsetx = marimekko.offsetx;
+var lwidth = marimekko.lwidth;
+var lheight = marimekko.lheight;
 var pptx = new PptxGenJS();
-pptx.setLayout({ name:'A4', width:(27.517/inch), height:(19.05/inch)});
+pptx.setLayout({ name:'A4', width:(lwidth/inch), height:(lheight/inch)});
 var optsTitle = { color:'9F9F9F', marginPt:3, border:[0,0,{pt:'1',color:'CFCFCF'},0] };
 var slide = pptx.addNewSlide();
 var stemp = marimekko.title.replace(/{{ratio_thresold}}/,marimekko.ratio_threshold);
@@ -100,3 +97,10 @@ for(var rows=0; rows<marimekko.rows.length; rows++){
 }
 
 pptx.save('Marimekko'+'_'+getTimestamp());
+
+/* ===   functions  === */
+function getTimestamp() {
+	var dateNow = new Date();
+	var dateMM = dateNow.getMonth() + 1; dateDD = dateNow.getDate(); dateYY = dateNow.getFullYear(), h = dateNow.getHours(); m = dateNow.getMinutes();
+	return dateNow.getFullYear() +''+ (dateMM<=9 ? '0' + dateMM : dateMM) +''+ (dateDD<=9 ? '0' + dateDD : dateDD) + (h<=9 ? '0' + h : h) + (m<=9 ? '0' + m : m);
+}
