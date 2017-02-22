@@ -60,6 +60,7 @@
 		<nav class="w3-navbar" >
 			<small>
 				<a id="a_jsonm" href="#" onclick="toggleShow('jsonm');return false;" class="w3-btn w3-grey w3-text-white">{{jsonm}}</a>
+				 <input type="file" id="jsonfile">
 			</small>
 		</nav>	
 		<!-- json marimekko editor (read from file) -->
@@ -173,6 +174,23 @@ function toggleShow(id){
 function execute_code(){
 	eval(window.e_jscode.getDoc().getValue());
 }
+var jsonfile = document.getElementById('jsonfile');
+jsonfile.addEventListener('change', function(e) {
+        var file = fileInput.files[0];
+        var textType = /text.*/;
+
+        if (file.type.match(textType)) {
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                window.e_jscode.getDoc().setValue(reader.result);
+            }
+
+            reader.readAsText(file);    
+        } else {
+            window.e_jscode.getDoc().setValue("File not supported!");
+        }
+    });
 </script>
      
 </body>
