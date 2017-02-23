@@ -1,26 +1,25 @@
 {
-"scalex": 51,
-"scaley" : 26,
-"offsetx" : 1.8,
-"lwidth" : 27.517,
-"lheight": 19.05,
-"title":"Top Players (>={{ratio_thresold}}%MS) ranking for Automation Markets {{size}} {{currency}}{{display}}",
+"scalex":"51",
+"scaley":"26",
+"offsetx":"1.8",
+"lwidth":"27.517",
+"lheight":"19.05",
+"title":"Top Players (>={{ratio_thresold}}%MS) ranking for Automation Markets {{size}} $Bn",
 "size":104991.775070619,
 "currency":"$",
 "display":"Bn",
 "internal":"Mn",
 "ratio_threshold":3,
-"shortTitleRows":{},
-"Colors":{"Schneider Electric":"33CC33"},
-"shortTitleCols":{	"Siemens":"SIE","Schneider Electric":"SU","ABB":"ABB","Rockwell Automation":"ROK","Yokogawa":"YOK","Emerson Process Management":"EMR",
-          		"Other":"OTH","Mitsubishi Electric":"MIE","Omron":"OMR","GE":"GE","Honeywell":"HON","B&R":"B&R","Danfoss":"DAN","Delta Electronics":"DEL",
-             	"Yaskawa":"YAS","Hitachi":"HIT","Eaton":"EAT","Bosch Rexroth":"BOR","Danaher Industrial":"DAN","Lenze":"LEN","FANUC":"FAN","Heidenhain":"HEI",
-             	"GSK CNC EQUIPMENT":"GSK","Flowserve Flow Control Division":"FLO","Samson":"SAM","Nihon Koso":"NIH","CCI":"CCI","Metso Automation":"MET",
-             	"Sick":"SIC","Pepperl+Fuchs":"P+F","Balluff":"BAL","Keyence":"KEY","Turck":"TUR","IFM Electronics":"IFM","Endress+Hauser":"E+H","Krohne":"KRO",
-             	"Advantech":"ADV","Beckhoff":"BEC","Ametek":"AME","Mettler-Toledo":"MET","Toshiba":"TOS","TMEIC":"TME","HIMA":"HIM","Cognex":"COG",
-                "National Instruments":"NI","Teledyne":"TLD"},
+"displayTitleRows":{
+"01- DCS":"DCS","03-2 PLC":"PLC","04- C&S + Safety":"C&S + Safety","02-2 Drives LV":"Drives LV","02-1 Motor Starters & Contactors":"Contactors + MCC","02-3 Motion":"Motion","03-3 CNC":"CNC","01- Control Valves":"Control Valves","04- Sensors":"Sensors","01- Instruments":"Instruments","03-1 OP & IPC":"OP & IPC","01- Analyzers":"Analyzers","02-2 Drives MV":"Drives MV","01- Safety Systems":"Safety Systems","03-3 Vision":"Vision"},
+"shortTitleRows":{
+"01- DCS":"DCS","03-2 PLC":"PLC","04- C&S + Safety":"C&S","02-2 Drives LV":"VSD","02-1 Motor Starters & Contactors":"MSC","02-3 Motion":"Mot","03-3 CNC":"CNC","01- Control Valves":"CTV","04- Sensors":"Sen","01- Instruments":"Ins","03-1 OP & IPC":"OPI","01- Analyzers":"ANZ","02-2 Drives MV":"DRS","01- Safety Systems":"SAS","03-3 Vision":"Vis"},
+"Colors":{
+"Siemens":"FFFFFF","Schneider Electric":"5AAE61","ABB":"FFFFFF","Rockwell Automation":"FFFFFF","B&R":"FFFFFF","Mitsubishi Electric":"FFFFFF","Yokogawa":"FFFFFF","Omron":"FFFFFF","Honeywell":"FFFFFF","GE":"FFFFFF","FANUC":"FFFFFF","Danfoss":"FFFFFF","Eaton":"FFFFFF","Yaskawa":"FFFFFF","Sick":"FFFFFF","Endress+Hauser":"FFFFFF","Emerson Process Management":"FFFFFF","Toshiba":"FFFFFF","Heidenhain":"FFFFFF","Bosch Rexroth":"FFFFFF","Hitachi":"FFFFFF","Flowserve Flow Control Division":"FFFFFF","Panasonic":"FFFFFF","Fuji Electric":"FFFFFF","Delta Electronics":"FFFFFF","Pepperl+Fuchs":"FFFFFF","Phoenix Contact":"FFFFFF","Cognex":"FFFFFF","Advantech":"FFFFFF","Balluff":"FFFFFF","Danaher Industrial":"FFFFFF","Azbil":"FFFFFF","Lenze":"FFFFFF","Samson":"FFFFFF","Ametek":"FFFFFF","Nihon Koso":"FFFFFF","CCI":"FFFFFF","Beckhoff":"FFFFFF","Keyence":"FFFFFF","Emerson Electric":"FFFFFF","Metso Automation":"FFFFFF","Krohne":"FFFFFF","Parker Industrial":"FFFFFF","Turck":"FFFFFF","IFM Electronics":"FFFFFF","TMEIC":"FFFFFF","Chint Electrics":"FFFFFF","GSK CNC EQUIPMENT":"FFFFFF","Banner":"FFFFFF","Oriental Motor":"FFFFFF","National Instruments":"FFFFFF","Leuze":"FFFFFF","Pilz":"FFFFFF","Baumer":"FFFFFF","Idec":"FFFFFF","Okuma":"FFFFFF","Sanyo Denki":"FFFFFF","HIMA":"FFFFFF","Pentair":"FFFFFF","Mettler-Toledo":"FFFFFF","Tamagawa Seiki":"FFFFFF","Weg":"FFFFFF","Lti Drives":"FFFFFF","Schmersal":"FFFFFF","Kontron":"FFFFFF","DKK-TOA Corporation":"FFFFFF","Num":"FFFFFF","Haas":"FFFFFF","Moog":"FFFFFF","Comeca":"FFFFFF","Euchner":"FFFFFF","Fagor Automation":"FFFFFF","Halma":"FFFFFF","Teledyne":"FFFFFF","SPX Valves & Controls":"FFFFFF","NEC":"FFFFFF","Powell Industries":"FFFFFF","Smar":"FFFFFF","Beijer Electronics":"FFFFFF","EVOC Group":"FFFFFF","Zebra Technologies":"FFFFFF","Thermo Scientific":"FFFFFF","Contec":"FFFFFF","Sunx":"FFFFFF","Festo":"FFFFFF","Harting":"FFFFFF","Weidmuller":"FFFFFF","Horiba Analytical":"FFFFFF","Wika":"FFFFFF","Hyosung Power and Industrial S":"FFFFFF","M-System":"FFFFFF","Hokuyo":"FFFFFF","Contrinex":"FFFFFF","Wago":"FFFFFF","Altus":"FFFFFF","Optex":"FFFFFF","Moore Industries":"FFFFFF","PR Electronics":"FFFFFF","Other":"FFFFFF"},
+"shortTitleCols":{
+"Siemens":"Sie","Schneider Electric":"Sch","ABB":"ABB","Rockwell Automation":"ROK","B&R":"B&R","Mitsubishi Electric":"Mit","Yokogawa":"Yok","Omron":"Omr","Honeywell":"Hon","GE":"GE","FANUC":"FAN","Danfoss":"Dan","Eaton":"Eat","Yaskawa":"Yas","Sick":"Sic","Endress+Hauser":"E+H","Emerson Process Management":"Eme","Toshiba":"Tos","Heidenhain":"Hei","Bosch Rexroth":"Bos","Hitachi":"Hit","Flowserve Flow Control Division":"Flo","Panasonic":"Pan","Fuji Electric":"Fuj","Delta Electronics":"Del","Pepperl+Fuchs":"P+F","Phoenix Contact":"PhC","Cognex":"Cog","Advantech":"Adv","Balluff":"Bal","Danaher Industrial":"DAI","Azbil":"Azb","Lenze":"Len","Samson":"Sam","Ametek":"Ame","Nihon Koso":"Nih","CCI":"CCI","Beckhoff":"Bec","Keyence":"Key","Emerson Electric":"Eme","Metso Automation":"Met","Krohne":"Kro","Parker Industrial":"Par","Turck":"Tur","IFM Electronics":"IFM","TMEIC":"TME","Chint Electrics":"Chi","GSK CNC EQUIPMENT":"GSK","Banner":"Ban","Oriental Motor":"Ori","National Instruments":"Nat","Leuze":"Leu","Pilz":"Pil","Baumer":"Bau","Idec":"Ide","Okuma":"Oku","Sanyo Denki":"San","HIMA":"HIM","Pentair":"Pen","Mettler-Toledo":"Met","Tamagawa Seiki":"Tam","Weg":"Weg","Lti Drives":"Lti","Schmersal":"Sal","Kontron":"Kon","DKK-TOA Corporation":"DKK","Num":"Num","Haas":"Haa","Moog":"Moo","Comeca":"Com","Euchner":"Euc","Fagor Automation":"Fag","Halma":"Hal","Teledyne":"Tel","SPX Valves & Controls":"SPX","NEC":"NEC","Powell Industries":"Pow","Smar":"Sma","Beijer Electronics":"Bei","EVOC Group":"EVO","Zebra Technologies":"Zeb","Thermo Scientific":"The","Contec":"Con","Sunx":"Sun","Festo":"Fes","Harting":"Har","Weidmuller":"Wei","Horiba Analytical":"Hor","Wika":"Wik","Hyosung Power and Industrial S":"Hyo","M-System":"M-S","Hokuyo":"Hok","Contrinex":"Con","Wago":"Wag","Altus":"Alt","Optex":"Opt","Moore Industries":"Moo","PR Electronics":"PRE","Other":"Oth"},
 "rows":[
-{"title":"DCS",
+{"title":"01- DCS",
 "size":13521.0076579863,
 "box":{"Top":72,"Left":14.4,"Width":191.1831,"Height":52.77472},
 "cols":[
@@ -34,7 +33,7 @@
 {"title":"Other","size":8.9585510903023,"box":{"Top":72,"Left":1370.112,"Width":107.0453,"Height":52.77472}}
 ]
 },
-{"title":"PLC",
+{"title":"03-2 PLC",
 "size":12691.3622285877,
 "box":{"Top":124.7747,"Left":14.4,"Width":191.1831,"Height":49.53646},
 "cols":[
@@ -48,7 +47,7 @@
 {"title":"Other","size":8.86434079898935,"box":{"Top":124.7747,"Left":1371.236,"Width":105.9196,"Height":49.53646}}
 ]
 },
-{"title":"C&S + Safety",
+{"title":"04- C&S + Safety",
 "size":11505.79935835,
 "box":{"Top":174.3112,"Left":14.4,"Width":191.1831,"Height":44.90905},
 "cols":[
@@ -59,7 +58,7 @@
 {"title":"Other","size":56.5443633573636,"box":{"Top":174.3112,"Left":801.5116,"Width":675.6453,"Height":44.90905}}
 ]
 },
-{"title":"Drives LV",
+{"title":"02-2 Drives LV",
 "size":10855.8402495674,
 "box":{"Top":219.2202,"Left":14.4,"Width":191.1831,"Height":42.37213},
 "cols":[
@@ -75,7 +74,7 @@
 {"title":"Other","size":13.5263296721213,"box":{"Top":219.2202,"Left":1315.533,"Width":161.6254,"Height":42.37213}}
 ]
 },
-{"title":"Motor Starters & Contactors",
+{"title":"02-1 Motor Starters & Contactors",
 "size":9626.01295823741,
 "box":{"Top":261.5923,"Left":14.4,"Width":191.1831,"Height":37.57189},
 "cols":[
@@ -89,7 +88,7 @@
 {"title":"Other","size":11.4309941428695,"box":{"Top":261.5923,"Left":1340.572,"Width":136.5883,"Height":37.57189}}
 ]
 },
-{"title":"Motion",
+{"title":"02-3 Motion",
 "size":7144.0655628348,
 "box":{"Top":299.1642,"Left":14.4,"Width":191.1831,"Height":27.88441},
 "cols":[
@@ -105,7 +104,7 @@
 {"title":"Other","size":17.358945098706,"box":{"Top":299.1642,"Left":1269.741,"Width":207.4211,"Height":27.88441}}
 ]
 },
-{"title":"CNC",
+{"title":"03-3 CNC",
 "size":6406,
 "box":{"Top":327.0486,"Left":14.4,"Width":191.1831,"Height":25.0037},
 "cols":[
@@ -117,7 +116,7 @@
 {"title":"Other","size":6.77489853262566,"box":{"Top":327.0486,"Left":1396.213,"Width":80.95276,"Height":25.0037}}
 ]
 },
-{"title":"Control Valves",
+{"title":"01- Control Valves",
 "size":6391.20415256226,
 "box":{"Top":352.0523,"Left":14.4,"Width":191.1831,"Height":24.94591},
 "cols":[
@@ -131,7 +130,7 @@
 {"title":"Other","size":26.4151577472496,"box":{"Top":352.0523,"Left":1161.532,"Width":315.6332,"Height":24.94591}}
 ]
 },
-{"title":"Sensors",
+{"title":"04- Sensors",
 "size":5959.25179609301,
 "box":{"Top":376.9982,"Left":14.4,"Width":191.1831,"Height":23.25992},
 "cols":[
@@ -146,7 +145,7 @@
 {"title":"Other","size":30.7734642555335,"box":{"Top":376.9982,"Left":1109.453,"Width":367.7105,"Height":23.25992}}
 ]
 },
-{"title":"Instruments",
+{"title":"01- Instruments",
 "size":5588.124369909,
 "box":{"Top":400.2581,"Left":14.4,"Width":191.1831,"Height":21.81134},
 "cols":[
@@ -159,7 +158,7 @@
 {"title":"Other","size":8.53547612774264,"box":{"Top":400.2581,"Left":1375.177,"Width":101.9899,"Height":21.81134}}
 ]
 },
-{"title":"OP & IPC",
+{"title":"03-1 OP & IPC",
 "size":4487.52458389885,
 "box":{"Top":422.0695,"Left":14.4,"Width":191.1831,"Height":17.51551},
 "cols":[
@@ -173,7 +172,7 @@
 {"title":"Other","size":27.150302798399,"box":{"Top":422.0695,"Left":1152.751,"Width":324.4175,"Height":17.51551}}
 ]
 },
-{"title":"Analyzers",
+{"title":"01- Analyzers",
 "size":3742.42356028276,
 "box":{"Top":439.5851,"Left":14.4,"Width":191.1831,"Height":14.60732},
 "cols":[
@@ -187,7 +186,7 @@
 {"title":"Other","size":59.9418206293855,"box":{"Top":439.5851,"Left":760.9349,"Width":716.2414,"Height":14.60732}}
 ]
 },
-{"title":"Drives MV",
+{"title":"02-2 Drives MV",
 "size":2838.45627148598,
 "box":{"Top":454.1923,"Left":14.4,"Width":191.1831,"Height":11.07898},
 "cols":[
@@ -201,7 +200,7 @@
 {"title":"Other","size":7.05420190325142,"box":{"Top":454.1923,"Left":1392.895,"Width":84.29024,"Height":11.07898}}
 ]
 },
-{"title":"Safety Systems",
+{"title":"01- Safety Systems",
 "size":2371.70232082347,
 "box":{"Top":465.2713,"Left":14.4,"Width":191.1831,"Height":9.257165},
 "cols":[
@@ -216,7 +215,7 @@
 {"title":"Other","size":13.389499525798,"box":{"Top":465.2713,"Left":1317.204,"Width":159.9904,"Height":9.257165}}
 ]
 },
-{"title":"Vision",
+{"title":"03-3 Vision",
 "size":1863,
 "box":{"Top":474.5284,"Left":14.4,"Width":191.1831,"Height":7.271575},
 "cols":[
