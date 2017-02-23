@@ -115,15 +115,15 @@
         "type": "object",
         "properties": {
           "title": {
-		    "description":"product line name (internal) to be substituted with display version",
+	    "description":"product line name (internal) to be substituted with display version",
             "type": "string"
           },
           "size": {
-		    "description":"Market size of this product line",
+	    "description":"Market size of this product line",
             "type": "number"
           },
           "box": {
-		    "description":"rectangle location and dimenssion to represent the market size for this product line"
+	    "description":"rectangle location and dimenssion to represent the market size for this product line",
             "type": "object",
             "properties": {
               "Top": {
