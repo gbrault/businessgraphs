@@ -1,0 +1,201 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "scalex": {
+      "type": "string"
+    },
+    "scaley": {
+      "type": "string"
+    },
+    "offsetx": {
+      "type": "string"
+    },
+    "lwidth": {
+      "type": "string"
+    },
+    "lheight": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "size": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string"
+    },
+    "display": {
+      "type": "string"
+    },
+    "internal": {
+      "type": "string"
+    },
+    "ratio_threshold": {
+      "type": "integer"
+    },
+    "displayTitleRows": {
+      "type": "object",
+      "properties": {
+        "Product_1": {
+          "type": "string"
+        },
+        "Product_2": {
+          "type": "string"
+        },
+        "Product_n": {
+          "type": "string"
+        }
+      }
+    },
+    "shortTitleRows": {
+      "type": "object",
+      "properties": {
+        "Product_1": {
+          "type": "string"
+        },
+        "Product_2": {
+          "type": "string"
+        },
+        "Product_n": {
+          "type": "string"
+        },
+      },
+    },
+    "Colors": {
+      "type": "object",
+      "properties": {
+        "Competitor_1": {
+          "type": "string"
+        },
+        "Competitor_2": {
+          "type": "string"
+        },
+        "Competitor_n": {
+          "type": "string"
+        },
+        "Other": {
+          "type": "string"
+        }
+      }
+    },
+    "shortTitleCols": {
+      "type": "object",
+      "properties": {
+        "Competitor_1": {
+          "type": "string"
+        },
+        "Competitor_2": {
+          "type": "string"
+        },
+        "Other": {
+          "type": "string"
+        }
+      }
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer"
+          },
+          "box": {
+            "type": "object",
+            "properties": {
+              "Top": {
+                "type": "number"
+              },
+              "Left": {
+                "type": "number"
+              },
+              "Width": {
+                "type": "number"
+              },
+              "Height": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "Top",
+              "Left",
+              "Width",
+              "Height"
+            ]
+          },
+          "cols": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "size": {
+                  "type": "number"
+                },
+                "box": {
+                  "type": "object",
+                  "properties": {
+                    "Top": {
+                      "type": "number"
+                    },
+                    "Left": {
+                      "type": "number"
+                    },
+                    "Width": {
+                      "type": "number"
+                    },
+                    "Height": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "Top",
+                    "Left",
+                    "Width",
+                    "Height"
+                  ]
+                }
+              },
+              "required": [
+                "title",
+                "size",
+                "box"
+              ]
+            }
+          }
+        },
+        "required": [
+          "title",
+          "size",
+          "box",
+          "cols"
+        ]
+      }
+    }
+  },
+  "required": [
+    "scalex",
+    "scaley",
+    "offsetx",
+    "lwidth",
+    "lheight",
+    "title",
+    "size",
+    "currency",
+    "display",
+    "internal",
+    "ratio_threshold",
+    "displayTitleRows",
+    "shortTitleRows",
+    "Colors",
+    "shortTitleCols",
+    "rows"
+  ]
+}
