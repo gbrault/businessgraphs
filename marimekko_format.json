@@ -3,39 +3,51 @@
   "type": "object",
   "properties": {
     "scalex": {
+	  "description":"scale factor to get cm x axis",
       "type": "string"
     },
     "scaley": {
+	  "description":"scale factor to get cm y axis",
       "type": "string"
     },
     "offsetx": {
+	  "description":"how much should cols (not the header) be translated left",
       "type": "string"
     },
     "lwidth": {
+	  "description":"page width 27.517 for A4 cm",
       "type": "string"
     },
     "lheight": {
+	  "description":"page height 19.05 for A4 cm",
       "type": "string"
     },
     "title": {
+	  "description":"Top Players (>={{ratio_thresold}}%MS) ranking for Automation Markets {{size}} $Bn",
       "type": "string"
     },
     "size": {
+	  "description":"total market size",
       "type": "number"
     },
     "currency": {
+	  "description":"currency of the figures",
       "type": "string"
     },
     "display": {
+	  "description":"unit (multiple of currency) to display Bn, Mn, Kn, Un",
       "type": "string"
     },
     "internal": {
+	  "description":"unit (multiple of currency) of internal data Bn, Mn, Kn, Un",
       "type": "string"
     },
     "ratio_threshold": {
+	  "description":"market share above which we show competitors",
       "type": "integer"
     },
     "displayTitleRows": {
+	  "description":"string to use to display product in rows header n=as many as product lines",
       "type": "object",
       "properties": {
         "Product_1": {
@@ -50,6 +62,7 @@
       }
     },
     "shortTitleRows": {
+      "description":"short (3chars) string to use to display product in rows header",	  
       "type": "object",
       "properties": {
         "Product_1": {
@@ -64,6 +77,7 @@
       },
     },
     "Colors": {
+	  "description":"color to fill the competitor market share box",
       "type": "object",
       "properties": {
         "Competitor_1": {
@@ -81,6 +95,7 @@
       }
     },
     "shortTitleCols": {
+	  "description":"short string to display competitors name",
       "type": "object",
       "properties": {
         "Competitor_1": {
@@ -100,12 +115,15 @@
         "type": "object",
         "properties": {
           "title": {
+		    "description":"product line name (internal) to be substituted with display version",
             "type": "string"
           },
           "size": {
-            "type": "integer"
+		    "description":"Market size of this product line",
+            "type": "number"
           },
           "box": {
+		    "description":"rectangle location and dimenssion to represent the market size for this product line"
             "type": "object",
             "properties": {
               "Top": {
@@ -132,14 +150,17 @@
             "type": "array",
             "items": {
               "type": "object",
-              "properties": {
+              "properties": {			  
                 "title": {
+				  "description":"name of the competitor"
                   "type": "string"
                 },
                 "size": {
+				  "description":"size of the competitor in this market"
                   "type": "number"
                 },
                 "box": {
+				  "description":"rectangle location and dimenssion to represent the market share for this product line"
                   "type": "object",
                   "properties": {
                     "Top": {
