@@ -10,6 +10,7 @@ var offsetx = marimekko.offsetx;
 var lwidth = marimekko.lwidth;
 var lheight = marimekko.lheight;
 var colors = marimekko.Colors;
+var displayTitleRows = marimekko.displayTitleRows;
 var pptx = new PptxGenJS();
 pptx.setLayout({ name:'A4', width:(lwidth/inch), height:(lheight/inch)});
 var optsTitle = { color:'9F9F9F', marginPt:3, border:[0,0,{pt:'1',color:'CFCFCF'},0] };
@@ -49,11 +50,18 @@ for(var rows=0; rows<marimekko.rows.length; rows++){
     } else if((hcm<1.5)||(wcm<2)){
        fs=8;
     }
-    title=marimekko.rows[rows].title;
+    title=displayTitleRows[marimekko.rows[rows].title];
+    if(title==undefined){
+      title=marimekko.rows[rows].title;
+    }
     if(wcm<2.5){
-       	title=marimekko.shortTitleRows[title];
+       	title=marimekko.shortTitleRows[marimekko.rows[rows].title];
         if(title==undefined){
-          	title=marimekko.rows[rows].title.substr(0,3);
+          	title=displayTitleRows[marimekko.rows[rows].title];
+            if(title==undefined){
+      			title=marimekko.rows[rows].title;
+    		}
+          title=title.substr(0,3);
         }
     }
   title += " "+Math.round((marimekko.rows[rows].size/ratio)*10)/10;
