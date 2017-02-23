@@ -152,15 +152,15 @@
               "type": "object",
               "properties": {			  
                 "title": {
-				  "description":"name of the competitor"
+		  "description":"name of the competitor",
                   "type": "string"
                 },
                 "size": {
-				  "description":"size of the competitor in this market"
+		  "description":"size of the competitor in this market",
                   "type": "number"
                 },
                 "box": {
-				  "description":"rectangle location and dimenssion to represent the market share for this product line"
+		  "description":"rectangle location and dimenssion to represent the market share for this product line",
                   "type": "object",
                   "properties": {
                     "Top": {
