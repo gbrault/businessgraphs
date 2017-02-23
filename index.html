@@ -65,6 +65,7 @@
 			<small>
 				<a id="a_jsonm" href="#" onclick="toggleShow('jsonm');return false;" class="w3-btn w3-grey w3-text-white">{{jsonm}}</a>
 				<label class="custom-upload w3-btn w3-grey w3-text-white"><input type="file" id="jsonfile">Input File to Render</label>
+				<label class="custom-upload w3-btn w3-grey w3-text-white"><input type="file" id="keyfile">load key</label>
 			</small>
 		</nav>	
 		<!-- json marimekko editor (read from file) -->
@@ -115,7 +116,7 @@ window.e_jsonm = CodeMirror.fromTextArea(document.getElementById("jsonm"), {
 w3.getHttpData("marimekko.json", function(text){
 	window.e_jsonm.getDoc().setValue(text);
 });
-w3.displayObject("a_jsonm",{jsonm:"hide marimekko json Editor"});
+w3.displayObject("a_jsonm",{jsonm:"hide file json file Editor"});
 var jsonm=true;
 
 window.e_jscode = CodeMirror.fromTextArea(document.getElementById("jscode"), {
@@ -151,9 +152,9 @@ function toggleShow(id){
 			w3.toggleShow("#d_"+id);
 			jsonm = !jsonm;
 			if(jsonm){
-				w3.displayObject("a_"+id,{jsonm:"hide marimekko Editor"});
+				w3.displayObject("a_"+id,{jsonm:"hide json Editor"});
 			} else {
-				w3.displayObject("a_"+id,{jsonm:"show marimekko Editor"});
+				w3.displayObject("a_"+id,{jsonm:"show json Editor"});
 			}
 			break;
 		case 'jscode':
@@ -164,16 +165,7 @@ function toggleShow(id){
 			} else {
 				w3.displayObject("a_"+id,{jscode:"show javascript Editor"});
 			}
-			break;
-		case 'jscode':
-			w3.toggleShow("#EBNFRailroad");
-			jscode = !jscode;
-			if(jscode){
-				w3.displayObject("a_"+id,{jscode:"hide EBNF railroad"});
-			} else {
-				w3.displayObject("a_"+id,{jscode:"show EBNF railroad"});
-			}
-			break;			
+			break;	
 	}
 }
 
@@ -198,6 +190,17 @@ codefile.addEventListener('change', function(e) {
     }
     reader.readAsText(file);    
  });
+var keyfile = document.getElementById('keyfile');
+keyfile.addEventListener('change', function(e) {
+    var file = keyfile.files[0];
+    var reader = new FileReader();
+	reader.onload = function(e) {
+        window.keyfile=JSON.parse(reader.result);
+    }
+    reader.readAsText(file);    
+ });
+
+
 </script>
      
 </body>
