@@ -30,8 +30,7 @@
 {"title":"Yokogawa","size":11.0746775527159,"box":{"Top":72,"Left":1069.635,"Width":132.3306,"Height":52.77472}},
 {"title":"Honeywell","size":15.4926034724751,"box":{"Top":72,"Left":701.4842,"Width":185.1203,"Height":52.77472}},
 {"title":"Emerson Process Management","size":15.3177393490023,"box":{"Top":72,"Left":886.6044,"Width":183.0308,"Height":52.77472}},
-{"title":"Other","size":8.9585510903023,"box":{"Top":72,"Left":1370.112,"Width":107.0453,"Height":52.77472}}
-]
+{"title":"Other","size":13.2409560823526,"box":{"Top":72,"Left":1318.94194246233,"Width":158.21551298201,"Height":52.77472}}]
 },
 {"title":"03-2 PLC",
 "size":12691.3622285877,
@@ -44,8 +43,7 @@
 {"title":"Mitsubishi Electric","size":9.75210774476142,"box":{"Top":124.7747,"Left":872.7722,"Width":116.5273,"Height":49.53646}},
 {"title":"Omron","size":4.72299764608661,"box":{"Top":124.7747,"Left":1087.471,"Width":56.43472,"Height":49.53646}},
 {"title":"GE","size":3.13046758584641,"box":{"Top":124.7747,"Left":1188.382,"Width":37.40583,"Height":49.53646}},
-{"title":"Other","size":8.86434079898935,"box":{"Top":124.7747,"Left":1371.236,"Width":105.9196,"Height":49.53646}}
-]
+{"title":"Other","size":21.0363141828537,"box":{"Top":124.7747,"Left":1225.79384416194,"Width":251.361970962568,"Height":49.53646}}]
 },
 {"title":"04- C&S + Safety",
 "size":11505.79935835,
@@ -55,8 +53,7 @@
 {"title":"Schneider Electric","size":4.56565706277553,"box":{"Top":174.3112,"Left":511.4834,"Width":54.5548,"Height":44.90905}},
 {"title":"Rockwell Automation","size":5.17842108953821,"box":{"Top":174.3112,"Left":449.6068,"Width":61.87654,"Height":44.90905}},
 {"title":"Omron","size":7.57749796512216,"box":{"Top":174.3112,"Left":282.2555,"Width":90.54307,"Height":44.90905}},
-{"title":"Other","size":56.5443633573636,"box":{"Top":174.3112,"Left":801.5116,"Width":675.6453,"Height":44.90905}}
-]
+{"title":"Other","size":76.2503810864515,"box":{"Top":174.3112,"Left":566.045531510555,"Width":911.111389876164,"Height":44.90905}}]
 },
 {"title":"02-2 Drives LV",
 "size":10855.8402495674,
@@ -71,8 +68,7 @@
 {"title":"Yaskawa","size":4.36641465886428,"box":{"Top":219.2202,"Left":1031.445,"Width":52.17394,"Height":42.37213}},
 {"title":"Hitachi","size":3.10590403579387,"box":{"Top":219.2202,"Left":1124.52,"Width":37.11228,"Height":42.37213}},
 {"title":"Delta Electronics","size":3.42294026829505,"box":{"Top":219.2202,"Left":1083.619,"Width":40.90055,"Height":42.37213}},
-{"title":"Other","size":13.5263296721213,"box":{"Top":219.2202,"Left":1315.533,"Width":161.6254,"Height":42.37213}}
-]
+{"title":"Other","size":26.4055127370401,"box":{"Top":219.2202,"Left":1161.64061993777,"Width":315.518132503639,"Height":42.37213}}]
 },
 {"title":"02-1 Motor Starters & Contactors",
 "size":9626.01295823741,
@@ -85,8 +81,7 @@
 {"title":"Mitsubishi Electric","size":4.31259130916086,"box":{"Top":261.5923,"Left":1151.342,"Width":51.53102,"Height":37.57189}},
 {"title":"GE","size":5.80891156521347,"box":{"Top":261.5923,"Left":1081.932,"Width":69.41023,"Height":37.57189}},
 {"title":"Eaton","size":9.87751181517317,"box":{"Top":261.5923,"Left":883.8166,"Width":118.0259,"Height":37.57189}},
-{"title":"Other","size":11.4309941428695,"box":{"Top":261.5923,"Left":1340.572,"Width":136.5883,"Height":37.57189}}
-]
+{"title":"Other","size":22.9540801232135,"box":{"Top":261.5923,"Left":1202.88286119589,"Width":274.276944101959,"Height":37.57189}}]
 },
 {"title":"02-3 Motion",
 "size":7144.0655628348,
@@ -101,8 +96,7 @@
 {"title":"Panasonic","size":5.21789724242232,"box":{"Top":299.1642,"Left":781.4736,"Width":62.34827,"Height":27.88441}},
 {"title":"Danaher Industrial","size":4.19885461279303,"box":{"Top":299.1642,"Left":843.8219,"Width":50.17197,"Height":27.88441}},
 {"title":"Lenze","size":3.33839673894851,"box":{"Top":299.1642,"Left":938.2875,"Width":39.89047,"Height":27.88441}},
-{"title":"Other","size":17.358945098706,"box":{"Top":299.1642,"Left":1269.741,"Width":207.4211,"Height":27.88441}}
-]
+{"title":"Other","size":41.7586673177692,"box":{"Top":299.1642,"Left":978.189882639957,"Width":498.972058888363,"Height":27.88441}}]
 },
 {"title":"03-3 CNC",
 "size":6406,
@@ -113,8 +107,7 @@
 {"title":"FANUC","size":29.3630970964721,"box":{"Top":327.0486,"Left":674.8957,"Width":350.858,"Height":25.0037}},
 {"title":"Heidenhain","size":3.2469559787699,"box":{"Top":327.0486,"Left":1199.038,"Width":38.79772,"Height":25.0037}},
 {"title":"GSK CNC EQUIPMENT","size":3.21573524820481,"box":{"Top":327.0486,"Left":1237.835,"Width":38.42457,"Height":25.0037}},
-{"title":"Other","size":6.77489853262566,"box":{"Top":327.0486,"Left":1396.213,"Width":80.95276,"Height":25.0037}}
-]
+{"title":"Other","size":16.8123634093038,"box":{"Top":327.0486,"Left":1276.27633540422,"Width":200.889680220784,"Height":25.0037}}]
 },
 {"title":"01- Control Valves",
 "size":6391.20415256226,
@@ -127,8 +120,7 @@
 {"title":"Nihon Koso","size":5.95263413464077,"box":{"Top":352.0523,"Left":873.2952,"Width":71.12756,"Height":24.94591}},
 {"title":"CCI","size":5.78920640254724,"box":{"Top":352.0523,"Left":944.4227,"Width":69.17504,"Height":24.94591}},
 {"title":"Metso Automation","size":5.11296450871456,"box":{"Top":352.0523,"Left":1013.598,"Width":61.09457,"Height":24.94591}},
-{"title":"Other","size":26.4151577472496,"box":{"Top":352.0523,"Left":1161.532,"Width":315.6332,"Height":24.94591}}
-]
+{"title":"Other","size":33.6814331255442,"box":{"Top":352.0523,"Left":1074.70803130398,"Width":402.457557074928,"Height":24.94591}}]
 },
 {"title":"04- Sensors",
 "size":5959.25179609301,
@@ -142,8 +134,7 @@
 {"title":"Keyence","size":3.16070719017929,"box":{"Top":376.9982,"Left":852.781,"Width":37.76724,"Height":23.25992}},
 {"title":"Turck","size":3.64992800174348,"box":{"Top":376.9982,"Left":809.1681,"Width":43.61283,"Height":23.25992}},
 {"title":"IFM Electronics","size":4.05271373427012,"box":{"Top":376.9982,"Left":716.782,"Width":48.42567,"Height":23.25992}},
-{"title":"Other","size":30.7734642555335,"box":{"Top":376.9982,"Left":1109.453,"Width":367.7105,"Height":23.25992}}
-]
+{"title":"Other","size":49.0923386604667,"box":{"Top":376.9982,"Left":890.561751696695,"Width":586.601730969321,"Height":23.25992}}]
 },
 {"title":"01- Instruments",
 "size":5588.124369909,
@@ -155,8 +146,7 @@
 {"title":"Endress+Hauser","size":13.2070473023642,"box":{"Top":400.2581,"Left":898.4778,"Width":157.8102,"Height":21.81134}},
 {"title":"Emerson Process Management","size":36.57429335334,"box":{"Top":400.2581,"Left":282.2555,"Width":437.0243,"Height":21.81134}},
 {"title":"Krohne","size":5.02136282991442,"box":{"Top":400.2581,"Left":1133.98,"Width":60.00008,"Height":21.81134}},
-{"title":"Other","size":8.53547612774264,"box":{"Top":400.2581,"Left":1375.177,"Width":101.9899,"Height":21.81134}}
-]
+{"title":"Other","size":19.1178580271314,"box":{"Top":400.2581,"Left":1248.72908528122,"Width":228.438204452671,"Height":21.81134}}]
 },
 {"title":"03-1 OP & IPC",
 "size":4487.52458389885,
@@ -169,8 +159,7 @@
 {"title":"Mitsubishi Electric","size":4.87014018586768,"box":{"Top":422.0695,"Left":825.7331,"Width":58.19307,"Height":17.51551}},
 {"title":"Advantech","size":9.70232267934062,"box":{"Top":422.0695,"Left":485.0457,"Width":115.9324,"Height":17.51551}},
 {"title":"Beckhoff","size":4.05889183052714,"box":{"Top":422.0695,"Left":883.9261,"Width":48.49961,"Height":17.51551}},
-{"title":"Other","size":27.150302798399,"box":{"Top":422.0695,"Left":1152.751,"Width":324.4175,"Height":17.51551}}
-]
+{"title":"Other","size":45.5876650373862,"box":{"Top":422.0695,"Left":932.443701282075,"Width":544.72451160855,"Height":17.51551}}]
 },
 {"title":"01- Analyzers",
 "size":3742.42356028276,
@@ -183,8 +172,7 @@
 {"title":"Danaher Industrial","size":3.44348684440154,"box":{"Top":439.5851,"Left":556.9861,"Width":41.14598,"Height":14.60732}},
 {"title":"Ametek","size":4.38005579431567,"box":{"Top":439.5851,"Left":406.4709,"Width":52.33701,"Height":14.60732}},
 {"title":"Mettler-Toledo","size":3.8552464112079,"box":{"Top":439.5851,"Left":510.9199,"Width":46.06614,"Height":14.60732}},
-{"title":"Other","size":59.9418206293855,"box":{"Top":439.5851,"Left":760.9349,"Width":716.2414,"Height":14.60732}}
-]
+{"title":"Other","size":70.1993558027316,"box":{"Top":439.5851,"Left":638.368173061486,"Width":838.808096469764,"Height":14.60732}}]
 },
 {"title":"02-2 Drives MV",
 "size":2838.45627148598,
@@ -197,8 +185,7 @@
 {"title":"GE","size":24.5723412585435,"box":{"Top":454.1923,"Left":282.2555,"Width":293.6134,"Height":11.07898}},
 {"title":"Toshiba","size":6.30282741352014,"box":{"Top":454.1923,"Left":1175.372,"Width":75.31205,"Height":11.07898}},
 {"title":"TMEIC","size":7.41583959661913,"box":{"Top":454.1923,"Left":1086.761,"Width":88.61142,"Height":11.07898}},
-{"title":"Other","size":7.05420190325142,"box":{"Top":454.1923,"Left":1392.895,"Width":84.29024,"Height":11.07898}}
-]
+{"title":"Other","size":14.0481403671762,"box":{"Top":454.1923,"Left":1309.32437806221,"Width":167.860390614552,"Height":11.07898}}]
 },
 {"title":"01- Safety Systems",
 "size":2371.70232082347,
@@ -212,8 +199,7 @@
 {"title":"Honeywell","size":11.1607598338098,"box":{"Top":465.2713,"Left":716.902,"Width":133.3593,"Height":9.257165}},
 {"title":"Emerson Process Management","size":6.42980613303725,"box":{"Top":465.2713,"Left":1067.134,"Width":76.82945,"Height":9.257165}},
 {"title":"HIMA","size":5.59808871603672,"box":{"Top":465.2713,"Left":1216.563,"Width":66.89134,"Height":9.257165}},
-{"title":"Other","size":13.389499525798,"box":{"Top":465.2713,"Left":1317.204,"Width":159.9904,"Height":9.257165}}
-]
+{"title":"Other","size":16.2102582446566,"box":{"Top":465.2713,"Left":1283.49937834201,"Width":193.695476394322,"Height":9.257165}}]
 },
 {"title":"03-3 Vision",
 "size":1863,
@@ -226,8 +212,8 @@
 {"title":"Keyence","size":5.9044551798175,"box":{"Top":474.5284,"Left":573.4427,"Width":70.55205,"Height":7.271575}},
 {"title":"National Instruments","size":3.97208803005904,"box":{"Top":474.5284,"Left":813.961,"Width":47.46228,"Height":7.271575}},
 {"title":"Teledyne","size":4.18679549114332,"box":{"Top":474.5284,"Left":763.9333,"Width":50.02772,"Height":7.271575}},
-{"title":"Other","size":36.1245303274289,"box":{"Top":474.5284,"Left":1045.55,"Width":431.6501,"Height":7.271575}}
-]
+{"title":"Other","size":48.3091787439614,"box":{"Top":474.5284,"Left":899.956335013901,"Width":577.243799263443,"Height":7.271575}}]
 }
 ]
 }
+
