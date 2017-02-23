@@ -26,6 +26,7 @@
 <script lang="javascript" src="libs/filesaver.min.js"></script>
 <script lang="javascript" src="dist/pptxgen.js"></script>
 <script lang="javascript" src="dist/pptxgen.shapes.js"></script>
+<script type="text/javascript" src="libs/aes.js"></script>
 <style type="text/css">
   .border {
     border: 1px solid #d7d4f0;
@@ -66,6 +67,8 @@
 				<a id="a_jsonm" href="#" onclick="toggleShow('jsonm');return false;" class="w3-btn w3-grey w3-text-white">{{jsonm}}</a>
 				<label class="custom-upload w3-btn w3-grey w3-text-white"><input type="file" id="jsonfile">Input File to Render</label>
 				<label class="custom-upload w3-btn w3-grey w3-text-white"><input type="file" id="keyfile">load key</label>
+				<a id="a_encode" href="#" onclick="encode();return false;" class="w3-btn w3-grey w3-text-white">Encode</a>
+				<a id="a_decode" href="#" onclick="decode();return false;" class="w3-btn w3-grey w3-text-white">Decode</a>
 			</small>
 		</nav>	
 		<!-- json marimekko editor (read from file) -->
@@ -200,6 +203,20 @@ keyfile.addEventListener('change', function(e) {
     reader.readAsText(file);    
  });
 
+ function encode(){
+	var aesCtr = new aesjs.ModeOfOperation.ctr(window.keyfile.key, new aesjs.Counter(5));
+	var encryptedBytes = aesCtr.encrypt(window.e_jsonm.getDoc().getValue());
+	var encryptedHex = aesjs.utils.hex.fromBytes(encryptedBytes);
+	window.e_jsonm.getDoc().setValue(encryptedHex);
+ }
+ 
+ function decode(){
+	var encryptedBytes = aesjs.utils.hex.toBytes(window.e_jsonm.getDoc().getValue());
+	var aesCtr = new aesjs.ModeOfOperation.ctr(window.keyfile.key, new aesjs.Counter(5));
+	var decryptedBytes = aesCtr.decrypt(encryptedBytes);
+	var decryptedText = aesjs.utils.utf8.fromBytes(decryptedBytes);
+	window.e_jsonm.getDoc().setValue(decryptedText);
+ }
 
 </script>
      
