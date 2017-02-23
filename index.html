@@ -205,7 +205,9 @@ keyfile.addEventListener('change', function(e) {
 
  function encode(){
 	var aesCtr = new aesjs.ModeOfOperation.ctr(window.keyfile.key, new aesjs.Counter(5));
-	var encryptedBytes = aesCtr.encrypt(window.e_jsonm.getDoc().getValue());
+	var text = window.e_jsonm.getDoc().getValue();
+	var textBytes = aesjs.utils.utf8.toBytes(text);
+	var encryptedBytes = aesCtr.encrypt(textBytes);
 	var encryptedHex = aesjs.utils.hex.fromBytes(encryptedBytes);
 	window.e_jsonm.getDoc().setValue(encryptedHex);
  }
