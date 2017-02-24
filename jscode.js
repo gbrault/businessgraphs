@@ -1,9 +1,11 @@
+/* marimekko powerpoint generator from json file*/
 /* all units in cm */
 var inch = 2.54;
 debugger;
 
 var sMarimekko = window.e_jsonm.getDoc().getValue();
 var marimekko = JSON.parse(sMarimekko);
+if(marimekko.graphtype=="marimekko"){
 var scalex = marimekko.scalex;
 var scaley = marimekko.scaley;
 var offsetx = marimekko.offsetx;
@@ -110,6 +112,7 @@ for(var rows=0; rows<marimekko.rows.length; rows++){
 }
 
 pptx.save('Marimekko'+'_'+getTimestamp());
+}
 
 /* ===   functions  === */
 function getTimestamp() {
