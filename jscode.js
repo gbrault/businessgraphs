@@ -139,11 +139,11 @@ for(var i=0; i<keys.length;i++)
     slide2.addTable( rows, tabOpts );
     rows = [];
   }
-  if(rows.length!=0){
+}
+if(rows.length!=0){
    	var tabOpts = { x:2/inch, y:2.75/inch, w:5.0/inch, fill:'F7F7F7', font_size:8, color:'6f9fc9', rowH:0.5/inch, valign:'m'};
     tabOpts.x += ((tabOpts.w+0.5/inch) * k);
     slide2.addTable( rows, tabOpts );
-  }
 }
 pptx.save('Marimekko'+'_'+getTimestamp());
 }
