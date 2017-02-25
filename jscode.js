@@ -15,7 +15,7 @@ var color_box_line=marimekko.color_box_line;
 var color_header_fill=marimekko.color_header_fill;
 var color_header_text=marimekko.color_header_text;
 var color_columns_text=marimekko.color_columns_text;
-var colors = marimekko.Colorsmarimekko.;
+var colors = marimekko.Colors;
 var displayTitleRows = marimekko.displayTitleRows;
 var pptx = new PptxGenJS();
 pptx.setLayout({ name:'A4', width:(lwidth/inch), height:(lheight/inch)});
@@ -49,7 +49,9 @@ for(var rows=0; rows<marimekko.rows.length; rows++){
 	var fs=12,title,wcm,hcm;
     wcm = marimekko.rows[rows].box.Width/scalex;
     hcm=marimekko.rows[rows].box.Height/scaley;
-    if((hcm<0.5)||(wcm<1)){
+    if((hcm<0.3)||(wcm<0.5)){
+     	fs=4;
+    } else if((hcm<0.5)||(wcm<1)){
      	fs=6;
     } else if((hcm<1)||(wcm<1.5)){
        fs=8;
@@ -85,6 +87,9 @@ for(var rows=0; rows<marimekko.rows.length; rows++){
         var fs=12,title,wcm,hcm;
         wcm = marimekko.rows[rows].cols[cols].box.Width/scalex;
         hcm=marimekko.rows[rows].cols[cols].box.Height/scaley;
+    	if((hcm<0.3)||(wcm<0.5)){
+     		fs=4;
+    	} else     
         if((hcm<0.5)||(wcm<1)){
           	fs=6;
         } else if((hcm<1)||(wcm<1.5)){
