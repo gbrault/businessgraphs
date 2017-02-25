@@ -82,6 +82,7 @@ for(var rows=0; rows<marimekko.rows.length; rows++){
                                              line: color_box_line,
 											 color:color_header_text,
                                              align:'c',
+                        					 margin:0,
                                              font_size:fs });
   for(var cols=0; cols<marimekko.rows[rows].cols.length; cols++){
         var fs=12,title,wcm,hcm;
@@ -117,6 +118,7 @@ for(var rows=0; rows<marimekko.rows.length; rows++){
                                              		fill:color,
                                              		line: color_box_line,
 													color:color_columns_text,
+                              						margin:0,
                                              		align:'c',
                                              		font_size:fs });    
   }
