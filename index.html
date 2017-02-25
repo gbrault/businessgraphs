@@ -71,6 +71,7 @@
 				<a id="a_encode" href="#" onclick="encode();return false;" class="w3-btn w3-grey w3-text-white">Encode</a>
 				<a id="a_decode" href="#" onclick="decode();return false;" class="w3-btn w3-grey w3-text-white">Decode</a>
 				<a id="a_genkey" href="#" onclick="genkey();return false;" class="w3-btn w3-grey w3-text-white">Generate Key</a>
+				<a id="a_dowload" href="#" onclick="do_download();return false;" class="w3-btn w3-grey w3-text-white">Download File</a>
 			</small>
 		</nav>	
 		<!-- json marimekko editor (read from file) -->
@@ -234,14 +235,20 @@ keyfile.addEventListener('change', function(e) {
  }
  
  function genkey(){
-	var array = new Uint8Array(32);
-	window.crypto.getRandomValues(array);
-	var key = {key:array};
-	var jsonkey = JSON.stringify(key);
+	var key = new Uint8Array(32);
+	window.crypto.getRandomValues(key);
+	var jsonkey = JSON.stringify({key:Array.from(key)});
 	var d = new Date();
 	var n = d.toString();
-	var file = new File(jsonkey, "key_"+n+".txt", {type: "text/plain;charset=utf-8"});
-	saveAs(file);
+	var blob = new Blob([jsonkey], {type: "text/plain;charset=utf-8"});
+	saveAs(blob, "key_"+n+".txt");
+ }
+ 
+ function do_download(){
+	var blob = new Blob([window.e_jsonm.getDoc().getValue()], {type: "text/plain;charset=utf-8"});
+	var d = new Date();
+	var n = d.toString();	
+	saveAs(blob, "file_"+n+".json");
  }
 
 </script>
