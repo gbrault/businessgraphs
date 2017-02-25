@@ -11,7 +11,11 @@ var scaley = marimekko.scaley;
 var offsetx = marimekko.offsetx;
 var lwidth = marimekko.lwidth;
 var lheight = marimekko.lheight;
-var colors = marimekko.Colors;
+var color_box_line=marimekko.color_box_line;
+var color_header_fill=marimekko.color_header_fill;
+var color_header_text=marimekko.color_header_text;
+var color_columns_text=marimekko.color_columns_text;
+var colors = marimekko.Colorsmarimekko.;
 var displayTitleRows = marimekko.displayTitleRows;
 var pptx = new PptxGenJS();
 pptx.setLayout({ name:'A4', width:(lwidth/inch), height:(lheight/inch)});
@@ -42,15 +46,15 @@ stemp = stemp.replace(/{{display}}/,marimekko.display);
 slide.addTable( [ [{ text:stemp, options:optsTitle }] ], { x:(1/inch), y:(1/inch), w:(20/inch) } );
 
 for(var rows=0; rows<marimekko.rows.length; rows++){
-	var fs=11,title,wcm,hcm;
+	var fs=12,title,wcm,hcm;
     wcm = marimekko.rows[rows].box.Width/scalex;
     hcm=marimekko.rows[rows].box.Height/scaley;
     if((hcm<0.5)||(wcm<1)){
-     	fs=4;
+     	fs=6;
     } else if((hcm<1)||(wcm<1.5)){
-       fs=6;
-    } else if((hcm<1.5)||(wcm<2)){
        fs=8;
+    } else if((hcm<1.5)||(wcm<2)){
+       fs=10;
     }
     title=displayTitleRows[marimekko.rows[rows].title];
     if(title==undefined){
@@ -72,20 +76,21 @@ for(var rows=0; rows<marimekko.rows.length; rows++){
                                              y:marimekko.rows[rows].box.Top/scaley/inch, 
                                              w:wcm/inch, 
                                              h:hcm/inch,
-                                             fill:'FFFFFF',
-					     line: '5B9BD5',
+                                             fill:color_header_fill,
+                                             line: color_box_line,
+											 color:color_header_text,
                                              align:'c',
                                              font_size:fs });
   for(var cols=0; cols<marimekko.rows[rows].cols.length; cols++){
-        var fs=11,title,wcm,hcm;
+        var fs=12,title,wcm,hcm;
         wcm = marimekko.rows[rows].cols[cols].box.Width/scalex;
         hcm=marimekko.rows[rows].cols[cols].box.Height/scaley;
         if((hcm<0.5)||(wcm<1)){
-          	fs=4;
+          	fs=6;
         } else if((hcm<1)||(wcm<1.5)){
-          fs=6;
-        } else if((hcm<1.5)||(wcm<2)){
           fs=8;
+        } else if((hcm<1.5)||(wcm<2)){
+          fs=10;
         }
     	title=marimekko.rows[rows].cols[cols].title;
         if(wcm<2.5){
@@ -105,7 +110,8 @@ for(var rows=0; rows<marimekko.rows.length; rows++){
                                              		w:wcm/inch, 
                                              		h:hcm/inch,
                                              		fill:color,
-							line: '5B9BD5',
+                                             		line: color_box_line,
+													color:color_columns_text,
                                              		align:'c',
                                              		font_size:fs });    
   }

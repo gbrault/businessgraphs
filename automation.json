@@ -11,6 +11,10 @@
 "display":"Bn",
 "internal":"Mn",
 "ratio_threshold":3,
+"color_box_line":"808080",
+"color_header_fill":"FFFFFF",
+"color_header_text":"404040",
+"color_columns_text":"404040",
 "displayTitleRows":{
 "01- DCS":"DCS","03-2 PLC":"PLC","04- C&S + Safety":"C&S + Safety","02-2 Drives LV":"Drives LV","02-1 Motor Starters & Contactors":"Contactors + MCC","02-3 Motion":"Motion","03-3 CNC":"CNC","01- Control Valves":"Control Valves","04- Sensors":"Sensors","01- Instruments":"Instruments","03-1 OP & IPC":"OP & IPC","01- Analyzers":"Analyzers","02-2 Drives MV":"Drives MV","01- Safety Systems":"Safety Systems","03-3 Vision":"Vision"},
 "shortTitleRows":{
