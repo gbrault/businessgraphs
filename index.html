@@ -27,6 +27,7 @@
 <script lang="javascript" src="dist/pptxgen.js"></script>
 <script lang="javascript" src="dist/pptxgen.shapes.js"></script>
 <script type="text/javascript" src="libs/aes.js"></script>
+<script type="text/javascript" src="libs/FileSaver.js"></script>
 <style type="text/css">
   .border {
     border: 1px solid #d7d4f0;
@@ -69,6 +70,7 @@
 				<label class="custom-upload w3-btn w3-grey w3-text-white"><input type="file" id="keyfile">load key</label>
 				<a id="a_encode" href="#" onclick="encode();return false;" class="w3-btn w3-grey w3-text-white">Encode</a>
 				<a id="a_decode" href="#" onclick="decode();return false;" class="w3-btn w3-grey w3-text-white">Decode</a>
+				<a id="a_genkey" href="#" onclick="genkey();return false;" class="w3-btn w3-grey w3-text-white">Generate Key</a>
 			</small>
 		</nav>	
 		<!-- json marimekko editor (read from file) -->
@@ -229,6 +231,17 @@ keyfile.addEventListener('change', function(e) {
 	var decryptedBytes = aesCtr.decrypt(encryptedBytes);
 	var decryptedText = aesjs.utils.utf8.fromBytes(decryptedBytes);
 	window.e_jsonm.getDoc().setValue(decryptedText);
+ }
+ 
+ function genkey(){
+	var array = new Uint8Array(32);
+	window.crypto.getRandomValues(array);
+	var key = {key:array};
+	var jsonkey = JSON.stringify(key);
+	var d = new Date();
+	var n = d.toString();
+	var file = new File(jsonkey, "key_"+n+".txt", {type: "text/plain;charset=utf-8"});
+	saveAs(file);
  }
 
 </script>
