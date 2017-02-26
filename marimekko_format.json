@@ -2,6 +2,14 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {
+    "date":{
+	  "description":"date of file generation",
+      "type": "string"
+    },
+    "file":{
+	  "description":"file nae",
+      "type": "string"
+    },
     "scalex": {
 	  "description":"scale factor to get cm x axis",
       "type": "string"
@@ -45,6 +53,22 @@
     "ratio_threshold": {
 	  "description":"market share above which we show competitors",
       "type": "integer"
+    },
+    "color_box_line":{
+	  "description":"color of boxes lines (hex format)",
+      "type": "string"
+    },
+    "color_header_fill":{
+	  "description":"color of boxes fill (hex format)",
+      "type": "string"
+    },
+   "color_header_text":{
+	  "description":"color of header text (hex format)",
+      "type": "string"
+    },
+    "color_columns_text":{
+	  "description":"color of column text (hex format)",
+      "type": "string"
     },
     "displayTitleRows": {
 	  "description":"string to use to display product in rows header n=as many as product lines",
