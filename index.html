@@ -194,7 +194,7 @@ jsonfile.addEventListener('change', function(e) {
     var file = jsonfile.files[0];
     var reader = new FileReader();
 	reader.onload = function(e) {
-        window.e_jsonm.getDoc().setValue(reader.result);
+        window.e_jsonm.getDoc().setValue(e.target.result);
     }
     reader.readAsText(file);    
  });
@@ -203,7 +203,7 @@ codefile.addEventListener('change', function(e) {
     var file = codefile.files[0];
     var reader = new FileReader();
 	reader.onload = function(e) {
-        window.e_jscode.getDoc().setValue(reader.result);
+        window.e_jscode.getDoc().setValue(e.target.result);
     }
     reader.readAsText(file);    
  });
@@ -212,7 +212,7 @@ keyfile.addEventListener('change', function(e) {
     var file = keyfile.files[0];
     var reader = new FileReader();
 	reader.onload = function(e) {
-        window.keyfile=JSON.parse(reader.result);
+        window.keyfile=JSON.parse(e.target.result);
     }
     reader.readAsText(file);    
  });
