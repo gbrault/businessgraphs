@@ -221,7 +221,11 @@ function SVGGenJS() {
     };
     this.slides = [];
     this.htmlbegin = "<!DOCTYPE html>" +
-        "<html>";
+        "<html>"+
+		"<header>"+
+		"<style>"+
+		"body {font-size:11px}"+
+		"</style>";
     this.htmlend = "</html>";
     this.setLayout = function(o) {
         this.layout.name = o.name;
@@ -243,7 +247,10 @@ function SVGGenJS() {
             temp += "<br>\n";
         }
         temp += this.htmlend + "\n";
-		return temp;
+        var blob = new Blob([temp], {type: "text/plain;charset=utf-8"});
+		var d = new Date();
+		var n = d.toString();	
+		saveAs(blob, "htmlsvg_"+n+".html");		
     };
 }
 
@@ -266,8 +273,11 @@ function Slide(presentation) {
                     '></rect>');
                 break;
         }
-		this.svgContent.push(	'<text x="'+(oShaphe.x*presentation.dpi.x+(oShaphe.w*presentation.dpi.x-getTextLength(sText))/2)+
-								'" y="'+(oShaphe.y*presentation.dpi.y+(oShaphe.h*presentation.dpi.y)/2)+'">'+sText+
+		this.svgContent.push(	'<text x="'+(oShaphe.x*presentation.dpi.x+(oShaphe.w*presentation.dpi.x)/2
+                                -getTextLength(sText,oShaphe.font_size)/2)+
+								'" y="'+(oShaphe.y*presentation.dpi.y+(oShaphe.h*presentation.dpi.y)/2)+
+                                '" font-size="'+oShaphe.font_size+
+                                '">'+sText+
 								'</text>');		
         this.svgContent.push("</g>");
     };
@@ -281,17 +291,22 @@ function Slide(presentation) {
     };
 	this.addTable = function(rows,tabOpts){
 		if(rows.length==0) return;
-		this.svgContent.push('<foreignObject x="'+tabOpts.x*presentation.dpi.x+'" y="'+tabOpts.y*presentation.dpi.y+'" w="'+tabOpts.w*presentation.dpi.x+'">');
-		if((rows.length==1)&&(rows[0].length==1)){
+		this.svgContent.push('<foreignObject x="'+tabOpts.x*presentation.dpi.x+'" y="'+tabOpts.y*presentation.dpi.y+'" width="'+tabOpts.w*presentation.dpi.x+'">');
+		/*if((rows.length==1)&&(rows[0].length==1)){
 			// just text
 			if(rows[0][0].text!==undefined){
 				this.svgContent.push('<p>'+rows[0][0].text+'</p>');
 			} else {
 				this.svgContent.push('<p>'+rows[0][0]+'</p>');
 			}
-		} else{
+		} else { */
 			// this is a true table
-			this.svgContent.push('<table>');
+			if (tabOpts.font_size==undefined){
+				this.svgContent.push('<table>');
+			} else{
+				this.svgContent.push('<table style="font-size:'+tabOpts.font_size+'px">');
+			}
+			
 			for(var i=0; i<rows.length;i++){
 				this.svgContent.push('<tr>');
 					if(Array.isArray(rows[i])){
@@ -312,7 +327,7 @@ function Slide(presentation) {
 				this.svgContent.push('</tr>');
 			}
 			this.svgContent.push('</table>');
-		}
+		/* } */
 		this.svgContent.push("</foreignObject>");
 	};
 }
@@ -327,7 +342,7 @@ function getDpi(oDpi){
 	oDpi.y = dpi.offsetHeight;
 	oDpi.x = dpi.offsetWidth;
 }
-function getTextLength(sText){
+function getTextLength(sText,fs){
 	var svgtext = document.getElementById('svgtext');
 	if(svgtext==null){
 		var div = document.createElement("div");
@@ -336,5 +351,6 @@ function getTextLength(sText){
 		svgtext = document.getElementById('svgtext');
 	}
 	svgtext.textContent=sText;
+	svgtext.setAttribute('font-size',fs);
 	return svgtext.getComputedTextLength();
 }
