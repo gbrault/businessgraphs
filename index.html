@@ -107,11 +107,14 @@ var graphfile="marimekko.json"
 var codefile="jscode.js"
 if(window.location.search.length!=0){
 	var tokens = window.location.search.substr(1).split("&");
-	for(var i=0; i<tokens.length;i+=2){
-		if(tokens[i]=="code"){
-			codefile = tokens[i+1];
-		} else if (tokens[i]=="file"){
-			graphfile=tokens[i+1];
+	for(var i=0; i<tokens.length;i++){
+		var token = tokens[i].split("="); 
+		if(toke.length>1){
+			if(token[0]=="code"){
+				codefile = token[1];
+			} else if (tokens[i]=="file"){
+				graphfile=token[1];
+			}
 		}
 	}
 }
