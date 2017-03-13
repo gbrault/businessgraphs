@@ -940,11 +940,13 @@
         tr = document.createElement("tr");
         if (parseInt(j) === 0 && rowAttrs.length !== 0) {
           th = document.createElement("th");
+		  th.setAttribute("data-colattrs", j);
           th.setAttribute("colspan", rowAttrs.length);
           th.setAttribute("rowspan", colAttrs.length);
           tr.appendChild(th);
         }
         th = document.createElement("th");
+		th.setAttribute("data-colattrs", j);
         th.className = "pvtAxisLabel";
         th.textContent = c;
         tr.appendChild(th);
@@ -954,6 +956,7 @@
           x = spanSize(colKeys, parseInt(i), parseInt(j));
           if (x !== -1) {
             th = document.createElement("th");
+			th.setAttribute("data-colattrs", j);
             th.className = "pvtColLabel";
             th.textContent = colKey[j];
             th.setAttribute("colspan", x);
@@ -978,6 +981,7 @@
           if (!hasProp.call(rowAttrs, i)) continue;
           r = rowAttrs[i];
           th = document.createElement("th");
+		  th.setAttribute("data-rowattrs", i);
           th.className = "pvtAxisLabel";
           th.textContent = r;
           tr.appendChild(th);
@@ -1002,6 +1006,7 @@
           x = spanSize(rowKeys, parseInt(i), parseInt(j));
           if (x !== -1) {
             th = document.createElement("th");
+			th.setAttribute("data-rowattrs", j);
             th.className = "pvtRowLabel";
             th.textContent = txt;
             th.setAttribute("rowspan", x);
