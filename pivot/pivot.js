@@ -957,6 +957,7 @@
           if (x !== -1) {
             th = document.createElement("th");
 			th.setAttribute("data-colattrs", j);
+			th.setAttribute("data-colkeys", i);
             th.className = "pvtColLabel";
             th.textContent = colKey[j];
             th.setAttribute("colspan", x);
@@ -1007,6 +1008,7 @@
           if (x !== -1) {
             th = document.createElement("th");
 			th.setAttribute("data-rowattrs", j);
+			th.setAttribute("data-rowkeys", i);
             th.className = "pvtRowLabel";
             th.textContent = txt;
             th.setAttribute("rowspan", x);
