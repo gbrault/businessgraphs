@@ -2,6 +2,8 @@
 <html>
     <head>
         <title>Pivot Demo</title>
+		<link rel="icon" href="favicon.ico" type="image/x-icon">
+		<script type="text/javascript" src="sugar.js"></script>
         <!-- external libs from cdnjs -->
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -35,8 +37,95 @@
     // parameter. Instead of showing the configuration in a textarea,
     // one could store the configuration in a cookie or implement a
     // "save configuration" feature.
-	function mySorter(){
-		return {};
+	var dictionary={};
+	function mySorter(attr){
+		if(dictionary[attr]==undefined) return {};
+		return function(attr,as,bs){
+			var a,b;
+			a = window.dictionary[attr].indexOf(as);
+			b = window.dictionary[attr].indexOf(bs);
+			if(a>b){
+				return 1;
+			} else {
+				if (a==b){
+					return 0;
+				}
+			}
+			return -1;
+		}.bind(null,attr);
+	}
+	
+	function Dictionary(pivotData){
+		var i,j;
+		var dictionary={};
+		/* columns */
+		for(i=0;i<pivotData.colAttrs.length;i++){
+			dictionary[pivotData.colAttrs[i]]=[];
+		}		
+		for(j=0;j<pivotData.colKeys.length;j++){
+			for(i=0;i<pivotData.colKeys[j].length;i++){
+				if(dictionary[pivotData.colAttrs[i]].indexOf(pivotData.colKeys[j][i])==-1){
+					dictionary[pivotData.colAttrs[i]].push(pivotData.colKeys[j][i]);
+				}
+			}		
+		}
+		/* rows */
+		for(i=0;i<pivotData.rowAttrs.length;i++){
+			dictionary[pivotData.rowAttrs[i]]=[];
+		}		
+		for(j=0;j<pivotData.rowKeys.length;j++){
+			for(i=0;i<pivotData.rowKeys[j].length;i++){
+				if(dictionary[pivotData.rowAttrs[i]].indexOf(pivotData.rowKeys[j][i])==-1){
+					dictionary[pivotData.rowAttrs[i]].push(pivotData.rowKeys[j][i]);
+				}
+			}		
+		}		
+		return dictionary;
+	}
+	
+	function Dictionary_Update(pivotData,pivotConfig,dictionary){
+		var i,j;
+		var temp = Dictionary(pivotData);
+		
+		for(i=0;i<Object.keys(temp).length;i++){
+			var attr = Object.keys(temp)[i];
+			if(dictionary[attr]==undefined){
+				dictionary[attr]=temp[attr];
+			}
+		}
+		
+		for(i=0; i<Object.keys(dictionary).length;i++){
+			// supress exclusions
+			var attr=Object.keys(dictionary)[i];
+			var keys = pivotConfig.exclusions[attr];
+			if(keys!==undefined){
+				for(j=0; j<keys.length;j++){
+					var value=keys[j];
+					var index = dictionary[attr].indexOf(value);
+					if(index!=-1){
+						dictionary[attr].splice(index,1);
+					}
+				}
+			}
+			// get back new inclusions (end)
+			if((keys==undefined)&&(pivotConfig.inclusions[attr]==undefined)){
+				keys = temp[attr];
+			} else {
+				keys = pivotConfig.inclusions[attr];
+			}
+			
+			
+			if(keys!==undefined){
+				for(j=0; j<keys.length;j++){
+					var value=keys[j];
+					var index = dictionary[attr].indexOf(value);
+					if(index==-1){
+						dictionary[attr].unshift(value);
+					}
+				}				
+			}
+		}
+		
 	}
 
     $(function(){
@@ -44,6 +133,7 @@
             $("#output2").pivotUI(mps, {
                 onRefresh: function(config) {
                     var config_copy = JSON.parse(JSON.stringify(config));
+					window.pivotConfig=config_copy;
                     //delete some values which are functions
                     delete config_copy["aggregators"];
                     delete config_copy["renderers"];
@@ -51,10 +141,13 @@
                     delete config_copy["rendererOptions"];
                     delete config_copy["localeStrings"];
                     $("#output").text(JSON.stringify(config_copy, undefined, 2));
+					Dictionary_Update(window.pivotData,window.pivotConfig,window.dictionary);
                 },
 				sorters:mySorter,
 				renderers : {
 						"Table": function(data, opts) {
+								window.pivotData = data;
+								window.pivotOpts = opts;								
 								return $.pivotUtilities.renderers.Table(data, opts);
 						},
 						"Table Barchart": function(data, opts) {
@@ -91,6 +184,7 @@
 			callback: function(key,option){
 				var m = "clicked: " + key +" on " + $(this).text();
                 window.console && console.log(m); // || alert(m);
+				
 			},
 			items: {
                 "up": {name: "Up", icon: 'fa-arrow-up'},
@@ -102,6 +196,18 @@
 			callback: function(key,option){
 				var m = "clicked: " + key +" on " + $(this).text();
                 window.console && console.log(m); // || alert(m);
+				var attr = $('[data-colattrs="'+$(this).attr('data-colattrs')+'"].pvtAxisLabel').text();
+				var value = $(this).text();
+				if(dictionary[attr].indexOf(value)!=-1){
+					if((key=='left')&&(dictionary[attr].indexOf(value)!=0)){
+						var index = dictionary[attr].indexOf(value);
+						dictionary[attr].splice(index,1); // suppress element
+						dictionary[attr].splice(index-1,0,value); // add it back left
+					} else if((key=='right')&&(dictionary[attr].indexOf(value)!=(dictionary[attr].length-1))){
+						dictionary[attr].splice(index,1); // suppress element
+						dictionary[attr].splice(index+1,0,value); // add it back right
+					}
+				}
 			},
 			items: {
                 "left": {name: "Left", icon: 'fa-arrow-left'},
