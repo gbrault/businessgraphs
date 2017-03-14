@@ -184,7 +184,21 @@
 			callback: function(key,option){
 				var m = "clicked: " + key +" on " + $(this).text();
                 window.console && console.log(m); // || alert(m);
-				
+				var attr = $('[data-rowattrs="'+$(this).attr('data-rowattrs')+'"].pvtAxisLabel').text();
+				var value = $(this).text();
+				if(dictionary[attr].indexOf(value)!=-1){
+					if((key=='up')&&(dictionary[attr].indexOf(value)!=0)){
+						index = dictionary[attr].indexOf(value);
+						dictionary[attr].splice(index,1); // suppress element
+						dictionary[attr].splice(index-1,0,value); // add it back left
+					} else if((key=='down')&&(dictionary[attr].indexOf(value)!=(dictionary[attr].length-1))){
+					    index = dictionary[attr].indexOf(value);
+						dictionary[attr].splice(index,1); // suppress element
+						dictionary[attr].splice(index+1,0,value); // add it back right
+					}
+				}
+				var render = $('.pvtRenderer')
+				render.trigger('change');				
 			},
 			items: {
                 "up": {name: "Up", icon: 'fa-arrow-up'},
@@ -194,20 +208,24 @@
 		$.contextMenu({
 			selector: '.pvtColLabel',
 			callback: function(key,option){
+				var index;
 				var m = "clicked: " + key +" on " + $(this).text();
                 window.console && console.log(m); // || alert(m);
 				var attr = $('[data-colattrs="'+$(this).attr('data-colattrs')+'"].pvtAxisLabel').text();
 				var value = $(this).text();
 				if(dictionary[attr].indexOf(value)!=-1){
 					if((key=='left')&&(dictionary[attr].indexOf(value)!=0)){
-						var index = dictionary[attr].indexOf(value);
+						index = dictionary[attr].indexOf(value);
 						dictionary[attr].splice(index,1); // suppress element
 						dictionary[attr].splice(index-1,0,value); // add it back left
 					} else if((key=='right')&&(dictionary[attr].indexOf(value)!=(dictionary[attr].length-1))){
+					    index = dictionary[attr].indexOf(value);
 						dictionary[attr].splice(index,1); // suppress element
 						dictionary[attr].splice(index+1,0,value); // add it back right
 					}
 				}
+				var render = $('.pvtRenderer')
+				render.trigger('change');
 			},
 			items: {
                 "left": {name: "Left", icon: 'fa-arrow-left'},
