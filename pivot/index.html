@@ -8,7 +8,8 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 		<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" rel="stylesheet" type="text/css" />
-		<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+		<!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">-->
+		<script src="https://use.fontawesome.com/ee191b07b0.js"></script>
 
         <!-- PivotTable.js libs from ../dist -->
         <link rel="stylesheet" type="text/css" href="pivot.css">
@@ -212,6 +213,38 @@
 					    index = dictionary[attr].indexOf(value);
 						dictionary[attr].splice(index,1); // suppress element
 						dictionary[attr].splice(index+1,0,value); // add it back right
+					} else if((key=='ascending')){
+						/* reorder I can do that only if one level header is set*/
+						if(window.pivotData.rowAttrs.length==1){
+							var order = Sugar.Array.sortBy(Object.entries(window.pivotData.rowTotals),
+								function(o){
+									if(window.pivotConfig.aggregatorName==="Count"){ return o[1].count;}
+									else 
+									if(window.pivotConfig.aggregatorName==="Sum"){ return o[1].sum;}
+								});
+							dictionary[attr]=[];
+							for(var i=0;i<order.length;i++){
+								dictionary[attr].push(order[i][0]);
+							}
+						}
+					} else if((key=='descending')){
+						/* reorder I can do that only if one level header is set*/
+						if(window.pivotData.rowAttrs.length==1){
+							var order = Sugar.Array.sortBy(Object.entries(window.pivotData.rowTotals),
+								function(o){
+									if(window.pivotConfig.aggregatorName==="Count"){ return o[1].count;}
+									else 
+									if(window.pivotConfig.aggregatorName==="Sum"){ return o[1].sum;}
+								},true);
+							dictionary[attr]=[];
+							for(var i=0;i<order.length;i++){
+								dictionary[attr].push(order[i][0]);
+							}
+						}
+					} else if((key=='alpha_ascending')){
+						dictionary[attr]=Sugar.Array.sortBy(dictionary[attr],length,false);
+					} else if((key=='alpha_descending')){
+						dictionary[attr]=Sugar.Array.sortBy(dictionary[attr],length,true);
 					}
 				}
 				var render = $('.pvtRenderer')
@@ -219,7 +252,11 @@
 			},
 			items: {
                 "up": {name: "Up", icon: 'fa-arrow-up'},
-                "down": {name: "Down", icon: 'fa-arrow-down'}
+                "down": {name: "Down", icon: 'fa-arrow-down'},
+				"ascending":{name:"Ascending", icon:'fa-sort-amount-asc'},
+				"descending":{name:"Descending", icon:'fa-sort-amount-desc'},
+				"alpha_ascending":{name:"Alpha_Ascending", icon:'fa-sort-alpha-asc'},
+				"alpha_descending":{name:"Alpha_Descending", icon:'fa-sort-alpha-desc'}
 			}
 		});
 		$.contextMenu({
@@ -239,6 +276,38 @@
 					    index = dictionary[attr].indexOf(value);
 						dictionary[attr].splice(index,1); // suppress element
 						dictionary[attr].splice(index+1,0,value); // add it back right
+					} else if((key=='ascending')){
+						/* reorder I can do that only if one level header is set*/
+						if(window.pivotData.colAttrs.length==1){
+							var order = Sugar.Array.sortBy(Object.entries(window.pivotData.colTotals),
+								function(o){
+									if(window.pivotConfig.aggregatorName==="Count"){ return o[1].count;}
+									else 
+									if(window.pivotConfig.aggregatorName==="Sum"){ return o[1].sum;}
+								});
+							dictionary[attr]=[];
+							for(var i=0;i<order.length;i++){
+								dictionary[attr].push(order[i][0]);
+							}
+						}
+					} else if((key=='descending')){
+						/* reorder I can do that only if one level header is set*/
+						if(window.pivotData.colAttrs.length==1){
+							var order = Sugar.Array.sortBy(Object.entries(window.pivotData.colTotals),
+								function(o){
+									if(window.pivotConfig.aggregatorName==="Count"){ return o[1].count;}
+									else 
+									if(window.pivotConfig.aggregatorName==="Sum"){ return o[1].sum;}
+								},true);
+							dictionary[attr]=[];
+							for(var i=0;i<order.length;i++){
+								dictionary[attr].push(order[i][0]);
+							}
+						}
+					} else if((key=='alpha_ascending')){
+						dictionary[attr]=Sugar.Array.sortBy(dictionary[attr],length,false);
+					} else if((key=='alpha_descending')){
+						dictionary[attr]=Sugar.Array.sortBy(dictionary[attr],length,true);
 					}
 				}
 				var render = $('.pvtRenderer')
@@ -246,7 +315,11 @@
 			},
 			items: {
                 "left": {name: "Left", icon: 'fa-arrow-left'},
-                "right": {name: "Right", icon: 'fa-arrow-right'}
+                "right": {name: "Right", icon: 'fa-arrow-right'},
+				"ascending":{name:"Ascending", icon:'fa-sort-amount-asc'},
+				"descending":{name:"Descending", icon:'fa-sort-amount-desc'},
+				"alpha_ascending":{name:"Alpha_Ascending", icon:'fa-sort-alpha-asc'},
+				"alpha_descending":{name:"Alpha_Descending", icon:'fa-sort-alpha-desc'}
 			}
 		});
  
