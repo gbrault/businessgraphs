@@ -1,1 +1,1 @@
-[firebase](https://rawgit.com/gbrault/businessgraphs/master/firebase/index.html)
+[firebase](https://rawgit.com/gbrault/businessgraphs/master/firebase/index.html?mode=select)
