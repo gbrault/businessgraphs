@@ -71,7 +71,7 @@ var signInWithRedirect = function() {
  * Open a popup with the FirebaseUI widget.
  */
 var signInWithPopup = function() {
-  window.open('widget.html', 'Sign In', 'width=985,height=735');
+  window.open('widget.html', 'Sign In', 'width=320,height=310');
 };
 
 
