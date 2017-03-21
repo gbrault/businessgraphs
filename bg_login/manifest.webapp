@@ -1,0 +1,22 @@
+{
+  "version": "0.0.0",
+  "name": "Business Graphs",
+  "launch_path": "/index.html",
+  "description": "Business Graphs: filter data, generate marimekko",
+  "developer": {
+    "name": "Gilbert Brault",
+    "url": "https://github.com/gbrault"
+  },
+  "installs_allowed_from": [
+    "*"
+  ],
+  "default_locale": "en",
+  "permissions": {
+  },
+  "locales": {
+    "en": {
+      "name": "Business Graphs",
+      "description": "Business Graphs: filter data, generate marimekko"
+    }
+  }
+}
