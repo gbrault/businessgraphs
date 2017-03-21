@@ -55,6 +55,7 @@ BusinessGraph.prototype.readSingleFile = function (evt) {
 		this.filecontent=contents;
 		this.filelastModified=f.lastModified;
 		this.filetype=f.type;
+		this.filesize=f.size;
       }.bind(this);
       r.readAsText(f);
     } else { 
@@ -63,12 +64,13 @@ BusinessGraph.prototype.readSingleFile = function (evt) {
 }
 
 BusinessGraph.prototype.menuSaveFile = function(){
-	if(this.checkSignedInWithMessage()){
+	if((this.checkSignedInWithMessage())&&(this.filename!==undefined)){
 		var uuid = this.UUID();		
 		firebase.database().ref('users/' + this.auth.currentUser.uid+"/files/"+uuid).set(
 			{	name:this.filename,
 				lastModified:this.filelastModified,
-				type:this.filetype
+				type:this.filetype,
+				size:this.filesize
 			}
 		);
 		firebase.database().ref('files/'+uuid).set(
@@ -124,6 +126,12 @@ BusinessGraph.prototype.onAuthStateChanged = function(user) {
 
     // Hide sign-in button.
     this.signInButton.setAttribute('hidden', 'true');
+	
+	// monitor files update
+	var filelist = firebase.database().ref('users/' + this.auth.currentUser.uid+'/files');
+	filelist.on('value', function(files){
+		this.displayFiles(files);
+	}.bind(this));
 
   } else { // User is signed out!
     mainmenu.setAttribute('style', 'display:none;');
@@ -159,44 +167,73 @@ BusinessGraph.resetMaterialTextfield = function(element) {
   element.parentNode.MaterialTextfield.boundUpdateClassesHandler();
 };
 
+// display the file list in the UI
+BusinessGraph.prototype.displayFiles= function (files){
+	var file_list_container = document.getElementById('file_list_container');
+	var html = '<table class="mdl-data-table mdl-shadow--2dp" id="filetable">';
+	html += '<thead>';
+	html += '<tr>';
+	html += '<th>';
+    html += '<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="table-header" id="table-lable-header" >';
+    html += '<input type="checkbox" id="table-header" class="mdl-checkbox__input" />';
+    html += '</label>';
+    html += '</th>';
+	html += '<th class="mdl-data-table__cell--non-numeric">File Name</th>';
+	html += '<th>Size</th>';
+	html += '<th class="mdl-data-table__cell--non-numeric">Type</th>';
+	html += '</tr>';
+	html += '</thead>';
+	html += '<tbody>';
+	if(files.val()!=null){
+		var filekeys = Object.keys(files.val());
+		for(var i=0; i<filekeys.length; i++){
+			html += '<tr>';
+			html += '<td>';
+			html += '<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="row['+(i+1)+']">';
+            html += '<input type="checkbox" id="row['+(i+1)+']" class="mdl-checkbox__input" />'
+			html += '</label>';
+			html += '</td>';
+			html += '<td class="mdl-data-table__cell--non-numeric">';
+			html += files.val()[filekeys[i]].name;
+			html += '</td>';
+			html += '<td>';
+			html += files.val()[filekeys[i]].size;
+			html += '</td>';
+			html += '<td class="mdl-data-table__cell--non-numeric">';
+			html += files.val()[filekeys[i]].type;
+			html += '</td>';
+			html += '</tr>';
+		}
+		html += '</tbody>';
+		html += '</table>';
+		file_list_container.innerHTML=html;
+		var table = document.getElementById('filetable');
+		componentHandler.upgradeElement(table);
+		var headerCheckbox = table.querySelector('thead .mdl-data-table__select input');
+		componentHandler.upgradeElement(document.getElementById('table-lable-header'));
+		var boxes = table.querySelectorAll('tbody .mdl-data-table__select');
+		for (var i = 0, length = boxes.length; i < length; i++){
+			componentHandler.upgradeElement(boxes[i]);
+		}
+		var headerCheckHandler = function(event) {
+			if (event.target.checked) {
+				for (var i = 0, length = boxes.length; i < length; i++) {
+					boxes[i].MaterialCheckbox.check();
+					boxes[i].MaterialCheckbox.updateClasses_();
+				}
+			} else {
+				for (var i = 0, length = boxes.length; i < length; i++) {
+					boxes[i].MaterialCheckbox.uncheck();
+					boxes[i].MaterialCheckbox.updateClasses_();
+				}
+			}
+		};
+		headerCheckbox.addEventListener('change', headerCheckHandler);
+	}
+}
+
 // A loading image URL.
 BusinessGraph.LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif';
-/*
-// Displays a Message in the UI.
-BusinessGraph.prototype.displayMessage = function(key, name, text, picUrl, imageUri) {
-  var div = document.getElementById(key);
-  // If an element for that message does not exists yet we create it.
-  if (!div) {
-    var container = document.createElement('div');
-    container.innerHTML = BusinessGraph.MESSAGE_TEMPLATE;
-    div = container.firstChild;
-    div.setAttribute('id', key);
-    this.messageList.appendChild(div);
-  }
-  if (picUrl) {
-    div.querySelector('.pic').style.backgroundImage = 'url(' + picUrl + ')';
-  }
-  div.querySelector('.name').textContent = name;
-  var messageElement = div.querySelector('.message');
-  if (text) { // If the message is text.
-    messageElement.textContent = text;
-    // Replace all line breaks by <br>.
-    messageElement.innerHTML = messageElement.innerHTML.replace(/\n/g, '<br>');
-  } else if (imageUri) { // If the message is an image.
-    var image = document.createElement('img');
-    image.addEventListener('load', function() {
-      this.messageList.scrollTop = this.messageList.scrollHeight;
-    }.bind(this));
-    this.setImageUrl(imageUri, image);
-    messageElement.innerHTML = '';
-    messageElement.appendChild(image);
-  }
-  // Show the card fading-in and scroll to view the new message.
-  setTimeout(function() {div.classList.add('visible')}, 1);
-  this.messageList.scrollTop = this.messageList.scrollHeight;
-  this.messageInput.focus();
-};
-*/
 
 // Checks that the Firebase SDK has been correctly setup and configured.
 BusinessGraph.prototype.checkSetup = function() {
