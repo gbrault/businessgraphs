@@ -146,7 +146,7 @@ BusinessGraph.resetMaterialTextfield = function(element) {
 
 // A loading image URL.
 BusinessGraph.LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif';
-
+/*
 // Displays a Message in the UI.
 BusinessGraph.prototype.displayMessage = function(key, name, text, picUrl, imageUri) {
   var div = document.getElementById(key);
@@ -181,6 +181,7 @@ BusinessGraph.prototype.displayMessage = function(key, name, text, picUrl, image
   this.messageList.scrollTop = this.messageList.scrollHeight;
   this.messageInput.focus();
 };
+*/
 
 // Checks that the Firebase SDK has been correctly setup and configured.
 BusinessGraph.prototype.checkSetup = function() {
