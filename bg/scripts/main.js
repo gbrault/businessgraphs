@@ -36,6 +36,10 @@ function BusinessGraph() {
   this.initFirebase();
 }
 
+BusinessGraph.prototype.UUID = function(){
+	return aesjs.utils.hex.fromBytes(crypto.getRandomValues(new Uint8Array(10)));
+}
+
 BusinessGraph.prototype.readSingleFile = function (evt) {
     //Retrieve the first (and only!) File from the FileList object
     var f = evt.target.files[0];
@@ -49,6 +53,8 @@ BusinessGraph.prototype.readSingleFile = function (evt) {
 	    var contents = e.target.result;
 		txt.innerText=contents;
 		this.filecontent=contents;
+		this.filelastModified=f.lastModified;
+		this.filetype=f.type;
       }.bind(this);
       r.readAsText(f);
     } else { 
@@ -58,11 +64,20 @@ BusinessGraph.prototype.readSingleFile = function (evt) {
 
 BusinessGraph.prototype.menuSaveFile = function(){
 	if(this.checkSignedInWithMessage()){
-		firebase.database().ref('users/' + this.auth.currentUser.uid+"/files/"+this.filename.replace(/\./g,"_")).set(
+		var uuid = this.UUID();		
+		firebase.database().ref('users/' + this.auth.currentUser.uid+"/files/"+uuid).set(
 			{	name:this.filename,
-				content:this.filecontent
+				lastModified:this.filelastModified,
+				type:this.filetype
 			}
-		);		
+		);
+		firebase.database().ref('files/'+uuid).set(
+			{	name:this.filename,
+				content:this.filecontent,
+				lastModified:this.filelastModified,
+				type:this.filetype
+			}
+		);			
 	}
 };
 
