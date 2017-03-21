@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<body>
+<input type = 'file' accept = 'image' capture = 'camera' id  = 'input'>
+<canvas id = 'canvas'></canvas>
+<script>
+var canvas = document.getElementById('canvas');
+var input = document.getElementById('input');
+
+
+  function picToBlob() {
+    canvas.renderImage(input.files[0]);
+  }
+
+HTMLCanvasElement.prototype.renderImage = function(blob){
+  
+  var ctx = this.getContext('2d');
+  var img = new Image();
+
+  img.onload = function(){
+	// reframe the canvas
+	ctx.canvas.width=img.width;
+	ctx.canvas.height = img.height;
+    ctx.drawImage(img, 0, 0)
+  }
+
+  img.src = URL.createObjectURL(blob);
+};
+
+input.addEventListener('change', picToBlob, false);
+</script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="FileSaver.js"></script>
+<script type="text/javascript" src="canvas-toBlob.js"></script>
+</head>
+<body>
+<canvas id="myCanvas" width="300" height="150" style="border:1px solid #d3d3d3;">
+Your browser does not support the HTML5 canvas tag.</canvas><br>
+<!-- <button onclick="copy()">Copy</button>-->
+<button onclick="do_encode()">Encode</button>
+<button onclick="do_decode()">Decode</button>
+<button onclick="do_download()">Save image</button>
+<input type="file" id="textinput" />
+<input type = 'file' accept = 'image' capture = 'camera' id  = 'imageinput'>
+<textarea id="txt" cols="80">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi tincidunt tincidunt lacinia. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec vel volutpat erat, ut congue arcu. Vestibulum turpis turpis, mattis nec neque id, elementum suscipit urna. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Praesent sed lectus eu lorem venenatis ullamcorper vel finibus nibh. Fusce suscipit, mi id elementum sagittis, erat felis viverra risus, vitae condimentum orci nulla sed sapien. Cras eget nunc purus.
+</textarea>
+<div id="cpy"></div>
+<script>
+
+function do_decode(){
+	var dec = new window.TextDecoder();
+	var ctx = document.getElementById("myCanvas").getContext("2d");
+	var imgDataBack = ctx.getImageData(0, 0, ctx.canvas.width, ctx.canvas.height);
+	var back = cpyImageData2Array(imgDataBack);
+	var cpy = document.getElementById('cpy');
+	cpy.innerText = dec.decode(new Uint8Array(back));
+}
+
+function do_encode(){
+    var enc = new window.TextEncoder();
+	var txt = document.getElementById('txt');
+	var l = txt.value.length;
+	var c = Math.ceil(Math.sqrt(Math.ceil(l/3)+4));
+	var ctx = document.getElementById("myCanvas").getContext("2d");
+	ctx.canvas.width=c;
+	ctx.canvas.height = c;
+	ctx.fillStyle = "red";
+	ctx.fillRect(0, 0, c, c);	
+	var imgData = ctx.getImageData(0, 0, c, c);
+	var val = txt.value;
+	var byt = enc.encode(val);
+	cpyArray2ImageData(imgData,byt);
+    ctx.putImageData(imgData, 0, 0);
+}
+
+function copy() {
+	
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");
+	ctx.fillStyle = "red";
+	ctx.fillRect(10, 10, 50, 50);
+    var txt = document.getElementById('txt');
+    var imgData = ctx.getImageData(10, 10, 50, 50);
+	var imgDataBack = ctx.getImageData(10, 70, 50, 50)
+	var back = cpyImageData2Array(imgDataBack);
+	var cpy = document.getElementById('cpy');
+	cpy.innerText = dec.decode(new Uint8Array(back)); 
+}
+
+function cpyArray2ImageData(dst,src){
+	var l = src.length;
+	var i,j;
+	
+	for(i=0;i<3;i++){
+		dst.data[i]=l%256;
+		l = (l - l%256)/256;
+	}
+	dst.data[3]=255;
+	j=0;
+	for(i=0; i<src.length;i++){
+		dst.data[j+4]=src[i];
+		j++;
+		if((j%4)==3){
+			dst.data[j+5]=255;
+			j++;
+		}
+	}
+}
+
+function cpyImageData2Array(src){
+	var i;
+	var l=0;
+	
+	dst=[];
+	
+	for(i=0;i<3;i++){
+		l = src.data[2-i]+l*256;
+	}
+	var t = (l-(l%3))/3;
+	l = l+t;
+	
+	for(i=0;i<l;i++){
+		dst.push(src.data[i+4]);
+		if((i%4)==2) i++;
+	}
+	
+	return dst;
+}
+
+function do_download(){
+	var canvas = document.getElementById("myCanvas"), ctx = canvas.getContext("2d");
+	canvas.toBlob(function(blob) {
+		var d = new Date();
+		var n = d.toString();	
+		saveAs(blob, "file_"+n+".png");
+	});	
+}
+
+function readSingleFile(evt) {
+    //Retrieve the first (and only!) File from the FileList object
+    var f = evt.target.files[0]; 
+
+    if (f) {
+      var r = new FileReader();
+      r.onload = function(e) { 
+		var txt = document.getElementById('txt');
+	    var contents = e.target.result;
+		/*
+        alert( "Got the file.n" 
+              +"name: " + f.name + "n"
+              +"type: " + f.type + "n"
+              +"size: " + f.size + " bytesn"
+              + "starts with: " + contents.substr(1, contents.indexOf("n"))
+        );
+		*/
+		txt.value=contents;
+      }
+      r.readAsText(f);
+    } else { 
+      alert("Failed to load file");
+    }
+}
+
+  function picToBlob() {
+    document.getElementById('myCanvas').renderImage(document.getElementById('imageinput').files[0]);
+  }
+
+HTMLCanvasElement.prototype.renderImage = function(blob){
+  
+  var ctx = this.getContext('2d');
+  var img = new Image();
+
+  img.onload = function(){
+	// reframe the canvas
+	ctx.canvas.width=img.width;
+	ctx.canvas.height = img.height;
+    ctx.drawImage(img, 0, 0)
+  }
+
+  img.src = URL.createObjectURL(blob);
+};
+
+document.getElementById('imageinput').addEventListener('change', picToBlob, false);
+document.getElementById('textinput').addEventListener('change', readSingleFile, false);
+
+window.onload=function(){
+	do_encode();
+};
+
+</script>
+</body>
+</html>
