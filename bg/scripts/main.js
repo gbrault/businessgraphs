@@ -25,12 +25,46 @@ function BusinessGraph() {
   this.signInButton = document.getElementById('sign-in');
   this.signOutButton = document.getElementById('sign-out');
   this.signInSnackbar = document.getElementById('must-signin-snackbar');
+  this.menu_save_file = document.getElementById('menu_save_file');
+  this.uploadFile=document.getElementById('uploadFile');
   
   this.signOutButton.addEventListener('click', this.signOut.bind(this));
   this.signInButton.addEventListener('click', this.signIn.bind(this));
+  this.menu_save_file.addEventListener('click', this.menuSaveFile.bind(this));
+  this.uploadFile.addEventListener('change', this.readSingleFile.bind(this));
 
   this.initFirebase();
 }
+
+BusinessGraph.prototype.readSingleFile = function (evt) {
+    //Retrieve the first (and only!) File from the FileList object
+    var f = evt.target.files[0];
+	document.getElementById("uploadFileName").value = f.name;
+	this.filename=f.name;
+
+    if (f) {
+      var r = new FileReader();
+      r.onload = function(e) { 
+		var txt = document.getElementById('txt');
+	    var contents = e.target.result;
+		txt.innerText=contents;
+		this.filecontent=contents;
+      }.bind(this);
+      r.readAsText(f);
+    } else { 
+      alert("Failed to load file");
+    }
+}
+
+BusinessGraph.prototype.menuSaveFile = function(){
+	if(this.checkSignedInWithMessage()){
+		firebase.database().ref('users/' + this.auth.currentUser.uid+"/files/"+this.filename.replace(/\./g,"_")).set(
+			{	name:this.filename,
+				content:this.filecontent
+			}
+		);		
+	}
+};
 
 // Sets up shortcuts to Firebase features and initiate firebase auth.
 BusinessGraph.prototype.initFirebase = function() {
@@ -57,7 +91,9 @@ BusinessGraph.prototype.signOut = function() {
 
 // Triggers when the auth state change for instance when the user signs-in or signs-out.
 BusinessGraph.prototype.onAuthStateChanged = function(user) {
+  var mainmenu=document.getElementById('mainmenu');
   if (user) { // User is signed in!
+	mainmenu.setAttribute('style', '');
     // Get profile pic and user's name from the Firebase user object.
     var profilePicUrl = user.photoURL;
     var userName = user.displayName;
@@ -75,6 +111,7 @@ BusinessGraph.prototype.onAuthStateChanged = function(user) {
     this.signInButton.setAttribute('hidden', 'true');
 
   } else { // User is signed out!
+    mainmenu.setAttribute('style', 'display:none;');
     // Hide user's profile and sign-out button.
     this.userName.setAttribute('hidden', 'true');
     this.userPic.setAttribute('hidden', 'true');
