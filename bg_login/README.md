@@ -1,3 +1,3 @@
 # Firebase business graphs
 
-[test](https://rawgit.com/gbrault/businessgraphs/master/bg/index.html)
+[test bg login](https://rawgit.com/gbrault/businessgraphs/master/bg_login/index.html)
