@@ -50,8 +50,11 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en' rel='stylesheet' type='text/css'>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="styles/main.css">
-  <!-- other scripts: cyphering... -->
+  <!-- other scripts: cyphering, Dialog polyfill... -->
   <script type="text/javascript" src="scripts/aes.js"></script>
+  <link rel="stylesheet" type="text/css" href="styles/dialog-polyfill.css" />
+  <script src="scripts/dialog-polyfill.js"></script>
+  <script src="scripts/vkbeautify.js"></script>
 </head>
 <body>
 <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -124,6 +127,16 @@
       </div>
   </main>
 </div>
+<dialog class="mdl-dialog" id="filenamedialog">
+  <h4 class="mdl-dialog__title">File Name?</h4>
+    <div class="mdl-dialog__content">
+	 <input class="mdl-textfield__input" type="text">
+	</div>
+	<div class="mdl-dialog__actions">
+		 <button type="button" class="mdl-button close">Ok</button>
+		 <button type="button" class="mdl-button cancel">Cancel</button>
+	</div>
+</dialog>
 
 <!-- Firebase -->
 <!-- ***********************************************************************************************************************

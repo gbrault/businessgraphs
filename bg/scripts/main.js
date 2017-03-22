@@ -42,8 +42,10 @@ function BusinessGraph() {
   this.menu_delete.addEventListener('click', this.deleteFiles.bind(this));
   this.menu_show.addEventListener('click', this.showFile.bind(this));  
   // this.menu_diff.addEventListener('click', this.diffFiles.bind(this));  
-  this.menu_pivot_save.addEventListener('click', this.pivotSave.bind(this));  
-  this.togglefiles
+  this.menu_pivot_save.addEventListener('click', this.pivotSave.bind(this));
+
+  // TAB listners  
+  this.togglefiles.addEventListener('click', this.do_togglefiles.bind(this));
   this.toggleconsole.addEventListener('click', this.do_toggleconsole.bind(this));
   this.togglepivot.addEventListener('click', this.do_togglepivot.bind(this));
 
@@ -90,9 +92,32 @@ BusinessGraph.prototype.diffFiles = function(){
 };
 
 BusinessGraph.prototype.pivotSave = function(){
-	var  pf = document.getElementById('pivotframe');
-	var target = (pf.contentWindow || pf.contentDocument)
-	target.postMessage('pivotData',location.origin);
+	// get file name
+	var dialog = document.getElementById('filenamedialog');
+	if (! dialog.showModal) {
+      dialogPolyfill.registerDialog(dialog);
+    }
+	dialog.showModal();
+	dialog.querySelector('.close').addEventListener('click', function(dialog) {
+		if ((dialog.open!==undefined)&&(dialog.open))
+			dialog.close();
+		var name = dialog.querySelector('.mdl-textfield__input').value;
+		name +=".pvt" // pivot file extension
+		if(name!=""){
+			firebase.database().ref('channels/'+this.channel+'/cmd').set(
+				{	
+					type:"save",
+					timestamp: Date.now(),
+					name:name,
+					filetype:"application/json"
+				}
+			);
+		}		
+    }.bind(this,dialog));
+	dialog.querySelector('.cancel').addEventListener('click', function() {
+      dialog.close();
+    });
+
 };
 
 BusinessGraph.prototype.showFile = function(){
@@ -102,6 +127,9 @@ BusinessGraph.prototype.showFile = function(){
 	if(id!=""){
 		firebase.database().ref('files/'+id).once('value').then( function(hfile){
 			var content = hfile.val().content;
+			if(hfile.val().type=="application/json"){
+				content = vkbeautify.json(content, 4 );
+			}
 			document.getElementById('txt').innerText = content;
 			this.toggleTab('toggleconsole');
 		}.bind(this));
@@ -360,6 +388,7 @@ window.onload = function() {
 	  channel = window.BusinessGraph.UUID();
 	  window.BusinessGraph.setCookie('channel',channel,365*10);
   }
+  window.BusinessGraph.channel = channel;
   document.getElementById('pivotframe').src="pivot.html?comuid="+channel;
   window.BusinessGraph.toggleTab('togglepivot');
 };
