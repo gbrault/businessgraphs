@@ -27,18 +27,90 @@ function BusinessGraph() {
   this.signInSnackbar = document.getElementById('must-signin-snackbar');
   this.menu_save_file = document.getElementById('menu_save_file');
   this.uploadFile=document.getElementById('uploadFile');
+  this.menu_show = document.getElementById('menu_show');
+  // this.menu_diff = document.getElementById('menu_diff');
+  this.menu_delete = document.getElementById('menu_delete');
+  this.menu_pivot_save = document.getElementById('menu_pivot_save');
+  this.togglepivot = document.getElementById('togglepivot');
+  this.togglefiles = document.getElementById('togglefiles');
+  this.toggleconsole = document.getElementById('toggleconsole');
   
   this.signOutButton.addEventListener('click', this.signOut.bind(this));
   this.signInButton.addEventListener('click', this.signIn.bind(this));
   this.menu_save_file.addEventListener('click', this.menuSaveFile.bind(this));
   this.uploadFile.addEventListener('change', this.readSingleFile.bind(this));
+  this.menu_delete.addEventListener('click', this.deleteFiles.bind(this));
+  this.menu_show.addEventListener('click', this.showFile.bind(this));  
+  // this.menu_diff.addEventListener('click', this.diffFiles.bind(this));  
+  this.menu_pivot_save.addEventListener('click', this.pivotSave.bind(this));  
+  this.togglefiles
+  this.toggleconsole.addEventListener('click', this.do_toggleconsole.bind(this));
+  this.togglepivot.addEventListener('click', this.do_togglepivot.bind(this));
 
   this.initFirebase();
-}
+};
+
+BusinessGraph.prototype.toggleTab = function(tab){
+	var tablink = document.getElementById(tab);
+	tablink.click();
+};
+
+BusinessGraph.prototype.activateMenuItems = function(tabCategory){
+	var menulis = document.getElementById('ulmenu').querySelectorAll('.mdl-menu__item');
+	for(var i=0; i<menulis.length;i++){
+		menulis[i].style.display = "none";
+	}
+	
+	menulis = document.getElementById('ulmenu').querySelectorAll('.'+tabCategory);	
+	
+	for(var i=0; i<menulis.length;i++){
+		menulis[i].style.display = "inherit";
+	}
+};
+
+BusinessGraph.prototype.do_togglefiles = function(){
+	this.activateMenuItems('togglefiles');
+};
+
+BusinessGraph.prototype.do_toggleconsole = function(){
+	this.activateMenuItems('toggleconsole');
+};
+
+BusinessGraph.prototype.do_togglepivot = function(){
+	this.activateMenuItems('togglepivot');
+	var pf = document.getElementById('pivotframe');
+	pf.height = pf.contentWindow.document.body.scrollWidth;
+	pf.width = pf.contentWindow.document.body.scrollHeight;
+};
+
+BusinessGraph.prototype.deleteFiles = function(){
+};
+
+BusinessGraph.prototype.diffFiles = function(){
+};
+
+BusinessGraph.prototype.pivotSave = function(){
+	var  pf = document.getElementById('pivotframe');
+	var target = (pf.contentWindow || pf.contentDocument)
+	target.postMessage('pivotData',location.origin);
+};
+
+BusinessGraph.prototype.showFile = function(){
+	// get first selected file
+	var checkedlabels = document.getElementById('filetable').querySelectorAll('label.is-checked');
+	var id = checkedlabels[0].id;
+	if(id!=""){
+		firebase.database().ref('files/'+id).once('value').then( function(hfile){
+			var content = hfile.val().content;
+			document.getElementById('txt').innerText = content;
+			this.toggleTab('toggleconsole');
+		}.bind(this));
+	}
+};
 
 BusinessGraph.prototype.UUID = function(){
 	return aesjs.utils.hex.fromBytes(crypto.getRandomValues(new Uint8Array(10)));
-}
+};
 
 BusinessGraph.prototype.readSingleFile = function (evt) {
     //Retrieve the first (and only!) File from the FileList object
@@ -61,7 +133,7 @@ BusinessGraph.prototype.readSingleFile = function (evt) {
     } else { 
       alert("Failed to load file");
     }
-}
+};
 
 BusinessGraph.prototype.menuSaveFile = function(){
 	if((this.checkSignedInWithMessage())&&(this.filename!==undefined)){
@@ -179,8 +251,10 @@ BusinessGraph.prototype.displayFiles= function (files){
     html += '</label>';
     html += '</th>';
 	html += '<th class="mdl-data-table__cell--non-numeric">File Name</th>';
+	html += '<th class="mdl-data-table__cell--non-numeric">Date</th>';
 	html += '<th>Size</th>';
 	html += '<th class="mdl-data-table__cell--non-numeric">Type</th>';
+	html += '<th class="mdl-data-table__cell--non-numeric">UUID</th>';
 	html += '</tr>';
 	html += '</thead>';
 	html += '<tbody>';
@@ -189,18 +263,24 @@ BusinessGraph.prototype.displayFiles= function (files){
 		for(var i=0; i<filekeys.length; i++){
 			html += '<tr>';
 			html += '<td>';
-			html += '<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="row['+(i+1)+']">';
+			html += '<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect mdl-data-table__select" for="row['+(i+1)+']" id="'+filekeys[i]+'">';
             html += '<input type="checkbox" id="row['+(i+1)+']" class="mdl-checkbox__input" />'
 			html += '</label>';
 			html += '</td>';
 			html += '<td class="mdl-data-table__cell--non-numeric">';
 			html += files.val()[filekeys[i]].name;
 			html += '</td>';
+			html += '<td class="mdl-data-table__cell--non-numeric">';
+			html += (new Date(files.val()[filekeys[i]].lastModified)).toGMTString();
+			html += '</td>';
 			html += '<td>';
 			html += files.val()[filekeys[i]].size;
 			html += '</td>';
 			html += '<td class="mdl-data-table__cell--non-numeric">';
 			html += files.val()[filekeys[i]].type;
+			html += '</td>';
+			html += '<td class="mdl-data-table__cell--non-numeric">';
+			html += filekeys[i];
 			html += '</td>';
 			html += '</tr>';
 		}
@@ -230,7 +310,7 @@ BusinessGraph.prototype.displayFiles= function (files){
 		};
 		headerCheckbox.addEventListener('change', headerCheckHandler);
 	}
-}
+};
 
 // A loading image URL.
 BusinessGraph.LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif';
@@ -250,6 +330,36 @@ BusinessGraph.prototype.checkSetup = function() {
   }
 };
 
+BusinessGraph.prototype.setCookie = function (cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+};
+
+BusinessGraph.prototype.getCookie = function (cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+};
+
 window.onload = function() {
   window.BusinessGraph = new BusinessGraph();
+  var channel = window.BusinessGraph.getCookie('channel');
+  if (channel==""){
+	  channel = window.BusinessGraph.UUID();
+	  window.BusinessGraph.setCookie('channel',channel,365*10);
+  }
+  document.getElementById('pivotframe').src="pivot.html?comuid="+channel;
+  window.BusinessGraph.toggleTab('togglepivot');
 };
