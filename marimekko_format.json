@@ -4,7 +4,7 @@
   "properties": {
 	"graphtype":{
 	  "description":"stamp name marimekko",
-	  "type": "string"
+	  "type": "string",
 	  "value":"marimekko"
 	},
     "date":{
