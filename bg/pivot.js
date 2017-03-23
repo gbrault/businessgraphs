@@ -1015,6 +1015,31 @@
             if (parseInt(j) === rowAttrs.length - 1 && colAttrs.length !== 0) {
               th.setAttribute("colspan", 2);
             }
+			// set background row header color, title
+			var categorie = rowAttrs[j];
+			if (pivotData.rowCustom!==undefined){
+				if (pivotData.rowCustom[categorie]!==undefined){
+					if(pivotData.rowCustom[categorie][txt]!==undefined){
+						if(pivotData.rowCustom[categorie][txt].color!==undefined){
+							th.style.backgroundColor = pivotData.rowCustom[categorie][txt].color;
+						}
+						var title = "";
+						if(pivotData.rowCustom[categorie][txt].shortname!==undefined){
+								title +="names, short:"+pivotData.rowCustom[categorie][txt].shortname;
+						}
+						if(pivotData.rowCustom[categorie][txt].longname!==undefined){
+							if(title==""){
+								title +="names, long:"+pivotData.rowCustom[categorie][txt].longname;
+							} else {
+								title +=" long:"+pivotData.rowCustom[categorie][txt].longname;
+							}								
+						}
+						if(title!==""){
+							th.setAttribute("title", title);
+						}
+					}
+				}
+		    }
             tr.appendChild(th);
           }
         }

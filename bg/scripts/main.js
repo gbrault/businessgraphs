@@ -32,6 +32,7 @@ function BusinessGraph() {
   // this.menu_diff = document.getElementById('menu_diff');
   this.menu_delete = document.getElementById('menu_delete');
   this.menu_pivot_save = document.getElementById('menu_pivot_save');
+  this.menu_pivot_save_existing = document.getElementById('menu_pivot_save_existing');
   this.togglepivot = document.getElementById('togglepivot');
   this.togglefiles = document.getElementById('togglefiles');
   this.toggleconsole = document.getElementById('toggleconsole');
@@ -44,6 +45,7 @@ function BusinessGraph() {
   this.menu_show.addEventListener('click', this.showFile.bind(this));  
   // this.menu_diff.addEventListener('click', this.diffFiles.bind(this));  
   this.menu_pivot_save.addEventListener('click', this.pivotSave.bind(this));
+  this.menu_pivot_save_existing.addEventListener('click', this.pivotSaveExisting.bind(this));
   this.menu_load_pivot.addEventListener('click', this.pivotLoad.bind(this))
 
   // TAB listners  
@@ -91,6 +93,14 @@ BusinessGraph.prototype.deleteFiles = function(){
 };
 
 BusinessGraph.prototype.diffFiles = function(){
+};
+
+BusinessGraph.prototype.pivotSaveExisting = function(){
+	firebase.database().ref('channels/'+this.channel+'/cmd').set(
+		{	
+			type:"saveExisting",
+			timestamp: Date.now(),
+		});
 };
 
 BusinessGraph.prototype.pivotSave = function(){
