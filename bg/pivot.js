@@ -959,11 +959,37 @@
 			th.setAttribute("data-colattrs", j);
 			th.setAttribute("data-colkeys", i);
             th.className = "pvtColLabel";
+			txt = colKey[j];
             th.textContent = colKey[j];
             th.setAttribute("colspan", x);
             if (parseInt(j) === colAttrs.length - 1 && rowAttrs.length !== 0) {
               th.setAttribute("rowspan", 2);
             }
+			// set background col header color, title
+			var categorie = colAttrs[j];
+			if (pivotData.pivotCustom!==undefined){
+				if (pivotData.pivotCustom[categorie]!==undefined){
+					if(pivotData.pivotCustom[categorie][txt]!==undefined){
+						if(pivotData.pivotCustom[categorie][txt].color!==undefined){
+							th.style.backgroundColor = pivotData.pivotCustom[categorie][txt].color;
+						}
+						var title = "";
+						if(pivotData.pivotCustom[categorie][txt].shortname!==undefined){
+								title +="names, short:"+pivotData.pivotCustom[categorie][txt].shortname;
+						}
+						if(pivotData.pivotCustom[categorie][txt].longname!==undefined){
+							if(title==""){
+								title +="names, long:"+pivotData.pivotCustom[categorie][txt].longname;
+							} else {
+								title +=" long:"+pivotData.pivotCustom[categorie][txt].longname;
+							}								
+						}
+						if(title!==""){
+							th.setAttribute("title", title);
+						}
+					}
+				}
+		    }
             tr.appendChild(th);
           }
         }

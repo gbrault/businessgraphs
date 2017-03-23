@@ -213,51 +213,69 @@
 						if (! dialog.showModal) {
 							dialogPolyfill.registerDialog(dialog);
 						}
+						if (dialog.custom!==undefined){
+							dialog.querySelector('.cancel').removeEventListener('click',dialog.custom.cancel,false); 
+							dialog.querySelector('.close').removeEventListener('click',dialog.custom.close,false); 
+						}
+						var close = function(o) {
+							if ((o.dialog.open!==undefined)&&(o.dialog.open)){
+								o.dialog.close();
+								var input = o.dialog.querySelector('input');
+								if(window.pivotCustom==undefined) window.pivotCustom={};
+								if(window.pivotCustom[o.category]==undefined) window.pivotCustom[o.category]={};
+								if(window.pivotCustom[o.category][o.name]==undefined) window.pivotCustom[o.category][o.name]={};
+								window.pivotCustom[o.category][o.name].color=input.value;
+								// update ui
+								var render = $('.pvtRenderer')
+								render.trigger('change');
+							}
+						}.bind(null,{name:value,category:attr,dialog:dialog});
+						var cancel = function(o) {
+							if ((o.dialog.open!==undefined)&&(o.dialog.open)){
+								o.dialog.close();
+							}
+						}.bind(null,{name:value,category:attr,dialog:dialog});							
+						dialog.querySelector('.cancel').addEventListener('click',cancel); 
+						dialog.querySelector('.close').addEventListener('click', close);
+						dialog.custom = {close,cancel};					
 						dialog.showModal();
-						dialog.querySelector('.close').addEventListener('click', function(o) {
-							if ((dialog.open!==undefined)&&(dialog.open))
-											dialog.close();
-							var input = dialog.querySelector('input');
-							if(window.pivotCustom==undefined) window.pivotCustom={};
-							if(window.pivotCustom[o.category]==undefined) window.pivotCustom[o.category]={};
-							if(window.pivotCustom[o.category][o.name]==undefined) window.pivotCustom[o.category][o.name]={};
-							window.pivotCustom[o.category][o.name].color=input.value;
-							// update ui
-							var render = $('.pvtRenderer')
-							render.trigger('change');
-						}.bind(null,{name:value,category:attr}));
-						dialog.querySelector('.cancel').addEventListener('click', function() {
-							if ((dialog.open!==undefined)&&(dialog.open))
-											dialog.close();
-						});
 					} else if((key=='edit_names')){
 						var dialog = document.getElementById('namesdialog');
 						if (! dialog.showModal) {
 							dialogPolyfill.registerDialog(dialog);
 						}
+						if (dialog.custom!==undefined){
+							dialog.querySelector('.cancel').removeEventListener('click',dialog.custom.cancel,false); 
+							dialog.querySelector('.close').removeEventListener('click',dialog.custom.close,false); 
+						}
 						var shortname = dialog.querySelector('.short');
 						var longname = dialog.querySelector('.long');
 						shortname.value = value.substr(0,3);
 						longname.value = value;
-						dialog.showModal();
-						dialog.querySelector('.cancel').addEventListener('click', function() {
-							if ((dialog.open!==undefined)&&(dialog.open))
-											dialog.close();
-						});
-						dialog.querySelector('.close').addEventListener('click', function(o) {
-							if ((dialog.open!==undefined)&&(dialog.open))
-											dialog.close();
-							var shortname = dialog.querySelector('.short');
-							var longname = dialog.querySelector('.long');
-							if(window.pivotCustom==undefined) window.pivotCustom={};
-							if(window.pivotCustom[o.category]==undefined) window.pivotCustom[o.category]={};
-							if(window.pivotCustom[o.category][o.name]==undefined) window.pivotCustom[o.category][o.name]={};
-							window.pivotCustom[o.category][o.name].shortname=shortname.value;
-							window.pivotCustom[o.category][o.name].longname=longname.value;
+						var cancel = function(o) {
+							if ((o.dialog.open!==undefined)&&(o.dialog.open)){
+								o.dialog.close();
+							}
+						}.bind(null,{name:value,category:attr,dialog:dialog});	
+						var close = function(o) {
+							if ((o.dialog.open!==undefined)&&(o.dialog.open)){
+								o.dialog.close();
+								var shortname = o.dialog.querySelector('.short');
+								var longname = o.dialog.querySelector('.long');
+								if(window.pivotCustom==undefined) window.pivotCustom={};
+								if(window.pivotCustom[o.category]==undefined) window.pivotCustom[o.category]={};
+								if(window.pivotCustom[o.category][o.name]==undefined) window.pivotCustom[o.category][o.name]={};
+								window.pivotCustom[o.category][o.name].shortname=shortname.value;
+								window.pivotCustom[o.category][o.name].longname=longname.value;
+							}
 							// update ui
 							var render = $('.pvtRenderer')
 							render.trigger('change');
-						}.bind(null,{name:value,category:attr}));
+						}.bind(null,{name:value,category:attr,dialog:dialog});						
+						dialog.querySelector('.cancel').addEventListener('click',cancel); 
+						dialog.querySelector('.close').addEventListener('click', close);
+						dialog.custom = {close,cancel};					
+						dialog.showModal();
 					}
 				}
 				// update ui
@@ -324,7 +342,39 @@
 						dictionary[attr]=Sugar.Array.sortBy(dictionary[attr],length,false);
 					} else if((key=='alpha_descending')){
 						dictionary[attr]=Sugar.Array.sortBy(dictionary[attr],length,true);
-					}  else if((key=='edit_names')){
+					}  else if((key=='edit_name')){
+						var dialog = document.getElementById('namedialog');
+						if (! dialog.showModal) {
+							dialogPolyfill.registerDialog(dialog);
+						}
+						if (dialog.custom!==undefined){
+							dialog.querySelector('.cancel').removeEventListener('click',dialog.custom.cancel,false); 
+							dialog.querySelector('.close').removeEventListener('click',dialog.custom.close,false); 
+						}
+						var longname = dialog.querySelector('.long');
+						longname.value = value;
+						var cancel = function(o) {
+							if ((o.dialog.open!==undefined)&&(o.dialog.open)){
+								o.dialog.close();
+							}
+						}.bind(null,{name:value,category:attr,dialog:dialog});	
+						var close = function(o) {
+							if ((o.dialog.open!==undefined)&&(o.dialog.open)){
+								o.dialog.close();
+								var longname = o.dialog.querySelector('.long');
+								if(window.pivotCustom==undefined) window.pivotCustom={};
+								if(window.pivotCustom[o.category]==undefined) window.pivotCustom[o.category]={};
+								if(window.pivotCustom[o.category][o.name]==undefined) window.pivotCustom[o.category][o.name]={};
+								window.pivotCustom[o.category][o.name].longname=longname.value;
+							}
+							// update ui
+							var render = $('.pvtRenderer')
+							render.trigger('change');
+						}.bind(null,{name:value,category:attr,dialog:dialog});						
+						dialog.querySelector('.cancel').addEventListener('click',cancel); 
+						dialog.querySelector('.close').addEventListener('click', close);
+						dialog.custom = {close,cancel};					
+						dialog.showModal();
 					}
 				}
 				// update ui
@@ -338,7 +388,7 @@
 				"descending":{name:"Descending", icon:'fa-sort-amount-desc'},
 				"alpha_ascending":{name:"Alpha_Ascending", icon:'fa-sort-alpha-asc'},
 				"alpha_descending":{name:"Alpha_Descending", icon:'fa-sort-alpha-desc'},
-				"edit_names":{name:"Edit_Names", icon:'fa-pencil-square-o'}
+				"edit_name":{name:"Edit_Name", icon:'fa-pencil-square-o'}
 			}
 		});
  
@@ -493,6 +543,16 @@
     <div >
 	 short<input type="text" class="short"><br>
 	 long<input type="text" class="long">
+	</div>
+	<div>
+		 <button type="button" class="close">Ok</button>
+		 <button type="button" class="cancel">Cancel</button>
+	</div>
+</dialog>
+<dialog id="namedialog">
+  <h4 >Choose Name?</h4>
+    <div >
+		<input type="text" class="long">
 	</div>
 	<div>
 		 <button type="button" class="close">Ok</button>
