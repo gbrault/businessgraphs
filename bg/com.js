@@ -29,7 +29,7 @@ Com.prototype.exec = function(cmd) {
 			if(cmd.done==undefined){
 				cmd.done=true;
 				firebase.database().ref('channels/'+this.channel+'/cmd').set(cmd);
-				var content = JSON.stringify({input:pivotData.input,rowCustom:pivotData.rowCustom,pivotConfig,dictionary});
+				var content = JSON.stringify({input:pivotData.input,pivotCustom:pivotData.pivotCustom,pivotConfig,dictionary});
 				this.saveFile({content:content,lastModified:Date.now(),name:cmd.name,type:cmd.filetype,size:content.length});
 			}
 			break;
@@ -37,7 +37,7 @@ Com.prototype.exec = function(cmd) {
 			if(cmd.done==undefined){
 				cmd.done=true;
 				firebase.database().ref('channels/'+this.channel+'/cmd').set(cmd);
-				var content = JSON.stringify({input:pivotData.input,rowCustom:pivotData.rowCustom,pivotConfig,dictionary});
+				var content = JSON.stringify({input:pivotData.input,pivotCustom:pivotData.pivotCustom,pivotConfig,dictionary});
 				this.saveExistingFile(content);
 			}
 			break;

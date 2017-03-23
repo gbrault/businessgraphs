@@ -218,10 +218,10 @@
 							if ((dialog.open!==undefined)&&(dialog.open))
 											dialog.close();
 							var input = dialog.querySelector('input');
-							if(window.rowCustom==undefined) window.rowCustom={};
-							if(window.rowCustom[o.category]==undefined) window.rowCustom[o.category]={};
-							if(window.rowCustom[o.category][o.name]==undefined) window.rowCustom[o.category][o.name]={};
-							window.rowCustom[o.category][o.name].color=input.value;
+							if(window.pivotCustom==undefined) window.pivotCustom={};
+							if(window.pivotCustom[o.category]==undefined) window.pivotCustom[o.category]={};
+							if(window.pivotCustom[o.category][o.name]==undefined) window.pivotCustom[o.category][o.name]={};
+							window.pivotCustom[o.category][o.name].color=input.value;
 							// update ui
 							var render = $('.pvtRenderer')
 							render.trigger('change');
@@ -249,11 +249,11 @@
 											dialog.close();
 							var shortname = dialog.querySelector('.short');
 							var longname = dialog.querySelector('.long');
-							if(window.rowCustom==undefined) window.rowCustom={};
-							if(window.rowCustom[o.category]==undefined) window.rowCustom[o.category]={};
-							if(window.rowCustom[o.category][o.name]==undefined) window.rowCustom[o.category][o.name]={};
-							window.rowCustom[o.category][o.name].shortname=shortname.value;
-							window.rowCustom[o.category][o.name].longname=longname.value;
+							if(window.pivotCustom==undefined) window.pivotCustom={};
+							if(window.pivotCustom[o.category]==undefined) window.pivotCustom[o.category]={};
+							if(window.pivotCustom[o.category][o.name]==undefined) window.pivotCustom[o.category][o.name]={};
+							window.pivotCustom[o.category][o.name].shortname=shortname.value;
+							window.pivotCustom[o.category][o.name].longname=longname.value;
 							// update ui
 							var render = $('.pvtRenderer')
 							render.trigger('change');
@@ -345,7 +345,7 @@
 	var justPivot = function(fileStructure) {
 		var parsed = JSON.parse(fileStructure.content);
 		window.dictionary = parsed.dictionary;
-		window.rowCustom=parsed.rowCustom;
+		window.pivotCustom=parsed.pivotCustom;
 		parsed.pivotConfig.onRefresh = function(config) {
 				$("#output2").html("");
 				var config_copy = JSON.parse(JSON.stringify(config));
@@ -366,7 +366,7 @@
 					"Table": function(data, opts) {
 							window.pivotData = data;
 							window.pivotOpts = opts;
-							if(window.rowCustom!==undefined) data.rowCustom=window.rowCustom;
+							if(window.pivotCustom!==undefined) data.pivotCustom=window.pivotCustom;
 							return $.pivotUtilities.renderers.Table(data, opts);
 					},
 					"Table Barchart": function(data, opts) {
@@ -413,7 +413,7 @@
 							"Table": function(data, opts) {
 									window.pivotData = data;
 									window.pivotOpts = opts;	
-									if(window.rowCustom!==undefined) data.rowCustom=window.rowCustom;
+									if(window.pivotCustom!==undefined) data.pivotCustom=window.pivotCustom;
 									return $.pivotUtilities.renderers.Table(data, opts);
 							},
 							"Table Barchart": function(data, opts) {

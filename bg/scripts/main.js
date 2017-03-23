@@ -167,12 +167,32 @@ BusinessGraph.prototype.showFile = function(){
 	var id = checkedlabels[0].id;
 	if(id!=""){
 		firebase.database().ref('files/'+id).once('value').then( function(hfile){
+			if(window.oCodeMirror!==undefined){
+				window.oCodeMirror.toTextArea();
+			}
 			var content = hfile.val().content;
 			if(hfile.val().type=="application/json"){
 				content = vkbeautify.json(content, 4 );
+				document.getElementById('txt').innerHTML = "<textarea class='codemirror'></textarea>"				
+				window.oCodeMirror = CodeMirror.fromTextArea(document.getElementById('txt').querySelector('.codemirror'), {
+						mode: "javascript",
+						lineNumbers: true,
+						lineWrapping: true,
+						matchBrackets: true,
+						foldGutter: true,
+						gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+						extraKeys: {"Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }},
+						continueComments: "Enter",	
+				});
+				oCodeMirror.getDoc().setValue(content);				
+			} else {
+				delete window.oCodeMirror;
+				document.getElementById('txt').innerText = content;				
 			}
-			document.getElementById('txt').innerText = content;
 			this.toggleTab('toggleconsole');
+			if(window.oCodeMirror!=undefined){
+				oCodeMirror.setCursor(1,1);
+			}
 		}.bind(this));
 	}
 };

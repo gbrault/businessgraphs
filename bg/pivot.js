@@ -1017,21 +1017,21 @@
             }
 			// set background row header color, title
 			var categorie = rowAttrs[j];
-			if (pivotData.rowCustom!==undefined){
-				if (pivotData.rowCustom[categorie]!==undefined){
-					if(pivotData.rowCustom[categorie][txt]!==undefined){
-						if(pivotData.rowCustom[categorie][txt].color!==undefined){
-							th.style.backgroundColor = pivotData.rowCustom[categorie][txt].color;
+			if (pivotData.pivotCustom!==undefined){
+				if (pivotData.pivotCustom[categorie]!==undefined){
+					if(pivotData.pivotCustom[categorie][txt]!==undefined){
+						if(pivotData.pivotCustom[categorie][txt].color!==undefined){
+							th.style.backgroundColor = pivotData.pivotCustom[categorie][txt].color;
 						}
 						var title = "";
-						if(pivotData.rowCustom[categorie][txt].shortname!==undefined){
-								title +="names, short:"+pivotData.rowCustom[categorie][txt].shortname;
+						if(pivotData.pivotCustom[categorie][txt].shortname!==undefined){
+								title +="names, short:"+pivotData.pivotCustom[categorie][txt].shortname;
 						}
-						if(pivotData.rowCustom[categorie][txt].longname!==undefined){
+						if(pivotData.pivotCustom[categorie][txt].longname!==undefined){
 							if(title==""){
-								title +="names, long:"+pivotData.rowCustom[categorie][txt].longname;
+								title +="names, long:"+pivotData.pivotCustom[categorie][txt].longname;
 							} else {
-								title +=" long:"+pivotData.rowCustom[categorie][txt].longname;
+								title +=" long:"+pivotData.pivotCustom[categorie][txt].longname;
 							}								
 						}
 						if(title!==""){

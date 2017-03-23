@@ -55,6 +55,23 @@
   <link rel="stylesheet" type="text/css" href="styles/dialog-polyfill.css" />
   <script src="scripts/dialog-polyfill.js"></script>
   <script src="scripts/vkbeautify.js"></script>
+  
+  <!-- Codemirror -->
+<link rel="stylesheet" href="codemirror/codemirror.css">
+<link rel="stylesheet" href="codemirror/foldgutter.css">
+<script src="codemirror/codemirror.js"></script>
+<script src="codemirror/matchbrackets.js"></script>
+<script src="codemirror/continuecomment.js"></script>
+<script src="codemirror/comment.js"></script>
+<script src="codemirror/foldcode.js"></script>
+<script src="codemirror/javascript.js"></script>
+<script src="codemirror/sql.js"></script>
+<script src="codemirror/markdown.js"></script>
+<script src="codemirror/meta.js"></script>
+<script src="codemirror/overlay.js"></script>
+<script src="codemirror/gfm.js"></script>
+<script src="codemirror/foldgutter.js"></script>
+<script src="codemirror/brace-fold.js"></script>
 </head>
 <body>
 <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -85,7 +102,7 @@
 		  <li class="mdl-menu__item togglefiles" id="menu_load_pivot">Load Pivot File</li>
 		  <!-- <li class="mdl-menu__item togglefiles" id="menu_diff">File Diff</li>-->
 		  <li class="mdl-menu__item togglefiles" id="menu_delete">Delete Files</li>
-		  <li class="mdl-menu__item toggleconsole" id="menu_save_file">save Text File</li>
+		  <li class="mdl-menu__item toggleconsole" id="menu_save_file">Save As File</li>
 		  <li class="mdl-menu__item toggleconsole">
 			<div class="mdl-textfield mdl-js-textfield mdl-textfield--file">
 				<input class="mdl-textfield__input" placeholder="File" type="text" id="uploadFileName" readonly/></div>

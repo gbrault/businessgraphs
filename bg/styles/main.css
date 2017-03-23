@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+.CodeMirror {
+  border: 1px solid #eee;
+  height: auto;
+}
 html, body {
   font-family: 'Roboto', 'Helvetica', sans-serif;
 }
