@@ -1,3 +1,6 @@
+/**
+* This module manage communication between pivot and firebase
+*/
 function Com(){
 	  // Initialize Firebase
   this.config = {
@@ -26,11 +29,24 @@ Com.prototype.exec = function(cmd) {
 			if(cmd.done==undefined){
 				cmd.done=true;
 				firebase.database().ref('channels/'+this.channel+'/cmd').set(cmd);
-				var content = JSON.stringify({pivotData,pivotConfig})
+				var content = JSON.stringify({input:pivotData.input,pivotConfig,dictionary})
 				this.saveFile({content:content,lastModified:Date.now(),name:cmd.name,type:cmd.filetype,size:content.length});
 			}
 			break;
+		case "load":
+			if(cmd.done==undefined){
+				cmd.done=true;
+				firebase.database().ref('channels/'+this.channel+'/cmd').set(cmd);
+				this.loadFile(cmd.fileID);
+			}			
+			break;
 	}
+}
+
+Com.prototype.loadFile = function(fileID){
+	firebase.database().ref('files/'+fileID).once('value').then( function(hfile){
+		justPivot(hfile.val());
+	});
 }
 
 Com.prototype.saveFile = function(fileStructure){

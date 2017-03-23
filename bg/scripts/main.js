@@ -28,6 +28,7 @@ function BusinessGraph() {
   this.menu_save_file = document.getElementById('menu_save_file');
   this.uploadFile=document.getElementById('uploadFile');
   this.menu_show = document.getElementById('menu_show');
+  this.menu_load_pivot = document.getElementById('menu_load_pivot');
   // this.menu_diff = document.getElementById('menu_diff');
   this.menu_delete = document.getElementById('menu_delete');
   this.menu_pivot_save = document.getElementById('menu_pivot_save');
@@ -43,6 +44,7 @@ function BusinessGraph() {
   this.menu_show.addEventListener('click', this.showFile.bind(this));  
   // this.menu_diff.addEventListener('click', this.diffFiles.bind(this));  
   this.menu_pivot_save.addEventListener('click', this.pivotSave.bind(this));
+  this.menu_load_pivot.addEventListener('click', this.pivotLoad.bind(this))
 
   // TAB listners  
   this.togglefiles.addEventListener('click', this.do_togglefiles.bind(this));
@@ -117,8 +119,37 @@ BusinessGraph.prototype.pivotSave = function(){
 	dialog.querySelector('.cancel').addEventListener('click', function() {
       dialog.close();
     });
-
 };
+
+BusinessGraph.prototype.pivotLoad = function(){	
+	// get first selected file
+	var data = null;
+	var selectpivot = {
+		message: 'You must select a pivot file (ends with .pvt)',
+		timeout: 3000
+	};			
+	var checkedlabels = document.getElementById('filetable').querySelectorAll('label.is-checked');
+	if(checkedlabels.length>0){
+		var tr = checkedlabels[0].parentElement.parentElement;
+		var id = checkedlabels[0].id;
+		if((id!="")&&(tr.children[1].innerText.endsWith('.pvt'))){
+			firebase.database().ref('channels/'+this.channel+'/cmd').set(
+				{
+					type:"load",
+					timestamp: Date.now(),
+					fileID: id
+				}
+			);
+			this.toggleTab('togglepivot');
+		} else {			
+			data = selectpivot;
+		}
+	} else {		
+		data = selectpivot;
+	}
+	if (data!==null) // Display a message to the user using a Toast.
+		this.signInSnackbar.MaterialSnackbar.showSnackbar(data);
+}
 
 BusinessGraph.prototype.showFile = function(){
 	// get first selected file

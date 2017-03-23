@@ -1,0 +1,317 @@
+Competitor;Products;Value
+Turck;01- DCS;2096.655
+Turck;03-2 PLC;3479.76514
+Turck;04- C&S + Safety;739.5977068
+Turck;02-2 Drives LV;1306.214286
+Turck;02-1 Motor Starters & Contactors;1732.8075
+Turck;02-3 Motion;626.37
+Turck;03-3 CNC;2105
+Turck;01- Control Valves;88
+Turck;04- Sensors;53.84955
+Turck;01- Instruments;255.9614576
+Turck;03-1 OP & IPC;761.595
+Turck;01- Analyzers;75.32585
+Turck;02-2 Drives MV;300.3602198
+Turck;01- Safety Systems;144.1
+Turck;03-3 Vision;12
+Heidenhain;01- DCS;896.071605
+Heidenhain;03-2 PLC;1042.70861
+Heidenhain;04- C&S + Safety;525.315341
+Heidenhain;02-2 Drives LV;576.7441494
+Heidenhain;02-1 Motor Starters & Contactors;1747.106782
+Heidenhain;02-3 Motion;264.8241936
+Heidenhain;01- Control Valves;20
+Heidenhain;04- Sensors;128.10957
+Heidenhain;01- Instruments;88.95
+Heidenhain;03-1 OP & IPC;315.3653464
+Heidenhain;01- Analyzers;17
+Heidenhain;02-2 Drives MV;139.2151202
+Heidenhain;01- Safety Systems;434.214
+M-System;01- DCS;2647.188914
+M-System;03-2 PLC;244.1253392
+M-System;04- C&S + Safety;334.5429639
+M-System;02-2 Drives LV;1937.182431
+M-System;02-1 Motor Starters & Contactors;1366.234254
+M-System;02-3 Motion;36.2068946
+M-System;01- Control Valves;22.52054803
+M-System;01- Instruments;363.34
+M-System;03-1 OP & IPC;17.39523258
+M-System;01- Analyzers;125.9371069
+M-System;02-2 Drives MV;549.1453204
+M-System;01- Safety Systems;209.21
+Hyosung Power and Industrial S;01- DCS;427.5046409
+Hyosung Power and Industrial S;03-2 PLC;2792.306143
+Hyosung Power and Industrial S;04- C&S + Safety;595.8187405
+Hyosung Power and Industrial S;02-2 Drives LV;1117.427569
+Hyosung Power and Industrial S;02-1 Motor Starters & Contactors;645.19395
+Hyosung Power and Industrial S;02-3 Motion;575.1
+Hyosung Power and Industrial S;04- Sensors;96.8726
+Hyosung Power and Industrial S;03-1 OP & IPC;306.5719341
+Hyosung Power and Industrial S;02-2 Drives MV;364.1117642
+Hyosung Power and Industrial S;01- Safety Systems;221.2533885
+Yokogawa;03-2 PLC;472.400464
+Yokogawa;04- C&S + Safety;38.04334958
+Yokogawa;02-3 Motion;152.7276468
+Yokogawa;03-1 OP & IPC;222.1480053
+ABB;03-2 PLC;1237.675319
+ABB;04- C&S + Safety;97.65136333
+ABB;02-2 Drives LV;600.8150564
+ABB;02-1 Motor Starters & Contactors;415.1305983
+ABB;02-3 Motion;688.8746764
+ABB;03-3 CNC;929
+ABB;04- Sensors;2.33604
+ABB;03-1 OP & IPC;218.5487381
+Omron;01- DCS;1497.408
+Omron;03-2 PLC;135.7913459
+Omron;01- Control Valves;3.4
+Omron;01- Instruments;838.05
+Omron;01- Analyzers;169.3946904
+Omron;01- Safety Systems;428.5
+Hitachi;03-2 PLC;599.4127393
+Hitachi;04- C&S + Safety;871.8517123
+Hitachi;02-2 Drives LV;158.1612051
+Hitachi;02-1 Motor Starters & Contactors;253.9828708
+Hitachi;02-3 Motion;124.0570321
+Hitachi;04- Sensors;645.6328091
+Hitachi;03-1 OP & IPC;94.57245873
+Hitachi;03-3 Vision;82
+Optex;01- DCS;2094.756102
+Optex;03-2 PLC;46.26728783
+Optex;04- C&S + Safety;140.663657
+Optex;04- Sensors;19
+Optex;01- Instruments;132.093
+Optex;01- Analyzers;18
+Optex;01- Safety Systems;264.7
+Metso Automation;01- DCS;140
+Metso Automation;03-2 PLC;397.2989808
+Metso Automation;04- C&S + Safety;1.893571172
+Metso Automation;02-2 Drives LV;61.74466299
+Metso Automation;02-1 Motor Starters & Contactors;559.16658
+Metso Automation;02-3 Motion;4.291056519
+Metso Automation;01- Control Valves;530
+Metso Automation;01- Instruments;132.0002716
+Metso Automation;03-1 OP & IPC;53.73615994
+Metso Automation;02-2 Drives MV;697.4751615
+Metso Automation;01- Safety Systems;66.9
+Beckhoff;02-3 Motion;123.1259624
+Beckhoff;03-3 CNC;1881
+Beckhoff;03-3 Vision;40
+Endress+Hauser;02-2 Drives LV;1268.144571
+Endress+Hauser;02-2 Drives MV;49.41053417
+Parker Industrial;03-2 PLC;28.61717109
+Parker Industrial;04- C&S + Safety;43.27618277
+Parker Industrial;02-2 Drives LV;63.48
+Parker Industrial;02-1 Motor Starters & Contactors;950.8105673
+Parker Industrial;04- Sensors;55
+Parker Industrial;03-1 OP & IPC;54.02692087
+Parker Industrial;02-2 Drives MV;69.55
+Mitsubishi Electric;02-2 Drives LV;474.011
+Mitsubishi Electric;02-3 Motion;636.3939433
+Keyence;04- C&S + Safety;247.9770273
+Keyence;04- Sensors;609.705
+Keyence;01- Analyzers;43.44280557
+Keyence;03-3 Vision;105
+Sunx;01- Instruments;738.0262288
+Sunx;01- Analyzers;219.6492615
+Wika;01- DCS;2071.11271
+Wika;03-2 PLC;80.30835798
+Wika;01- Control Valves;1619.8
+Wika;01- Instruments;2043.817
+Wika;01- Analyzers;163.2155179
+Wika;01- Safety Systems;152.4958613
+Moore Industries;01- DCS;30.7
+Moore Industries;03-2 PLC;93.76221685
+Moore Industries;02-2 Drives LV;246.1
+Moore Industries;02-1 Motor Starters & Contactors;181.4761372
+Moore Industries;01- Instruments;18.6
+Moore Industries;03-1 OP & IPC;33.85456293
+Moore Industries;02-2 Drives MV;178.903
+Moore Industries;03-3 Vision;20
+Rockwell Automation;03-3 CNC;208
+Rockwell Automation;04- Sensors;523
+Delta Electronics;03-2 PLC;27.36044759
+Delta Electronics;04- C&S + Safety;5.697692294
+Delta Electronics;02-3 Motion;458
+Delta Electronics;03-3 CNC;191
+Delta Electronics;03-1 OP & IPC;2.904754463
+Fuji Electric;01- DCS;114.8830089
+Fuji Electric;03-2 PLC;48.73035954
+Fuji Electric;02-2 Drives LV;337.1719804
+Fuji Electric;02-1 Motor Starters & Contactors;72.51593324
+Fuji Electric;04- Sensors;4.04061
+Fuji Electric;01- Instruments;12.55
+Fuji Electric;03-1 OP & IPC;35.31680623
+Fuji Electric;02-2 Drives MV;58.31080191
+Emerson Process Management;01- Control Valves;600.2
+Haas;03-2 PLC;49.58711119
+Haas;04- C&S + Safety;123.6575566
+Haas;02-3 Motion;372.77
+Haas;03-1 OP & IPC;16.61342229
+Haas;03-3 Vision;20
+Festo;01- DCS;45.67760954
+Festo;03-2 PLC;47.4519637
+Festo;02-2 Drives LV;303.6448833
+Festo;02-1 Motor Starters & Contactors;43.74145718
+Festo;02-3 Motion;51.37870929
+Festo;01- Instruments;58
+Festo;03-1 OP & IPC;17.14751393
+Festo;02-2 Drives MV;3.883694368
+Advantech;03-2 PLC;67.79240381
+Advantech;02-2 Drives LV;371.5889274
+Advantech;02-3 Motion;60.21166127
+Advantech;03-1 OP & IPC;24.80730422
+Advantech;02-2 Drives MV;9.464
+Advantech;03-3 Vision;2
+Moog;03-2 PLC;32.10533152
+Moog;04- C&S + Safety;57.91110345
+Moog;04- Sensors;388.760884
+Moog;03-1 OP & IPC;16.3279295
+Moog;03-3 Vision;23
+DKK-TOA Corporation;03-2 PLC;113.5656847
+DKK-TOA Corporation;04- C&S + Safety;293.6169965
+DKK-TOA Corporation;02-1 Motor Starters & Contactors;52.31845539
+DKK-TOA Corporation;04- Sensors;4.49262
+DKK-TOA Corporation;03-1 OP & IPC;30.83647999
+Pentair;03-3 Vision;454
+Idec;03-2 PLC;5.40710505
+Idec;04- Sensors;5.25
+Idec;03-1 OP & IPC;435.3941154
+Danfoss;03-2 PLC;211.354473
+Danfoss;04- Sensors;219.2427136
+Danfoss;03-3 Vision;2
+Zebra Technologies;02-3 Motion;299.9689264
+Zebra Technologies;01- Analyzers;128.869863
+Cognex;01- DCS;215.2345212
+Cognex;03-2 PLC;0.769495559
+Cognex;01- Control Valves;109.8
+Cognex;04- Sensors;41
+Cognex;01- Instruments;57.37
+Baumer;03-2 PLC;3.77502
+Baumer;02-2 Drives LV;165.9037727
+Baumer;02-3 Motion;238.4972518
+Baumer;03-1 OP & IPC;13.33581257
+Hokuyo;01- Control Valves;411.33
+Phoenix Contact;02-3 Motion;103
+Phoenix Contact;04- Sensors;71
+Phoenix Contact;01- Analyzers;163.92024
+Phoenix Contact;03-3 Vision;60
+Emerson Electric;01- Control Valves;380.445
+Kontron;01- Control Valves;370
+Oriental Motor;03-2 PLC;91.09537328
+Oriental Motor;04- C&S + Safety;27.66701067
+Oriental Motor;02-3 Motion;62
+Oriental Motor;03-1 OP & IPC;182.1437687
+Lenze;04- C&S + Safety;60.053114
+Lenze;04- Sensors;188.3545
+Lenze;03-3 Vision;110
+Powell Industries;04- C&S + Safety;5.336684375
+Powell Industries;02-2 Drives LV;282.6032759
+Powell Industries;02-3 Motion;45.31463935
+Powell Industries;02-2 Drives MV;4.103252075
+Horiba Analytical;03-2 PLC;8.783085631
+Horiba Analytical;01- Control Valves;326.78
+Contec;01- Instruments;280.6
+Contec;01- Analyzers;37.69775746
+Altus;02-2 Drives LV;88.23107042
+Altus;02-3 Motion;198.2165028
+Altus;03-1 OP & IPC;11.58857969
+Altus;02-2 Drives MV;0.841295425
+HIMA;03-2 PLC;71.70982697
+HIMA;04- Sensors;217.5084
+GSK CNC EQUIPMENT;03-2 PLC;12.06037982
+GSK CNC EQUIPMENT;04- C&S + Safety;14.37130475
+GSK CNC EQUIPMENT;04- Sensors;241.511416
+GSK CNC EQUIPMENT;03-3 Vision;14
+Leuze;02-2 Drives LV;21.86095361
+Leuze;02-2 Drives MV;210.4953641
+Pepperl+Fuchs;02-1 Motor Starters & Contactors;210.375
+Yaskawa;03-3 CNC;206
+Siemens;04- C&S + Safety;52.91484235
+Siemens;04- Sensors;124
+Siemens;03-3 Vision;20
+SPX Valves & Controls;02-3 Motion;190.9166085
+Weg;02-3 Motion;34.75131249
+Weg;04- Sensors;37
+Weg;03-1 OP & IPC;40.8039855
+Weg;03-3 Vision;74
+Schneider Electric;04- C&S + Safety;66.83388652
+Schneider Electric;04- Sensors;108
+Schneider Electric;03-3 Vision;8
+Euchner;03-2 PLC;5.077389371
+Euchner;04- C&S + Safety;171.6954395
+Euchner;03-1 OP & IPC;2.28933794
+Tamagawa Seiki;04- Sensors;141
+Tamagawa Seiki;03-3 Vision;39
+Nihon Koso;03-2 PLC;43.64858054
+Nihon Koso;04- C&S + Safety;118.4778468
+Nihon Koso;04- Sensors;14
+Nihon Koso;03-1 OP & IPC;2.043430858
+National Instruments;03-3 CNC;164
+Smar;02-3 Motion;160.230013
+Num;04- C&S + Safety;23.38790559
+Num;01- Safety Systems;132.77
+Wago;01- Control Valves;145.9519457
+Thermo Scientific;04- Sensors;1.30515
+Thermo Scientific;01- Analyzers;144.27965
+Sanyo Denki;02-3 Motion;143.04117
+Banner;02-2 Drives LV;6.413714898
+Banner;02-1 Motor Starters & Contactors;101.9893599
+Banner;02-3 Motion;27.30454516
+Banner;02-2 Drives MV;2.956307006
+NEC;02-3 Motion;127.1100457
+Beijer Electronics;04- C&S + Safety;124.6918913
+Honeywell;03-1 OP & IPC;103.2501743
+CCI;01- Analyzers;102.51
+GE;03-3 CNC;100
+Fagor Automation;03-3 CNC;101
+PR Electronics;02-3 Motion;99.24835257
+Weidmuller;02-1 Motor Starters & Contactors;91
+Samson;04- C&S + Safety;90.5499958
+Eaton;03-3 CNC;87
+Teledyne;04- C&S + Safety;79.00326692
+Lti Drives;03-3 Vision;78
+Krohne;01- Control Valves;74.73
+Ametek;03-1 OP & IPC;74.43941534
+Pilz;02-1 Motor Starters & Contactors;72.814536
+Panasonic;01- DCS;32.52916721
+Panasonic;01- Instruments;37.44
+Comeca;03-1 OP & IPC;63.83711518
+TMEIC;03-1 OP & IPC;60.88523036
+Halma;04- Sensors;57.12
+Flowserve Flow Control Division;01- Analyzers;54
+B&R;03-1 OP & IPC;51.28516954
+EVOC Group;04- Sensors;43
+Contrinex;03-2 PLC;27.37286524
+Contrinex;03-3 Vision;15
+Mettler-Toledo;04- Sensors;41.291712
+Azbil;03-2 PLC;0.173191775
+Azbil;04- C&S + Safety;38.27909998
+FANUC;01- Analyzers;35.904
+Bosch Rexroth;01- Instruments;35.58339023
+Danaher Industrial;02-1 Motor Starters & Contactors;29
+Schmersal;03-2 PLC;26.46957912
+Schmersal;01- Instruments;2
+Okuma;04- Sensors;27
+Balluff;04- Sensors;17
+Chint Electrics;03-2 PLC;9.662991289
+Chint Electrics;04- C&S + Safety;9.141108987
+Toshiba;03-2 PLC;11.96485498
+Toshiba;03-1 OP & IPC;6.083366107
+Sick;03-3 Vision;12
+IFM Electronics;01- Instruments;10.1
+Harting;01- Instruments;6.67
+Other;01- DCS;1211.286379
+Other;03-2 PLC;1125.0056
+Other;04- C&S + Safety;6505.880996
+Other;02-2 Drives LV;1468.396741
+Other;02-1 Motor Starters & Contactors;1100.348977
+Other;02-3 Motion;1240.134419
+Other;03-3 CNC;434
+Other;01- Control Valves;1688.246659
+Other;04- Sensors;1833.868221
+Other;01- Instruments;476.9730216
+Other;03-1 OP & IPC;1218.376513
+Other;01- Analyzers;2243.276818
+Other;02-2 Drives MV;200.2304363
+Other;01- Safety Systems;317.559071
+Other;03-3 Vision;673
