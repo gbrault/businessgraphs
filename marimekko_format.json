@@ -2,12 +2,17 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {
+	"graphtype":{
+	  "description":"stamp name marimekko",
+	  "type": "string"
+	  "value":"marimekko"
+	},
     "date":{
 	  "description":"date of file generation",
       "type": "string"
     },
     "file":{
-	  "description":"file nae",
+	  "description":"file name",
       "type": "string"
     },
     "scalex": {
@@ -147,7 +152,7 @@
             "type": "number"
           },
           "box": {
-	    "description":"rectangle location and dimenssion to represent the market size for this product line",
+	    "description":"rectangle location and dimension to represent the market size for this product line",
             "type": "object",
             "properties": {
               "Top": {
