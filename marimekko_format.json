@@ -185,7 +185,7 @@
                   "type": "string"
                 },
                 "size": {
-		  "description":"size of the competitor in this market",
+		  "description":"size of the competitor in this market in % (0-100)",
                   "type": "number"
                 },
                 "box": {

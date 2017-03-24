@@ -34,6 +34,7 @@ function BusinessGraph() {
   this.menu_delete = document.getElementById('menu_delete');
   this.menu_pivot_save = document.getElementById('menu_pivot_save');
   this.menu_pivot_save_existing = document.getElementById('menu_pivot_save_existing');
+  this.menu_pivot2marimekko = document.getElementById('menu_pivot2marimekko');
   
   // TAB elements
   this.togglepivot = document.getElementById('togglepivot');
@@ -52,6 +53,7 @@ function BusinessGraph() {
   this.menu_pivot_save_existing.addEventListener('click', this.pivotSaveExisting.bind(this));
   this.menu_load_pivot.addEventListener('click', this.pivotLoad.bind(this));
   this.menu_load_marimekko.addEventListener('click', this.marimekkoLoad.bind(this));
+  this.menu_pivot2marimekko.addEventListener('click', this.pivot2marimekko.bind(this));
 
   // TAB listners  
   this.togglefiles.addEventListener('click', this.do_togglefiles.bind(this));
@@ -109,6 +111,14 @@ BusinessGraph.prototype.pivotSaveExisting = function(){
 	firebase.database().ref('channels/'+this.channel+'/cmd').set(
 		{	
 			type:"saveExisting",
+			timestamp: Date.now(),
+		});
+};
+
+BusinessGraph.prototype.pivot2marimekko = function(){
+	firebase.database().ref('channels/'+this.channel+'/cmd').set(
+		{	
+			type:"pivot2marimekko",
 			timestamp: Date.now(),
 		});
 };

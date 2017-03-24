@@ -53,10 +53,7 @@ Com.prototype.exec = function(cmd) {
 				firebase.database().ref('channels/'+this.channel+'/cmd').set(cmd);
 				var globals = this.getGlobals();
 				var content = JSON.stringify({	input:pivotData.input,
-												pivotCustom:pivotData.pivotCustom,
-												pivotConfig,
-												dictionary,
-												globals});
+												});
 				this.saveFile({content:content,lastModified:Date.now(),name:cmd.name,type:cmd.filetype,size:content.length});
 			}
 			break;
@@ -78,6 +75,22 @@ Com.prototype.exec = function(cmd) {
 				cmd.done=true;
 				firebase.database().ref('channels/'+this.channel+'/cmd').set(cmd);
 				this.loadFile(cmd.fileID);
+			}			
+			break;
+		case "pivot2marimekko":
+			if(cmd.done==undefined){
+				cmd.done=true;
+				var globals = this.getGlobals();
+				firebase.database().ref('channels/'+this.channel+'/cmd').set(cmd);
+				content = { pivotCustom:pivotData.pivotCustom,
+							tree:pivotData.tree,
+							allTotal:pivotData.allTotal,
+							colTotals:pivotData.colTotals,
+							rowTotals:pivotData.rowTotals,
+						    pivotConfig,
+							globals};
+				var marimekko = pivot2marimekko(content);
+				
 			}			
 			break;
 	}
