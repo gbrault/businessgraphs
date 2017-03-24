@@ -3,6 +3,7 @@
     <head>
         <title>Pivot Component</title>
 		<script type="text/javascript" src="scripts/aes.js"></script>
+		<script type="text/javascript" src="scripts/pivot2marimekko.js"></script>
 		<script src="scripts/dialog-polyfill.js"></script>
 		<link rel="icon" href="favicon.ico" type="image/x-icon">
 		<script type="text/javascript" src="sugar.js"></script>
@@ -534,8 +535,9 @@
 		<!--
 				pvTitle: Top Players (>={{ratio_thresold}}%MS) ranking for Automation Markets {{size}} $Bn
 				pvCurrency: figures currency
-				pvDisplayUnit: unit (multiple of currency) to display Bn, Mn, Kn, Un (internal display)
-				pvInternalUnit: market share above which we show competitors
+				pvDisplayUnit: unit (multiple of currency) to display Bn, Mn, Kn, Un (display)
+				pvInternalUnit: unit (multiple of currency) to display Bn, Mn, Kn, Un (internal)
+				pvThresholdShare: market share above which we show competitors
 				pvLinesColor:  color of boxes lines (hex format)
 				pvFillColor: color of boxes fill (hex format)
 				pvHeaderTextColor: color of header text (hex format)
@@ -545,11 +547,12 @@
 		<table>
 			<tbody>
 			    <tr>
-					<td colspan="8"><input size="108" id="pvTitle" title="Title" placeholder="Top Players (>={{ratio_thresold}}%MS) ranking for Automation Markets {{size}} {{currency}}{{display}}" value="Top Players (>={{ratio_thresold}}%MS) ranking for Automation Markets {{size}} {{currency}}{{display}}"></input></td>
+					<td colspan="9"><input size="108" id="pvTitle" title="Title" placeholder="Top Players (>={{ratio_thresold}}%MS) ranking for Automation Markets {{size}} {{currency}}{{display}}" value="Top Players (>={{ratio_thresold}}%MS) ranking for Automation Markets {{size}} {{currency}}{{display}}"></input></td>
 				<tr>
-					<td><input id="pvCurrency" title="Currency $,€..." placeholder="$" value="$"></input></td>
-					<td><input id="pvDisplayUnit" title="Display Unit Bn, Mn, Kn, Un" placeholder="Mn" value="Mn"></input></td>
-					<td><input id="pvInternalUnit" title="Internal Unit Bn, Mn, Kn, Un" placeholder="Mn" value="Mn"></input></td>
+					<td><input size="3" id="pvCurrency" title="Currency $,€..." placeholder="$" value="$"></input></td>
+					<td><input size="2" id="pvDisplayUnit" title="Display Unit Bn, Mn, Kn, Un" placeholder="Mn" value="Bn"></input></td>
+					<td><input size="2" id="pvInternalUnit" title="Internal Unit Bn, Mn, Kn, Un" placeholder="Mn" value="Mn"></input></td>
+					<td><input size="4" id="pvThresholdShare" title="Thresold Share (0-100)% no % sign input" placeholder="3" value="3"></input></td>
 					<td ><input id="pvLinesColor" type="color" title="Lines Color" value="#393939"></input></td>
 					<td><input id="pvFillColor" type="color" title="Header Fill Color" value="#c0c0c0"></input></td>
 					<td><input id="pvHeaderTextColor" type="color" title="Header Text Color" value="#393939"></input></td>

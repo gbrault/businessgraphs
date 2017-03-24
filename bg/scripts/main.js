@@ -29,11 +29,15 @@ function BusinessGraph() {
   this.uploadFile=document.getElementById('uploadFile');
   this.menu_show = document.getElementById('menu_show');
   this.menu_load_pivot = document.getElementById('menu_load_pivot');
+  this.menu_load_marimekko = document.getElementById('menu_load_marimekko');
   // this.menu_diff = document.getElementById('menu_diff');
   this.menu_delete = document.getElementById('menu_delete');
   this.menu_pivot_save = document.getElementById('menu_pivot_save');
   this.menu_pivot_save_existing = document.getElementById('menu_pivot_save_existing');
+  
+  // TAB elements
   this.togglepivot = document.getElementById('togglepivot');
+  this.togglemarimekko = document.getElementById('togglemarimekko');
   this.togglefiles = document.getElementById('togglefiles');
   this.toggleconsole = document.getElementById('toggleconsole');
   
@@ -46,13 +50,15 @@ function BusinessGraph() {
   // this.menu_diff.addEventListener('click', this.diffFiles.bind(this));  
   this.menu_pivot_save.addEventListener('click', this.pivotSave.bind(this));
   this.menu_pivot_save_existing.addEventListener('click', this.pivotSaveExisting.bind(this));
-  this.menu_load_pivot.addEventListener('click', this.pivotLoad.bind(this))
+  this.menu_load_pivot.addEventListener('click', this.pivotLoad.bind(this));
+  this.menu_load_marimekko.addEventListener('click', this.marimekkoLoad.bind(this));
 
   // TAB listners  
   this.togglefiles.addEventListener('click', this.do_togglefiles.bind(this));
   this.toggleconsole.addEventListener('click', this.do_toggleconsole.bind(this));
   this.togglepivot.addEventListener('click', this.do_togglepivot.bind(this));
-
+  this.togglemarimekko.addEventListener('click', this.do_togglemarimekko.bind(this));
+  
   this.initFirebase();
 };
 
@@ -72,6 +78,10 @@ BusinessGraph.prototype.activateMenuItems = function(tabCategory){
 	for(var i=0; i<menulis.length;i++){
 		menulis[i].style.display = "inherit";
 	}
+};
+
+BusinessGraph.prototype.do_togglemarimekko = function(){
+	this.activateMenuItems('togglemarimekko');
 };
 
 BusinessGraph.prototype.do_togglefiles = function(){
@@ -161,6 +171,33 @@ BusinessGraph.prototype.pivotLoad = function(){
 		this.signInSnackbar.MaterialSnackbar.showSnackbar(data);
 }
 
+BusinessGraph.prototype.marimekkoLoad = function(){	
+	// get first selected file
+	var data = null;
+	var selectmarimekko = {
+		message: 'You must select a marimekko file (ends with .mmk)',
+		timeout: 3000
+	};			
+	var checkedlabels = document.getElementById('filetable').querySelectorAll('label.is-checked');
+	if(checkedlabels.length>0){
+		var tr = checkedlabels[0].parentElement.parentElement;
+		var id = checkedlabels[0].id;
+		if((id!="")&&(tr.children[1].innerText.endsWith('.mmk'))){
+			// load the marimekko file and render it
+			firebase.database().ref('files/'+id).once('value').then( function(hfile){
+				svgMarimekko(JSON.parse(hfile.val().content), document.getElementById('marimekkoframe'));
+			});
+			this.toggleTab('togglemarimekko');
+		} else {			
+			data = selectmarimekko;
+		}
+	} else {		
+		data = selectmarimekko;
+	}
+	if (data!==null) // Display a message to the user using a Toast.
+		this.signInSnackbar.MaterialSnackbar.showSnackbar(data);
+}
+
 BusinessGraph.prototype.showFile = function(){
 	// get first selected file
 	var checkedlabels = document.getElementById('filetable').querySelectorAll('label.is-checked');
@@ -169,24 +206,28 @@ BusinessGraph.prototype.showFile = function(){
 		firebase.database().ref('files/'+id).once('value').then( function(hfile){
 			if(window.oCodeMirror!==undefined){
 				window.oCodeMirror.toTextArea();
+				delete window.oCodeMirror;
 			}
 			var content = hfile.val().content;
 			if(hfile.val().type=="application/json"){
 				content = vkbeautify.json(content, 4 );
-				document.getElementById('txt').innerHTML = "<textarea class='codemirror'></textarea>"				
-				window.oCodeMirror = CodeMirror.fromTextArea(document.getElementById('txt').querySelector('.codemirror'), {
-						mode: "javascript",
-						lineNumbers: true,
-						lineWrapping: true,
-						matchBrackets: true,
-						foldGutter: true,
-						gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-						extraKeys: {"Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }},
-						continueComments: "Enter",	
-				});
-				oCodeMirror.getDoc().setValue(content);				
-			} else {
-				delete window.oCodeMirror;
+				if(content.length<200000){
+					document.getElementById('txt').innerHTML = "<textarea class='codemirror'></textarea>"				
+					window.oCodeMirror = CodeMirror.fromTextArea(document.getElementById('txt').querySelector('.codemirror'), {
+							mode: "javascript",
+							lineNumbers: true,
+							lineWrapping: true,
+							matchBrackets: true,
+							foldGutter: true,
+							gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+							extraKeys: {"Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }},
+							continueComments: "Enter",	
+					});
+					oCodeMirror.getDoc().setValue(content);	
+				} else {
+					document.getElementById('txt').innerText = content;		
+				}
+			} else {				
 				document.getElementById('txt').innerText = content;				
 			}
 			this.toggleTab('toggleconsole');
@@ -226,6 +267,11 @@ BusinessGraph.prototype.readSingleFile = function (evt) {
 
 BusinessGraph.prototype.menuSaveFile = function(){
 	if((this.checkSignedInWithMessage())&&(this.filename!==undefined)){
+		if((this.filetype==undefined)||(this.filetype=="")){
+			if(this.filename.endsWith('mmk')){
+				this.filetype='application/json';
+			}
+		}
 		var uuid = this.UUID();		
 		firebase.database().ref('users/' + this.auth.currentUser.uid+"/files/"+uuid).set(
 			{	name:this.filename,

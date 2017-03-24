@@ -55,6 +55,7 @@
   <link rel="stylesheet" type="text/css" href="styles/dialog-polyfill.css" />
   <script src="scripts/dialog-polyfill.js"></script>
   <script src="scripts/vkbeautify.js"></script>
+  <script src="scripts/svgMarimekko.js"></script>
   
   <!-- Codemirror -->
 <link rel="stylesheet" href="codemirror/codemirror.css">
@@ -100,6 +101,7 @@
 		  <li class="mdl-menu__item togglepivot" id="menu_pivot_save">Save As File</li>
 		  <li class="mdl-menu__item togglefiles" id="menu_show">Show File</li>
 		  <li class="mdl-menu__item togglefiles" id="menu_load_pivot">Load Pivot File</li>
+		  <li class="mdl-menu__item togglefiles" id="menu_load_marimekko">Load Marimekko File</li>
 		  <!-- <li class="mdl-menu__item togglefiles" id="menu_diff">File Diff</li>-->
 		  <li class="mdl-menu__item togglefiles" id="menu_delete">Delete Files</li>
 		  <li class="mdl-menu__item toggleconsole" id="menu_save_file">Save As File</li>
@@ -125,12 +127,16 @@
 		<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
 			<div class="mdl-tabs__tab-bar">
 				<a href="#pivot" class="mdl-tabs__tab is-active" id="togglepivot">Pivot</a>
+				<a href="#marimekko" class="mdl-tabs__tab" id="togglemarimekko">Marimekko</a>
 				<a href="#files" class="mdl-tabs__tab" id="togglefiles">Files</a>
 				<a href="#console" class="mdl-tabs__tab" id="toggleconsole" >Console</a>
 				<!-- <a href="#filediff" class="mdl-tabs__tab" id="togglefilediff">Files Diff</a>-->
 			</div>
 			<div class="mdl-tabs__panel is-active" id="pivot">
 				<iframe id="pivotframe" frameborder="0"></iframe>
+			</div>
+			<div class="mdl-tabs__panel" id="marimekko">
+				<iframe id="marimekkoframe" frameborder="0"></iframe>
 			</div>
 			<div class="mdl-tabs__panel" id="files">
 				<div id="file_list_container"></div>

@@ -27,14 +27,15 @@ Com.prototype.getGlobals = function(){
 	/*
 	pvTitle: Top Players (>={{ratio_thresold}}%MS) ranking for Automation Markets {{size}} $Bn
 	pvCurrency: figures currency
-	pvDisplayUnit: unit (multiple of currency) to display Bn, Mn, Kn, Un (internal display)
-	pvInternalUnit: market share above which we show competitors
+	pvDisplayUnit: unit (multiple of currency) to display Bn, Mn, Kn, Un (display)
+	pvInternalUnit: unit (multiple of currency) to display Bn, Mn, Kn, Un (internal)
+	pvThresholdShare: market share above which we show competitors
 	pvLinesColor:  color of boxes lines (hex format)
 	pvFillColor: color of boxes fill (hex format)
 	pvHeaderTextColor: color of header text (hex format)
 	pvColumnsTextColor: color of column text (hex format)
 	*/
-	var parameters = ['pvTitle','pvCurrency','pvDisplayUnit','pvInternalUnit','pvLinesColor','pvFillColor','pvHeaderTextColor','pvColumnsTextColor'];
+	var parameters = ['pvTitle','pvCurrency','pvDisplayUnit','pvInternalUnit','pvThresholdShare','pvLinesColor','pvFillColor','pvHeaderTextColor','pvColumnsTextColor'];
 	var globals = {};
 	for(var i=0;i<parameters.length;i++){
 		var elt = document.getElementById(parameters[i]);
@@ -51,7 +52,11 @@ Com.prototype.exec = function(cmd) {
 				cmd.done=true;
 				firebase.database().ref('channels/'+this.channel+'/cmd').set(cmd);
 				var globals = this.getGlobals();
-				var content = JSON.stringify({input:pivotData.input,pivotCustom:pivotData.pivotCustom,pivotConfig,dictionary,globals});
+				var content = JSON.stringify({	input:pivotData.input,
+												pivotCustom:pivotData.pivotCustom,
+												pivotConfig,
+												dictionary,
+												globals});
 				this.saveFile({content:content,lastModified:Date.now(),name:cmd.name,type:cmd.filetype,size:content.length});
 			}
 			break;
@@ -60,7 +65,11 @@ Com.prototype.exec = function(cmd) {
 				cmd.done=true;
 				firebase.database().ref('channels/'+this.channel+'/cmd').set(cmd);
 				var globals = this.getGlobals();
-				var content = JSON.stringify({input:pivotData.input,pivotCustom:pivotData.pivotCustom,pivotConfig,dictionary,globals});
+				var content = JSON.stringify({	input:pivotData.input,
+												pivotCustom:pivotData.pivotCustom,
+												pivotConfig,
+												dictionary,
+												globals});
 				this.saveExistingFile(content);
 			}
 			break;
