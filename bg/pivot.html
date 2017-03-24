@@ -394,6 +394,14 @@
  
 	var justPivot = function(fileStructure) {
 		var parsed = JSON.parse(fileStructure.content);
+		if(parsed.globals!==undefined){
+			window.globals=parsed.globals;
+			var keys = Object.keys(parsed.globals);
+			for(var i=0; i<keys.length;i++){
+				var elt = document.getElementById(keys[i]);
+				elt.value = parsed.globals[keys[i]];
+			}
+		}
 		window.dictionary = parsed.dictionary;
 		window.pivotCustom=parsed.pivotCustom;
 		parsed.pivotConfig.onRefresh = function(config) {
@@ -523,7 +531,32 @@
 		window.oCom=new Com();
 	}
 </script>
+		<!--
+				pvTitle: Top Players (>={{ratio_thresold}}%MS) ranking for Automation Markets {{size}} $Bn
+				pvCurrency: figures currency
+				pvDisplayUnit: unit (multiple of currency) to display Bn, Mn, Kn, Un (internal display)
+				pvInternalUnit: market share above which we show competitors
+				pvLinesColor:  color of boxes lines (hex format)
+				pvFillColor: color of boxes fill (hex format)
+				pvHeaderTextColor: color of header text (hex format)
+				pvColumnsTextColor: color of column text (hex format)
+		-->
         <p style="width: 800px"></p>
+		<table>
+			<tbody>
+			    <tr>
+					<td colspan="8"><input size="108" id="pvTitle" title="Title" placeholder="Top Players (>={{ratio_thresold}}%MS) ranking for Automation Markets {{size}} {{currency}}{{display}}" value="Top Players (>={{ratio_thresold}}%MS) ranking for Automation Markets {{size}} {{currency}}{{display}}"></input></td>
+				<tr>
+					<td><input id="pvCurrency" title="Currency $,€..." placeholder="$" value="$"></input></td>
+					<td><input id="pvDisplayUnit" title="Display Unit Bn, Mn, Kn, Un" placeholder="Mn" value="Mn"></input></td>
+					<td><input id="pvInternalUnit" title="Internal Unit Bn, Mn, Kn, Un" placeholder="Mn" value="Mn"></input></td>
+					<td ><input id="pvLinesColor" type="color" title="Lines Color" value="#393939"></input></td>
+					<td><input id="pvFillColor" type="color" title="Header Fill Color" value="#c0c0c0"></input></td>
+					<td><input id="pvHeaderTextColor" type="color" title="Header Text Color" value="#393939"></input></td>
+					<td><input id="pvColumnsTextColor" type="color" title="Cells Text Color" value="#393939"></input></td>
+				</tr>
+			</tbody>
+		</table>
         <div id="output2" style="margin: 30px;"></div>
 		<div id="output3" style="margin: 30px;"></div>
 		<p align="center" style="line-height: 1.5">Drop a CSV file on this page or <label id="filechooser">click here to choose one<input id="csv" type="file" style="display:none"></label><br> <em><small>note: the data never leaves your browser!</small></em></p>
