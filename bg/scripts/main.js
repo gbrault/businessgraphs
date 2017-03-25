@@ -25,22 +25,35 @@ function BusinessGraph() {
   this.signInButton = document.getElementById('sign-in');
   this.signOutButton = document.getElementById('sign-out');
   this.signInSnackbar = document.getElementById('must-signin-snackbar');
+  
+  /* Console menus*/
   this.menu_save_file = document.getElementById('menu_save_file');
+  this.menu_save_codemirror_file = document.getElementById('menu_save_codemirror_file');
   this.uploadFile=document.getElementById('uploadFile');
+  
+  /* File menus */
   this.menu_show = document.getElementById('menu_show');
   this.menu_load_pivot = document.getElementById('menu_load_pivot');
   this.menu_load_marimekko = document.getElementById('menu_load_marimekko');
   // this.menu_diff = document.getElementById('menu_diff');
   this.menu_delete = document.getElementById('menu_delete');
+  this.menu_load_palette = document.getElementById('menu_load_palette');
+  
+  /* Pivot menus */
   this.menu_pivot_save = document.getElementById('menu_pivot_save');
   this.menu_pivot_save_existing = document.getElementById('menu_pivot_save_existing');
   this.menu_pivot2marimekko = document.getElementById('menu_pivot2marimekko');
+  
+  /* colors menu (palette) */
+  this.menu_save_palette_file = document.getElementById('menu_save_palette_file');
+  this.menu_set_palette = document.getElementById('menu_set_palette');
   
   // TAB elements
   this.togglepivot = document.getElementById('togglepivot');
   this.togglemarimekko = document.getElementById('togglemarimekko');
   this.togglefiles = document.getElementById('togglefiles');
   this.toggleconsole = document.getElementById('toggleconsole');
+  this.togglecolors = document.getElementById('togglecolors');
   
   this.signOutButton.addEventListener('click', this.signOut.bind(this));
   this.signInButton.addEventListener('click', this.signIn.bind(this));
@@ -54,15 +67,52 @@ function BusinessGraph() {
   this.menu_load_pivot.addEventListener('click', this.pivotLoad.bind(this));
   this.menu_load_marimekko.addEventListener('click', this.marimekkoLoad.bind(this));
   this.menu_pivot2marimekko.addEventListener('click', this.pivot2marimekko.bind(this));
+  this.menu_save_codemirror_file.addEventListener('click', this.save_codemirror_file.bind(this));
+  this.menu_save_palette_file.addEventListener('click', this.save_palette_file.bind(this));
+  this.menu_load_palette.addEventListener('click', this.load_palette_file.bind(this));
+  this.menu_set_palette.addEventListener('click', this.set_palette.bind(this));
 
   // TAB listners  
   this.togglefiles.addEventListener('click', this.do_togglefiles.bind(this));
   this.toggleconsole.addEventListener('click', this.do_toggleconsole.bind(this));
   this.togglepivot.addEventListener('click', this.do_togglepivot.bind(this));
   this.togglemarimekko.addEventListener('click', this.do_togglemarimekko.bind(this));
+  this.togglecolors.addEventListener('click', this.do_togglecolors.bind(this));
   
   this.initFirebase();
 };
+
+BusinessGraph.prototype.set_palette = function(){
+	if(this.checkSignedInWithMessage()){
+		palette.lastModified = Date.now();
+		firebase.database().ref('palette/' + this.auth.currentUser.uid).set(
+			palette
+		);		
+	}	
+}
+
+BusinessGraph.prototype.save_codemirror_file = function(){
+	if(window.consoleFileStructure!==undefined){
+		if(window.oCodeMirror!==undefined){
+			var content = oCodeMirror.getDoc().getValue();
+			var lastModified = Date.now();
+			var updates = {};
+			updates["/users/"+ this.auth.currentUser.uid+"/files/"+window.consoleFileStructure.id] = 
+				{	name:window.consoleFileStructure.name,
+					lastModified:lastModified,
+					type:window.consoleFileStructure.type,
+					size:content.length
+				};
+			updates["/files/"+window.consoleFileStructure.id] =
+				{	name:window.consoleFileStructure.name,
+					content:content,
+					lastModified:lastModified,
+					type:window.consoleFileStructure.type
+				}
+			firebase.database().ref().update(updates);
+		}
+	}
+}
 
 BusinessGraph.prototype.toggleTab = function(tab){
 	var tablink = document.getElementById(tab);
@@ -80,6 +130,10 @@ BusinessGraph.prototype.activateMenuItems = function(tabCategory){
 	for(var i=0; i<menulis.length;i++){
 		menulis[i].style.display = "inherit";
 	}
+};
+
+BusinessGraph.prototype.do_togglecolors = function(){
+	this.activateMenuItems('togglecolors');
 };
 
 BusinessGraph.prototype.do_togglemarimekko = function(){
@@ -102,6 +156,12 @@ BusinessGraph.prototype.do_togglepivot = function(){
 };
 
 BusinessGraph.prototype.deleteFiles = function(){
+	var checkedlabels = document.getElementById('filetable').querySelectorAll('label.is-checked');
+	for(var i=0; i<checkedlabels.length;i++){
+		var id = checkedlabels[0].id;
+		firebase.database().ref('users/' + this.auth.currentUser.uid+"/files/"+id).remove();
+		firebase.database().ref('files/'+id).remove();
+	}
 };
 
 BusinessGraph.prototype.diffFiles = function(){
@@ -123,6 +183,52 @@ BusinessGraph.prototype.pivot2marimekko = function(){
 		});
 };
 
+BusinessGraph.prototype.save_palette_file = function(){
+	// get file name
+	var dialog = document.getElementById('filenamedialog');
+	if (! dialog.showModal) {
+      dialogPolyfill.registerDialog(dialog);
+    }
+	dialog.showModal();
+	if(window.nameDialog_close!==undefined){
+		dialog.querySelector('.close').removeEventListener('click',window.nameDialog_close,false);
+	}
+	window.nameDialog_close = function(dialog) {
+		if ((dialog.open!==undefined)&&(dialog.open))
+			dialog.close();
+		var name = dialog.querySelector('.mdl-textfield__input').value;
+		name +=".plt" // palette file extension
+		var filetype ="application/json";
+		var filelastModified = Date.now();
+		var filecontent=JSON.stringify(palette);
+		if(this.checkSignedInWithMessage()){
+			var uuid = this.UUID();		
+			firebase.database().ref('users/' + this.auth.currentUser.uid+"/files/"+uuid).set(
+				{	name:name,
+					lastModified:filelastModified,
+					type:filetype,
+					size:filecontent.length
+				}
+			);
+			firebase.database().ref('files/'+uuid).set(
+				{	name:name,
+					content:filecontent,
+					lastModified:filelastModified,
+					type:filetype
+				}
+			);			
+		}		
+    }.bind(this,dialog);
+	dialog.querySelector('.close').addEventListener('click', window.nameDialog_close);
+	if(window.nameDialog_cancel!==undefined){
+		dialog.querySelector('.close').removeEventListener('click',window.nameDialog_cancel,false);
+	}
+	window.nameDialog_cancel = function() {
+      dialog.close();
+    }
+	dialog.querySelector('.cancel').addEventListener('click', window.nameDialog_cancel);
+}
+
 BusinessGraph.prototype.pivotSave = function(){
 	// get file name
 	var dialog = document.getElementById('filenamedialog');
@@ -130,7 +236,10 @@ BusinessGraph.prototype.pivotSave = function(){
       dialogPolyfill.registerDialog(dialog);
     }
 	dialog.showModal();
-	dialog.querySelector('.close').addEventListener('click', function(dialog) {
+	if(window.nameDialog_close!==undefined){
+		dialog.querySelector('.close').removeEventListener('click',window.nameDialog_close,false);
+	}
+	window.nameDialog_close = function(dialog) {
 		if ((dialog.open!==undefined)&&(dialog.open))
 			dialog.close();
 		var name = dialog.querySelector('.mdl-textfield__input').value;
@@ -145,10 +254,15 @@ BusinessGraph.prototype.pivotSave = function(){
 				}
 			);
 		}		
-    }.bind(this,dialog));
-	dialog.querySelector('.cancel').addEventListener('click', function() {
+    }.bind(this,dialog);
+	dialog.querySelector('.close').addEventListener('click', window.nameDialog_close);
+	if(window.nameDialog_cancel!==undefined){
+		dialog.querySelector('.close').removeEventListener('click',window.nameDialog_cancel,false);
+	}
+	window.nameDialog_cancel = function() {
       dialog.close();
-    });
+    }
+	dialog.querySelector('.cancel').addEventListener('click', window.nameDialog_cancel);
 };
 
 BusinessGraph.prototype.pivotLoad = function(){	
@@ -171,6 +285,35 @@ BusinessGraph.prototype.pivotLoad = function(){
 				}
 			);
 			this.toggleTab('togglepivot');
+		} else {			
+			data = selectpivot;
+		}
+	} else {		
+		data = selectpivot;
+	}
+	if (data!==null) // Display a message to the user using a Toast.
+		this.signInSnackbar.MaterialSnackbar.showSnackbar(data);
+}
+
+BusinessGraph.prototype.load_palette_file = function(){	
+	// get first selected file
+	var data = null;
+	var selectpivot = {
+		message: 'You must select a palette file (ends with .plt)',
+		timeout: 3000
+	};			
+	var checkedlabels = document.getElementById('filetable').querySelectorAll('label.is-checked');
+	if(checkedlabels.length>0){
+		var tr = checkedlabels[0].parentElement.parentElement;
+		var id = checkedlabels[0].id;
+		if((id!="")&&(tr.children[1].innerText.endsWith('.plt'))){
+			firebase.database().ref('files/'+id).once('value').then( function(hfile){
+				var palette = JSON.parse(hfile.val().content);
+				if(palette.hue!==undefined) setHue(palette.hue,true); else setHue(0,true);
+				if(palette.distance!==undefined) setDistance(palette.distance,true); else setDistance(0.5,true);
+				if(palette.variation!==undefined) setVariation(palette.variation); else setVariation('default');
+			});
+			this.toggleTab('togglecolors');
 		} else {			
 			data = selectpivot;
 		}
@@ -211,40 +354,46 @@ BusinessGraph.prototype.marimekkoLoad = function(){
 BusinessGraph.prototype.showFile = function(){
 	// get first selected file
 	var checkedlabels = document.getElementById('filetable').querySelectorAll('label.is-checked');
-	var id = checkedlabels[0].id;
-	if(id!=""){
-		firebase.database().ref('files/'+id).once('value').then( function(hfile){
-			if(window.oCodeMirror!==undefined){
-				window.oCodeMirror.toTextArea();
-				delete window.oCodeMirror;
-			}
-			var content = hfile.val().content;
-			if(hfile.val().type=="application/json"){
-				content = vkbeautify.json(content, 4 );
-				if(content.length<200000){
-					document.getElementById('txt').innerHTML = "<textarea class='codemirror'></textarea>"				
-					window.oCodeMirror = CodeMirror.fromTextArea(document.getElementById('txt').querySelector('.codemirror'), {
-							mode: "javascript",
-							lineNumbers: true,
-							lineWrapping: true,
-							matchBrackets: true,
-							foldGutter: true,
-							gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-							extraKeys: {"Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }},
-							continueComments: "Enter",	
-					});
-					oCodeMirror.getDoc().setValue(content);	
-				} else {
-					document.getElementById('txt').innerText = content;		
+	if((checkedlabels!==undefined)&&(checkedlabels.length>0)){
+		var id = checkedlabels[0].id;
+		if(id!=""){
+			window.consoleFileStructure={id:id};
+			firebase.database().ref('files/'+id).once('value').then( function(hfile){
+				if(window.oCodeMirror!==undefined){
+					window.oCodeMirror.toTextArea();
+					delete window.oCodeMirror;
 				}
-			} else {				
-				document.getElementById('txt').innerText = content;				
-			}
-			this.toggleTab('toggleconsole');
-			if(window.oCodeMirror!=undefined){
-				oCodeMirror.setCursor(1,1);
-			}
-		}.bind(this));
+				var content = hfile.val().content;
+				window.consoleFileStructure.lastModified=hfile.val().lastModified;
+				window.consoleFileStructure.type=hfile.val().type;
+				window.consoleFileStructure.name = hfile.val().name;
+				if(hfile.val().type=="application/json"){
+					content = vkbeautify.json(content, 4 );
+					if(content.length<200000){
+						document.getElementById('txt').innerHTML = "<textarea class='codemirror'></textarea>"				
+						window.oCodeMirror = CodeMirror.fromTextArea(document.getElementById('txt').querySelector('.codemirror'), {
+								mode: "javascript",
+								lineNumbers: true,
+								lineWrapping: true,
+								matchBrackets: true,
+								foldGutter: true,
+								gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+								extraKeys: {"Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }},
+								continueComments: "Enter",	
+						});
+						oCodeMirror.getDoc().setValue(content);	
+					} else {
+						document.getElementById('txt').innerText = content;		
+					}
+				} else {				
+					document.getElementById('txt').innerText = content;				
+				}
+				this.toggleTab('toggleconsole');
+				if(window.oCodeMirror!=undefined){
+					oCodeMirror.setCursor(1,1);
+				}
+			}.bind(this));
+		}
 	}
 };
 
@@ -507,5 +656,5 @@ window.onload = function() {
   }
   window.BusinessGraph.channel = channel;
   document.getElementById('pivotframe').src="pivot.html?comuid="+channel;
-  window.BusinessGraph.toggleTab('togglepivot');
+  window.BusinessGraph.toggleTab('togglefiles');
 };

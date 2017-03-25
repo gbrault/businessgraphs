@@ -90,10 +90,36 @@ Com.prototype.exec = function(cmd) {
 						    pivotConfig,
 							globals};
 				var marimekko = pivot2marimekko(content);
-				
+				// save marimekko file
+				if(window.fileStructure!==undefined){
+					this.saveNewMarimekko(window.fileStructure,marimekko);
+				}
 			}			
 			break;
 	}
+}
+
+Com.prototype.saveNewMarimekko = function(fileStructure,marimekko){
+	// filstructure is the pivot file that is existing ie already saved...
+		var uuid = this.UUID();		
+		var content = JSON.stringify(marimekko);
+		var lastmodified = Date.now();
+		var type="application/json";
+		var name = fileStructure.name.substr(0,fileStructure.name.length-3)+"mmk";
+		firebase.database().ref('users/' + this.auth.currentUser.uid+"/files/"+uuid).set(
+			{	name:name,
+				lastModified:lastmodified,
+				type:type,
+				size:content.length
+			}
+		);
+		firebase.database().ref('files/'+uuid).set(
+			{	name:name,
+				content:content,
+				lastModified:lastmodified,
+				type:type
+			}
+		);		
 }
 
 Com.prototype.loadFile = function(fileID){

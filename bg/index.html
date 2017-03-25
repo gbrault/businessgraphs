@@ -56,6 +56,7 @@
   <script src="scripts/dialog-polyfill.js"></script>
   <script src="scripts/vkbeautify.js"></script>
   <script src="scripts/svgMarimekko.js"></script>
+  <script type="text/javascript" src="scripts/color-scheme.js"></script>
   
   <!-- Codemirror -->
 <link rel="stylesheet" href="codemirror/codemirror.css">
@@ -97,14 +98,16 @@
 				<i class="material-icons">more_vert</i>
 		</button>
 		<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="menu-lower-right" id="ulmenu">
-		  <li class="mdl-menu__item togglepivot" id="menu_pivot_save_existing">Save Current</li>
-		  <li class="mdl-menu__item togglepivot" id="menu_pivot_save">Save As File</li>
-		  <li class="mdl-menu__item togglepivot" id="menu_pivot2marimekko">Generate Marimekko</li>
+		  <li class="mdl-menu__item togglepivot" id="menu_pivot_save_existing">Save Pivot</li>
+		  <li class="mdl-menu__item togglepivot" id="menu_pivot_save">Save As Pivot</li>
+		  <li class="mdl-menu__item togglepivot" id="menu_pivot2marimekko">Save Marimekko</li>
 		  <li class="mdl-menu__item togglefiles" id="menu_show">Show File</li>
-		  <li class="mdl-menu__item togglefiles" id="menu_load_pivot">Load Pivot File</li>
-		  <li class="mdl-menu__item togglefiles" id="menu_load_marimekko">Load Marimekko File</li>
+		  <li class="mdl-menu__item togglefiles" id="menu_load_pivot">Load Pivot</li>
+		  <li class="mdl-menu__item togglefiles" id="menu_load_marimekko">Load Marimekko</li>
+		  <li class="mdl-menu__item togglefiles" id="menu_load_palette">Load Palette</li>
 		  <!-- <li class="mdl-menu__item togglefiles" id="menu_diff">File Diff</li>-->
 		  <li class="mdl-menu__item togglefiles" id="menu_delete">Delete Files</li>
+		  <li class="mdl-menu__item toggleconsole" id="menu_save_codemirror_file">Save</li>
 		  <li class="mdl-menu__item toggleconsole" id="menu_save_file">Save As File</li>
 		  <li class="mdl-menu__item toggleconsole">
 			<div class="mdl-textfield mdl-js-textfield mdl-textfield--file">
@@ -112,11 +115,10 @@
 				<div class="mdl-button mdl-button--primary mdl-button--icon mdl-button--file">
 					<i class="material-icons">attach_file</i>
 					<input type="file" id="uploadFile">
-				</div>
-			
+				</div>			
 		  </li>
-		  <!-- <li disabled class="mdl-menu__item">Disabled Action</li> -->
-		  <!-- <li class="mdl-menu__item">Yet Another Action</li> -->
+		  <li class="mdl-menu__item togglecolors" id="menu_save_palette_file" title="save as a file in firebase">Save As Palette</li>
+		  <li class="mdl-menu__item togglecolors" id="menu_set_palette" title="set the firebase palette">Set Palette</li>
 		</ul>
 		</div>		
       </div>
@@ -127,24 +129,28 @@
 	<main class="mdl-layout__content mdl-color--grey-100">
 		<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
 			<div class="mdl-tabs__tab-bar">
-				<a href="#pivot" class="mdl-tabs__tab is-active" id="togglepivot">Pivot</a>
+				<a href="#files" class="mdl-tabs__tab is-active" id="togglefiles">Files</a>
+				<a href="#pivot" class="mdl-tabs__tab " id="togglepivot">Pivot</a>
 				<a href="#marimekko" class="mdl-tabs__tab" id="togglemarimekko">Marimekko</a>
-				<a href="#files" class="mdl-tabs__tab" id="togglefiles">Files</a>
 				<a href="#console" class="mdl-tabs__tab" id="toggleconsole" >Console</a>
+				<a href="#colors" class="mdl-tabs__tab" id="togglecolors" >Palette</a>
 				<!-- <a href="#filediff" class="mdl-tabs__tab" id="togglefilediff">Files Diff</a>-->
 			</div>
-			<div class="mdl-tabs__panel is-active" id="pivot">
+			<div class="mdl-tabs__panel" id="pivot">
 				<iframe id="pivotframe" frameborder="0"></iframe>
 			</div>
 			<div class="mdl-tabs__panel" id="marimekko">
 				<iframe id="marimekkoframe" frameborder="0"></iframe>
 			</div>
-			<div class="mdl-tabs__panel" id="files">
+			<div class="mdl-tabs__panel is-active" id="files">
 				<div id="file_list_container"></div>
 			</div>
 			<div class="mdl-tabs__panel" id="console">
 				<pre id="txt"></pre>
 			</div>
+			<div class="mdl-tabs__panel" id="colors">
+				<div id="colordiv"></div>
+			</div>			
 			<!-- <div class="mdl-tabs__panel" id="filediff"></div>-->
 		</div>
         <div id="must-signin-snackbar" class="mdl-js-snackbar mdl-snackbar">
@@ -183,5 +189,6 @@
 </script>
 
 <script src="scripts/main.js"></script>
+<script src="scripts/colors.js"></script>
 </body>
 </html>

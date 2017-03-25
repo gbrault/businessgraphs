@@ -15,6 +15,7 @@ if (marimekko.graphtype == "marimekko") {
     var color_columns_text = marimekko.color_columns_text;
     var colors = marimekko.Colors;
     var displayTitleRows = marimekko.displayTitleRows;
+    var displayTitleCols = marimekko.displayTitleCols;
     var pptx = new SVGGenJS(outputFrame);
     pptx.setLayout({
         name: 'A4',
@@ -119,7 +120,10 @@ if (marimekko.graphtype == "marimekko") {
                 fs = 10;
             }
             title = marimekko.rows[rows].cols[cols].title;
+			if((displayTitleCols!==undefined)&&(displayTitleCols[title]!==undefined))
+				title=displayTitleCols[title];
             if (wcm < 2.5) {
+				title = marimekko.rows[rows].cols[cols].title;
                 title = marimekko.shortTitleCols[title];
                 if (title == undefined) {
                     title = marimekko.rows[rows].cols[cols].title.substr(0, 3);
@@ -249,8 +253,8 @@ function SVGGenJS(outputFrame) {
         temp += this.htmlend + "\n";
 		// image/svg+xml?
 		this.outputFrame.src = "data:text/html;charset=utf-8," + escape(temp);
-		this.outputFrame.height = this.outputFrame.contentWindow.document.body.scrollWidth;
-		this.outputFrame.width = this.outputFrame.contentWindow.document.body.scrollHeight;	
+		this.outputFrame.height = window.innerHeight;
+		this.outputFrame.width = window.innerWidth;	
 		/*
         var blob = new Blob([temp], {type: "text/plain;charset=utf-8"});
 		var d = new Date();
