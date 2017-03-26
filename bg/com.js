@@ -53,6 +53,10 @@ Com.prototype.exec = function(cmd) {
 				firebase.database().ref('channels/'+this.channel+'/cmd').set(cmd);
 				var globals = this.getGlobals();
 				var content = JSON.stringify({	input:pivotData.input,
+												pivotCustom:pivotData.pivotCustom,
+												pivotConfig,
+												dictionary,
+												globals
 												});
 				this.saveFile({content:content,lastModified:Date.now(),name:cmd.name,type:cmd.filetype,size:content.length});
 			}
@@ -98,6 +102,13 @@ Com.prototype.exec = function(cmd) {
 			break;
 	}
 }
+Com.prototype.getPalette = function(callback){
+	firebase.database().ref('palette/' + this.auth.currentUser.uid).once('value').then( function(palette){
+		if((callback!==undefined)&&(typeof callback === 'function')){
+			return callback(palette.val());
+		}
+	});
+};
 
 Com.prototype.saveNewMarimekko = function(fileStructure,marimekko){
 	// filstructure is the pivot file that is existing ie already saved...
@@ -120,7 +131,7 @@ Com.prototype.saveNewMarimekko = function(fileStructure,marimekko){
 				type:type
 			}
 		);		
-}
+};
 
 Com.prototype.loadFile = function(fileID){
 	firebase.database().ref('files/'+fileID).once('value').then( function(hfile){
@@ -128,7 +139,7 @@ Com.prototype.loadFile = function(fileID){
 		// remember file structure (for save)
 		window.fileStructure = {id:fileID, lastModified:hfile.val().lastModified, name:hfile.val().name, type:hfile.val().type, size:hfile.val().content.length};
 	});
-}
+};
 
 Com.prototype.saveFile = function(fileStructure){ // actually save as
 		var uuid = this.UUID();		
@@ -187,4 +198,4 @@ Com.prototype.onAuthStateChanged = function(user) {
 	} else {
 		// not logged
 	}
-}
+};

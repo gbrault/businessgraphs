@@ -277,6 +277,60 @@
 						dialog.querySelector('.close').addEventListener('click', close);
 						dialog.custom = {close,cancel};					
 						dialog.showModal();
+					} else if((key=='delete_color')){
+						var name = value;
+						var category = attr;
+						if(window.pivotCustom!==undefined) {
+							if(window.pivotCustom[category]!==undefined){
+								if(window.pivotCustom[category][name]!==undefined){
+									if(window.pivotCustom[category][name].color!==undefined){
+										delete window.pivotCustom[category][name].color;						
+										// update ui
+										var render = $('.pvtRenderer')
+										render.trigger('change');
+									}
+								}
+							}
+						}
+					} else if((key=='apply_palette')){
+						
+						// delete all existing colors
+						var categories = Object.keys(window.pivotCustom);
+						for(var i=0; i<categories.length; i++){
+							var names=Object.keys(window.pivotCustom[categories[i]]);
+							for(var j=0; j<names.length; j++){
+								if(window.pivotCustom[categories[i]][names[j]].color!==undefined){
+									delete window.pivotCustom[categories[i]][names[j]].color;
+								}
+							}
+						}						
+						// add the palette colors to the first items
+						oCom.getPalette(function(palette){
+							var colors = palette.colors;
+							if(colors!==undefined){
+								// create as many a entries as colors in the pivotCustom						
+								var keys = pivotData.getRowKeys();
+								for(var i=0;((i<keys.length)&&(i<colors.length));i++){
+									var oSplit= keys[i][0].split("\u0000");
+									var l = oSplit.length-1;
+									var category = pivotConfig.rows[l];
+									var name = oSplit[l];
+									if(window.pivotCustom==undefined){ 
+										window.pivotCustom={};
+									}
+									if(window.pivotCustom[category]==undefined){
+										window.pivotCustom[category]={};
+									}
+									if(window.pivotCustom[category][name]==undefined){ 
+										window.pivotCustom[category][name]={};
+									}
+									window.pivotCustom[category][name].color="#"+colors[i];									
+								}							
+								// update ui
+								var render = $('.pvtRenderer')
+								render.trigger('change');
+							}
+						});
 					}
 				}
 				// update ui
@@ -291,7 +345,9 @@
 				"alpha_ascending":{name:"Alpha_Ascending", icon:'fa-sort-alpha-asc'},
 				"alpha_descending":{name:"Alpha_Descending", icon:'fa-sort-alpha-desc'},
 				"edit_color":{name:"Edit_Color", icon:'fa-pencil-square-o'},
-				"edit_names":{name:"Edit_Names", icon:'fa-pencil-square-o'}
+				"edit_names":{name:"Edit_Names", icon:'fa-pencil-square-o'},
+				"delete_color":{name:"Delete_Color", icon:'fa-eraser'},
+				"apply_palette":{name:"Apply_Palette", icon:'fa-paint-brush'}
 			}
 		});
 		$.contextMenu({

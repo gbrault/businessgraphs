@@ -48,6 +48,9 @@ function BusinessGraph() {
   this.menu_save_palette_file = document.getElementById('menu_save_palette_file');
   this.menu_set_palette = document.getElementById('menu_set_palette');
   
+  /* marimekko menu */
+  this.menu_save_powerpoint = document.getElementById('menu_save_powerpoint');
+  
   // TAB elements
   this.togglepivot = document.getElementById('togglepivot');
   this.togglemarimekko = document.getElementById('togglemarimekko');
@@ -71,6 +74,7 @@ function BusinessGraph() {
   this.menu_save_palette_file.addEventListener('click', this.save_palette_file.bind(this));
   this.menu_load_palette.addEventListener('click', this.load_palette_file.bind(this));
   this.menu_set_palette.addEventListener('click', this.set_palette.bind(this));
+  this.menu_save_powerpoint.addEventListener('click', this.download_powerpoint.bind(this));
 
   // TAB listners  
   this.togglefiles.addEventListener('click', this.do_togglefiles.bind(this));
@@ -82,12 +86,17 @@ function BusinessGraph() {
   this.initFirebase();
 };
 
+BusinessGraph.prototype.download_powerpoint = function(){
+	if(this.checkSignedInWithMessage()){
+		if(window.marimekkoFileStructure!==undefined){
+			pptxMarimekko(window.marimekkoFileStructure.content,window.marimekkoFileStructure.name);
+		}
+	}	
+}
 BusinessGraph.prototype.set_palette = function(){
 	if(this.checkSignedInWithMessage()){
 		palette.lastModified = Date.now();
-		firebase.database().ref('palette/' + this.auth.currentUser.uid).set(
-			palette
-		);		
+		firebase.database().ref('palette/' + this.auth.currentUser.uid).set(palette);		
 	}	
 }
 
@@ -337,8 +346,11 @@ BusinessGraph.prototype.marimekkoLoad = function(){
 		var id = checkedlabels[0].id;
 		if((id!="")&&(tr.children[1].innerText.endsWith('.mmk'))){
 			// load the marimekko file and render it
+			window.marimekkoFileStructure = {id:id};
 			firebase.database().ref('files/'+id).once('value').then( function(hfile){
-				svgMarimekko(JSON.parse(hfile.val().content), document.getElementById('marimekkoframe'));
+				window.marimekkoFileStructure.content = JSON.parse(hfile.val().content);
+				window.marimekkoFileStructure.name = hfile.val().name;
+				svgMarimekko(window.marimekkoFileStructure.content, document.getElementById('marimekkoframe'));
 			});
 			this.toggleTab('togglemarimekko');
 		} else {			
