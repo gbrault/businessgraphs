@@ -167,9 +167,9 @@ BusinessGraph.prototype.do_togglepivot = function(){
 BusinessGraph.prototype.deleteFiles = function(){
 	var checkedlabels = document.getElementById('filetable').querySelectorAll('label.is-checked');
 	for(var i=0; i<checkedlabels.length;i++){
-		var id = checkedlabels[0].id;
-		firebase.database().ref('users/' + this.auth.currentUser.uid+"/files/"+id).remove();
-		firebase.database().ref('files/'+id).remove();
+		var id = checkedlabels[i].id;
+			firebase.database().ref('users/' + this.auth.currentUser.uid+"/files/"+id).remove();
+			firebase.database().ref('files/'+id).remove();
 	}
 };
 

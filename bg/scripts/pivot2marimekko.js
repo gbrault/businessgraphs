@@ -45,14 +45,17 @@ function pivot2marimekko(pivotFile){
 				var label=""
 				for(var j=0;j<split.length;j++){
 					var field = pivotFile.pivotConfig.rows[j];
-					var slabel = pivotFile.pivotCustom[field]
-					if(slabel!==undefined){
-						slabel = slabel[split[j]];
+					var slabel=null;
+					if(pivotFile.pivotCustom!==undefined){
+						slabel = pivotFile.pivotCustom[field]
 						if(slabel!==undefined){
-							slabel = slabel.longname;
+							slabel = slabel[split[j]];
+							if(slabel!==undefined){
+								slabel = slabel.longname;
+							}
 						}
-					} 
-					if (slabel==undefined){
+					}
+					if (slabel==null){
 						slabel = split[j];
 					}
 					label += slabel;
@@ -70,14 +73,15 @@ function pivot2marimekko(pivotFile){
 				var label=""
 				for(var j=0;j<split.length;j++){
 					var field = pivotFile.pivotConfig.rows[j];
-					var slabel = pivotFile.pivotCustom[field]
-					if(slabel!==undefined){
+					var slabel = null;
+					if((pivotFile.pivotCustom!==undefined)&&(pivotFile.pivotCustom[field]!==undefined)){
+						slabel = pivotFile.pivotCustom[field]
 						slabel = slabel[split[j]];
 						if(slabel!==undefined){
 							slabel = slabel.shortname;
 						}
 					} 
-					if (slabel==undefined){
+					if ((slabel==undefined)||(slabel==null)){
 						slabel = split[j];
 					}
 					label += slabel;
@@ -93,7 +97,8 @@ function pivot2marimekko(pivotFile){
 				var split = keys[i].split("\u0000");
 				// get the color of the inner element
 				var field = pivotFile.pivotConfig.rows[split.length-1];
-				if(	(pivotFile.pivotCustom[field]!==undefined) &&
+				if(	(pivotFile.pivotCustom!==undefined)&&
+					(pivotFile.pivotCustom[field]!==undefined) &&
 					(pivotFile.pivotCustom[field][split[split.length-1]]!==undefined) && 
 					(pivotFile.pivotCustom[field][split[split.length-1]].color!==undefined)
 				  ){
@@ -113,14 +118,15 @@ function pivot2marimekko(pivotFile){
 				var label=""
 				for(var j=0;j<split.length;j++){
 					var field = pivotFile.pivotConfig.cols[j];
-					var slabel = pivotFile.pivotCustom[field]
-					if(slabel!==undefined){
+					var slabel = null;
+					if((pivotFile.pivotCustom!==undefined)&&(pivotFile.pivotCustom[field]!==undefined)){
+						slabel=pivotFile.pivotCustom[field];
 						slabel = slabel[split[j]];
 						if(slabel!==undefined){
 							slabel = slabel.longname;
 						}
 					} 
-					if (slabel==undefined){
+					if ((slabel==undefined)||(slabel==null)){
 						slabel = split[j];
 					}
 					label += slabel;
@@ -138,14 +144,15 @@ function pivot2marimekko(pivotFile){
 				var label=""
 				for(var j=0;j<split.length;j++){
 					var field = pivotFile.pivotConfig.cols[j];
-					var slabel = pivotFile.pivotCustom[field]
-					if(slabel!==undefined){
+					var slabel = null;
+					if((pivotFile.pivotCustom!==undefined)&&(pivotFile.pivotCustom[field]!==undefined)){
+						slabel=pivotFile.pivotCustom[field];
 						slabel = slabel[split[j]];
 						if(slabel!==undefined){
 							slabel = slabel.shortname;
 						}
 					} 
-					if (slabel==undefined){
+					if ((slabel==undefined)||(slabel==null)){
 						slabel = split[j];
 					}
 					label += slabel;
