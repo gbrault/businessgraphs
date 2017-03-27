@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Pivot Component</title>
+		<script type="text/javascript" src="scripts/aes.js"></script>
+		<script type="text/javascript" src="scripts/lzwCompress.js"></script>
+		<script type="text/javascript" src="scripts/IOmodule.js"></script>
+  <script type="text/javascript" src="scripts/gzip.min.js"></script>
+  <script type="text/javascript" src="scripts/gunzip.min.js"></script>
+		<script type="text/javascript" src="scripts/pivot2marimekko.js"></script>
+		<script src="scripts/dialog-polyfill.js"></script>
+		<link rel="icon" href="favicon.ico" type="image/x-icon">
+		<script type="text/javascript" src="sugar.js"></script>
+		<script type="text/javascript" src="com.js"></script>
+        <!-- external libs from cdnjs -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" rel="stylesheet" type="text/css" />
+		<!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">-->
+		<script src="https://use.fontawesome.com/ee191b07b0.js"></script>
+
+        <!-- PivotTable.js libs from ../dist -->
+        <link rel="stylesheet" type="text/css" href="pivot.css">
+        <script type="text/javascript" src="pivot.js"></script>
+        <style>
+            body {font-family: Verdana;}			
+            html { height:100%; }
+            body {
+                font-family: Verdana;
+                min-height: 95%;
+                border: 5px dotted;
+            }
+            .whiteborder {border-color: white;}
+            .greyborder {border-color: lightgrey;}
+            #filechooser {
+                color: #555;
+                text-decoration: underline;;
+                cursor: pointer; /* "hand" cursor */
+            }
+        </style>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
+
+        <!-- optional: mobile support with jqueryui-touch-punch -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+
+        <!-- for examples only! script to show code to user -->
+        <script type="text/javascript" src="show_code.js"></script>
+		
+		<!-- jquery context menu addon -->
+		<link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic'
+          rel='stylesheet' type='text/css'>
+		<link href="https://swisnl.github.io/jQuery-contextMenu/dist/jquery.contextMenu.css" rel="stylesheet" type="text/css" />
+		<script src="https://swisnl.github.io/jQuery-contextMenu/dist/jquery.contextMenu.js" type="text/javascript"></script>
+		<script src="https://swisnl.github.io/jQuery-contextMenu/dist/jquery.ui.position.min.js" type="text/javascript"></script>
+    </head>
+    <body class="whiteborder" style="overflow:scroll">
+        <script type="text/javascript">
+    // Textarea below will refresh will display the configuration
+    // object every time a user interacts, using the "onRefresh"
+    // parameter. Instead of showing the configuration in a textarea,
+    // one could store the configuration in a cookie or implement a
+    // "save configuration" feature.
+	var dictionary={};
+	function mySorter(attr){
+		if(dictionary[attr]==undefined) return {};
+		return function(attr,as,bs){
+			var a,b;
+			a = window.dictionary[attr].indexOf(as);
+			b = window.dictionary[attr].indexOf(bs);
+			if(a>b){
+				return 1;
+			} else {
+				if (a==b){
+					return 0;
+				}
+			}
+			return -1;
+		}.bind(null,attr);
+	}
+	
+	function Dictionary(pivotData){
+		var i,j;
+		var dictionary={};
+		/* columns */
+		for(i=0;i<pivotData.colAttrs.length;i++){
+			dictionary[pivotData.colAttrs[i]]=[];
+		}		
+		for(j=0;j<pivotData.colKeys.length;j++){
+			for(i=0;i<pivotData.colKeys[j].length;i++){
+				if(dictionary[pivotData.colAttrs[i]].indexOf(pivotData.colKeys[j][i])==-1){
+					dictionary[pivotData.colAttrs[i]].push(pivotData.colKeys[j][i]);
+				}
+			}		
+		}
+		/* rows */
+		for(i=0;i<pivotData.rowAttrs.length;i++){
+			dictionary[pivotData.rowAttrs[i]]=[];
+		}		
+		for(j=0;j<pivotData.rowKeys.length;j++){
+			for(i=0;i<pivotData.rowKeys[j].length;i++){
+				if(dictionary[pivotData.rowAttrs[i]].indexOf(pivotData.rowKeys[j][i])==-1){
+					dictionary[pivotData.rowAttrs[i]].push(pivotData.rowKeys[j][i]);
+				}
+			}		
+		}		
+		return dictionary;
+	}
+	
+	function Dictionary_Update(pivotData,pivotConfig,dictionary){
+		var i,j;
+		var temp = Dictionary(pivotData);
+		
+		for(i=0;i<Object.keys(temp).length;i++){
+			var attr = Object.keys(temp)[i];
+			if(dictionary[attr]==undefined){
+				dictionary[attr]=temp[attr];
+			}
+		}
+		
+		for(i=0; i<Object.keys(dictionary).length;i++){
+			// supress exclusions
+			var attr=Object.keys(dictionary)[i];
+			var keys = pivotConfig.exclusions[attr];
+			if(keys!==undefined){
+				for(j=0; j<keys.length;j++){
+					var value=keys[j];
+					var index = dictionary[attr].indexOf(value);
+					if(index!=-1){
+						dictionary[attr].splice(index,1);
+					}
+				}
+			}
+			// get back new inclusions (end)
+			if((keys==undefined)&&(pivotConfig.inclusions[attr]==undefined)){
+				keys = temp[attr];
+			} else {
+				keys = pivotConfig.inclusions[attr];
+			}
+			
+			
+			if(keys!==undefined){
+				for(j=0; j<keys.length;j++){
+					var value=keys[j];
+					var index = dictionary[attr].indexOf(value);
+					if(index==-1){
+						dictionary[attr].unshift(value);
+					}
+				}				
+			}
+		}
+		
+	}
+
+		$(document).on('click','.pvtRowLabel',function(e) {
+			var range,textNode,offset
+			console.log(e);
+			if (document.caretPositionFromPoint) {
+				range = document.caretPositionFromPoint(e.clientX, e.clientY);
+				textNode = range.offsetNode;
+				offset = range.offset;
+			} else if (document.caretRangeFromPoint) {
+				range = document.caretRangeFromPoint(e.clientX, e.clientY);
+				textNode = range.startContainer;
+				offset = range.startOffset;
+			}
+			console.log(textNode.data.substr(offset,1));
+		});
+		$.contextMenu({
+			selector: '.pvtRowLabel',
+			callback: function(key,option){
+				var m = "clicked: " + key +" on " + $(this).text();
+                window.console && console.log(m); // || alert(m);
+				var attr = $('[data-rowattrs="'+$(this).attr('data-rowattrs')+'"].pvtAxisLabel').text();
+				var value = $(this).text();
+				if(dictionary[attr].indexOf(value)!=-1){
+					if((key=='up')&&(dictionary[attr].indexOf(value)!=0)){
+						index = dictionary[attr].indexOf(value);
+						dictionary[attr].splice(index,1); // suppress element
+						dictionary[attr].splice(index-1,0,value); // add it back left
+					} else if((key=='down')&&(dictionary[attr].indexOf(value)!=(dictionary[attr].length-1))){
+					    index = dictionary[attr].indexOf(value);
+						dictionary[attr].splice(index,1); // suppress element
+						dictionary[attr].splice(index+1,0,value); // add it back right
+					} else if((key=='ascending')){
+						/* reorder I can do that only if one level header is set*/
+						if(window.pivotData.rowAttrs.length==1){
+							var order = Sugar.Array.sortBy(Object.entries(window.pivotData.rowTotals),
+								function(o){
+									if(window.pivotConfig.aggregatorName==="Count"){ return o[1].count;}
+									else 
+									if(window.pivotConfig.aggregatorName==="Sum"){ return o[1].sum;}
+								});
+							dictionary[attr]=[];
+							for(var i=0;i<order.length;i++){
+								dictionary[attr].push(order[i][0]);
+							}
+						}
+					} else if((key=='descending')){
+						/* reorder I can do that only if one level header is set*/
+						if(window.pivotData.rowAttrs.length==1){
+							var order = Sugar.Array.sortBy(Object.entries(window.pivotData.rowTotals),
+								function(o){
+									if(window.pivotConfig.aggregatorName==="Count"){ return o[1].count;}
+									else 
+									if(window.pivotConfig.aggregatorName==="Sum"){ return o[1].sum;}
+								},true);
+							dictionary[attr]=[];
+							for(var i=0;i<order.length;i++){
+								dictionary[attr].push(order[i][0]);
+							}
+						}
+					} else if((key=='alpha_ascending')){
+						dictionary[attr]=Sugar.Array.sortBy(dictionary[attr],length,false);
+					} else if((key=='alpha_descending')){
+						dictionary[attr]=Sugar.Array.sortBy(dictionary[attr],length,true);
+					} else if((key=='edit_color')){
+						var dialog = document.getElementById('colordialog');
+						if (! dialog.showModal) {
+							dialogPolyfill.registerDialog(dialog);
+						}
+						if (dialog.custom!==undefined){
+							dialog.querySelector('.cancel').removeEventListener('click',dialog.custom.cancel,false); 
+							dialog.querySelector('.close').removeEventListener('click',dialog.custom.close,false); 
+						}
+						var close = function(o) {
+							if ((o.dialog.open!==undefined)&&(o.dialog.open)){
+								o.dialog.close();
+								var input = o.dialog.querySelector('input');
+								if(window.pivotCustom==undefined) window.pivotCustom={};
+								if(window.pivotCustom[o.category]==undefined) window.pivotCustom[o.category]={};
+								if(window.pivotCustom[o.category][o.name]==undefined) window.pivotCustom[o.category][o.name]={};
+								window.pivotCustom[o.category][o.name].color=input.value;
+								// update ui
+								var render = $('.pvtRenderer')
+								render.trigger('change');
+							}
+						}.bind(null,{name:value,category:attr,dialog:dialog});
+						var cancel = function(o) {
+							if ((o.dialog.open!==undefined)&&(o.dialog.open)){
+								o.dialog.close();
+							}
+						}.bind(null,{name:value,category:attr,dialog:dialog});							
+						dialog.querySelector('.cancel').addEventListener('click',cancel); 
+						dialog.querySelector('.close').addEventListener('click', close);
+						dialog.custom = {close,cancel};					
+						dialog.showModal();
+					} else if((key=='edit_names')){
+						var dialog = document.getElementById('namesdialog');
+						if (! dialog.showModal) {
+							dialogPolyfill.registerDialog(dialog);
+						}
+						if (dialog.custom!==undefined){
+							dialog.querySelector('.cancel').removeEventListener('click',dialog.custom.cancel,false); 
+							dialog.querySelector('.close').removeEventListener('click',dialog.custom.close,false); 
+						}
+						var shortname = dialog.querySelector('.short');
+						var longname = dialog.querySelector('.long');
+						shortname.value = value.substr(0,3);
+						longname.value = value;
+						var cancel = function(o) {
+							if ((o.dialog.open!==undefined)&&(o.dialog.open)){
+								o.dialog.close();
+							}
+						}.bind(null,{name:value,category:attr,dialog:dialog});	
+						var close = function(o) {
+							if ((o.dialog.open!==undefined)&&(o.dialog.open)){
+								o.dialog.close();
+								var shortname = o.dialog.querySelector('.short');
+								var longname = o.dialog.querySelector('.long');
+								if(window.pivotCustom==undefined) window.pivotCustom={};
+								if(window.pivotCustom[o.category]==undefined) window.pivotCustom[o.category]={};
+								if(window.pivotCustom[o.category][o.name]==undefined) window.pivotCustom[o.category][o.name]={};
+								window.pivotCustom[o.category][o.name].shortname=shortname.value;
+								window.pivotCustom[o.category][o.name].longname=longname.value;
+							}
+							// update ui
+							var render = $('.pvtRenderer')
+							render.trigger('change');
+						}.bind(null,{name:value,category:attr,dialog:dialog});						
+						dialog.querySelector('.cancel').addEventListener('click',cancel); 
+						dialog.querySelector('.close').addEventListener('click', close);
+						dialog.custom = {close,cancel};					
+						dialog.showModal();
+					} else if((key=='delete_color')){
+						var name = value;
+						var category = attr;
+						if(window.pivotCustom!==undefined) {
+							if(window.pivotCustom[category]!==undefined){
+								if(window.pivotCustom[category][name]!==undefined){
+									if(window.pivotCustom[category][name].color!==undefined){
+										delete window.pivotCustom[category][name].color;						
+										// update ui
+										var render = $('.pvtRenderer')
+										render.trigger('change');
+									}
+								}
+							}
+						}
+					} else if((key=='apply_palette')){
+						
+						// delete all existing colors
+						var categories = Object.keys(window.pivotCustom);
+						for(var i=0; i<categories.length; i++){
+							var names=Object.keys(window.pivotCustom[categories[i]]);
+							for(var j=0; j<names.length; j++){
+								if(window.pivotCustom[categories[i]][names[j]].color!==undefined){
+									delete window.pivotCustom[categories[i]][names[j]].color;
+								}
+							}
+						}						
+						// add the palette colors to the first items
+						oCom.getPalette(function(palette){
+							var colors = palette.colors;
+							if(colors!==undefined){
+								// create as many a entries as colors in the pivotCustom						
+								var keys = pivotData.getRowKeys();
+								for(var i=0;((i<keys.length)&&(i<colors.length));i++){
+									var oSplit= keys[i][0].split("\u0000");
+									var l = oSplit.length-1;
+									var category = pivotConfig.rows[l];
+									var name = oSplit[l];
+									if(window.pivotCustom==undefined){ 
+										window.pivotCustom={};
+									}
+									if(window.pivotCustom[category]==undefined){
+										window.pivotCustom[category]={};
+									}
+									if(window.pivotCustom[category][name]==undefined){ 
+										window.pivotCustom[category][name]={};
+									}
+									window.pivotCustom[category][name].color="#"+colors[i];									
+								}							
+								// update ui
+								var render = $('.pvtRenderer')
+								render.trigger('change');
+							}
+						});
+					}
+				}
+				// update ui
+				var render = $('.pvtRenderer')
+				render.trigger('change');				
+			},
+			items: {
+                "up": {name: "Up", icon: 'fa-arrow-up'},
+                "down": {name: "Down", icon: 'fa-arrow-down'},
+				"ascending":{name:"Ascending", icon:'fa-sort-amount-asc'},
+				"descending":{name:"Descending", icon:'fa-sort-amount-desc'},
+				"alpha_ascending":{name:"Alpha_Ascending", icon:'fa-sort-alpha-asc'},
+				"alpha_descending":{name:"Alpha_Descending", icon:'fa-sort-alpha-desc'},
+				"edit_color":{name:"Edit_Color", icon:'fa-pencil-square-o'},
+				"edit_names":{name:"Edit_Names", icon:'fa-pencil-square-o'},
+				"delete_color":{name:"Delete_Color", icon:'fa-eraser'},
+				"apply_palette":{name:"Apply_Palette", icon:'fa-paint-brush'}
+			}
+		});
+		$.contextMenu({
+			selector: '.pvtColLabel',
+			callback: function(key,option){
+				var index;
+				var m = "clicked: " + key +" on " + $(this).text();
+                window.console && console.log(m); // || alert(m);
+				var attr = $('[data-colattrs="'+$(this).attr('data-colattrs')+'"].pvtAxisLabel').text();
+				var value = $(this).text();
+				if(dictionary[attr].indexOf(value)!=-1){
+					if((key=='left')&&(dictionary[attr].indexOf(value)!=0)){
+						index = dictionary[attr].indexOf(value);
+						dictionary[attr].splice(index,1); // suppress element
+						dictionary[attr].splice(index-1,0,value); // add it back left
+					} else if((key=='right')&&(dictionary[attr].indexOf(value)!=(dictionary[attr].length-1))){
+					    index = dictionary[attr].indexOf(value);
+						dictionary[attr].splice(index,1); // suppress element
+						dictionary[attr].splice(index+1,0,value); // add it back right
+					} else if((key=='ascending')){
+						/* reorder I can do that only if one level header is set*/
+						if(window.pivotData.colAttrs.length==1){
+							var order = Sugar.Array.sortBy(Object.entries(window.pivotData.colTotals),
+								function(o){
+									if(window.pivotConfig.aggregatorName==="Count"){ return o[1].count;}
+									else 
+									if(window.pivotConfig.aggregatorName==="Sum"){ return o[1].sum;}
+								});
+							dictionary[attr]=[];
+							for(var i=0;i<order.length;i++){
+								dictionary[attr].push(order[i][0]);
+							}
+						}
+					} else if((key=='descending')){
+						/* reorder I can do that only if one level header is set*/
+						if(window.pivotData.colAttrs.length==1){
+							var order = Sugar.Array.sortBy(Object.entries(window.pivotData.colTotals),
+								function(o){
+									if(window.pivotConfig.aggregatorName==="Count"){ return o[1].count;}
+									else 
+									if(window.pivotConfig.aggregatorName==="Sum"){ return o[1].sum;}
+								},true);
+							dictionary[attr]=[];
+							for(var i=0;i<order.length;i++){
+								dictionary[attr].push(order[i][0]);
+							}
+						}
+					} else if((key=='alpha_ascending')){
+						dictionary[attr]=Sugar.Array.sortBy(dictionary[attr],length,false);
+					} else if((key=='alpha_descending')){
+						dictionary[attr]=Sugar.Array.sortBy(dictionary[attr],length,true);
+					}  else if((key=='edit_name')){
+						var dialog = document.getElementById('namedialog');
+						if (! dialog.showModal) {
+							dialogPolyfill.registerDialog(dialog);
+						}
+						if (dialog.custom!==undefined){
+							dialog.querySelector('.cancel').removeEventListener('click',dialog.custom.cancel,false); 
+							dialog.querySelector('.close').removeEventListener('click',dialog.custom.close,false); 
+						}
+						var longname = dialog.querySelector('.long');
+						longname.value = value;
+						var cancel = function(o) {
+							if ((o.dialog.open!==undefined)&&(o.dialog.open)){
+								o.dialog.close();
+							}
+						}.bind(null,{name:value,category:attr,dialog:dialog});	
+						var close = function(o) {
+							if ((o.dialog.open!==undefined)&&(o.dialog.open)){
+								o.dialog.close();
+								var longname = o.dialog.querySelector('.long');
+								if(window.pivotCustom==undefined) window.pivotCustom={};
+								if(window.pivotCustom[o.category]==undefined) window.pivotCustom[o.category]={};
+								if(window.pivotCustom[o.category][o.name]==undefined) window.pivotCustom[o.category][o.name]={};
+								window.pivotCustom[o.category][o.name].longname=longname.value;
+							}
+							// update ui
+							var render = $('.pvtRenderer')
+							render.trigger('change');
+						}.bind(null,{name:value,category:attr,dialog:dialog});						
+						dialog.querySelector('.cancel').addEventListener('click',cancel); 
+						dialog.querySelector('.close').addEventListener('click', close);
+						dialog.custom = {close,cancel};					
+						dialog.showModal();
+					}
+				}
+				// update ui
+				var render = $('.pvtRenderer')
+				render.trigger('change');
+			},
+			items: {
+                "left": {name: "Left", icon: 'fa-arrow-left'},
+                "right": {name: "Right", icon: 'fa-arrow-right'},
+				"ascending":{name:"Ascending", icon:'fa-sort-amount-asc'},
+				"descending":{name:"Descending", icon:'fa-sort-amount-desc'},
+				"alpha_ascending":{name:"Alpha_Ascending", icon:'fa-sort-alpha-asc'},
+				"alpha_descending":{name:"Alpha_Descending", icon:'fa-sort-alpha-desc'},
+				"edit_name":{name:"Edit_Name", icon:'fa-pencil-square-o'}
+			}
+		});
+ 
+	var justPivot = function(fileStructure) {
+		var parsed = fileStructure.content;
+		if(parsed.globals!==undefined){
+			window.globals=parsed.globals;
+			var keys = Object.keys(parsed.globals);
+			for(var i=0; i<keys.length;i++){
+				var elt = document.getElementById(keys[i]);
+				elt.value = parsed.globals[keys[i]];
+			}
+		}
+		window.dictionary = parsed.dictionary;
+		window.pivotCustom=parsed.pivotCustom;
+		parsed.pivotConfig.onRefresh = function(config) {
+				$("#output2").html("");
+				var config_copy = JSON.parse(JSON.stringify(config));
+				window.pivotConfig=config_copy;
+				//delete some values which are functions
+				delete config_copy["aggregators"];
+				delete config_copy["renderers"];
+				//delete some bulky default values
+				delete config_copy["rendererOptions"];
+				delete config_copy["localeStrings"];
+				if($("#output")!==undefined){
+					$("#output").text(JSON.stringify(config_copy, undefined, 2));
+				}
+				Dictionary_Update(window.pivotData,window.pivotConfig,window.dictionary);
+			};
+		parsed.pivotConfig.sorters = mySorter;
+		parsed.pivotConfig.renderers = {
+					"Table": function(data, opts) {
+							window.pivotData = data;
+							window.pivotOpts = opts;
+							if(window.pivotCustom!==undefined) data.pivotCustom=window.pivotCustom;
+							return $.pivotUtilities.renderers.Table(data, opts);
+					},
+					"Table Barchart": function(data, opts) {
+							return $.pivotUtilities.renderers['Table Barchart'](data, opts);
+					},
+					"Heatmap": function(data, opts) {
+							return $.pivotUtilities.renderers.Heatmap(data, opts);
+					},
+					"Row Heatmap": function(data, opts) {
+							return $.pivotUtilities.renderers['Row Heatmap'](data, opts);
+					},
+					"Col Heatmap": function(data, opts) {
+							return $.pivotUtilities.renderers['Col Heatmap'](data, opts);
+					}
+			};
+		$("#output2").html("<p align='center' style='color:grey;'>(processing...)</p>")
+		$("#output3").pivotUI(parsed.input,parsed.pivotConfig , true);
+	};
+	
+	var parseAndPivot = function(f) {
+		$("#output2").html("<p align='center' style='color:grey;'>(processing...)</p>")
+		Papa.parse(f, {
+			skipEmptyLines: true,
+			error: function(e){ alert(e)},
+			complete: function(parsed){
+				$("#output3").pivotUI(parsed.data, {
+					onRefresh: function(config) {
+						$("#output2").html("");
+						var config_copy = JSON.parse(JSON.stringify(config));
+						window.pivotConfig=config_copy;
+						//delete some values which are functions
+						delete config_copy["aggregators"];
+						delete config_copy["renderers"];
+						//delete some bulky default values
+						delete config_copy["rendererOptions"];
+						delete config_copy["localeStrings"];
+						if($("#output")!==undefined){
+							$("#output").text(JSON.stringify(config_copy, undefined, 2));
+						}
+						Dictionary_Update(window.pivotData,window.pivotConfig,window.dictionary);
+					},
+					sorters:mySorter,
+					renderers : {
+							"Table": function(data, opts) {
+									window.pivotData = data;
+									window.pivotOpts = opts;	
+									if(window.pivotCustom!==undefined) data.pivotCustom=window.pivotCustom;
+									return $.pivotUtilities.renderers.Table(data, opts);
+							},
+							"Table Barchart": function(data, opts) {
+									return $.pivotUtilities.renderers['Table Barchart'](data, opts);
+							},
+							"Heatmap": function(data, opts) {
+									return $.pivotUtilities.renderers.Heatmap(data, opts);
+							},
+							"Row Heatmap": function(data, opts) {
+									return $.pivotUtilities.renderers['Row Heatmap'](data, opts);
+							},
+							"Col Heatmap": function(data, opts) {
+									return $.pivotUtilities.renderers['Col Heatmap'](data, opts);
+							}
+					}
+				}, true);
+			}
+		});
+	};
+
+	$("#csv").bind("change", function(event){
+		parseAndPivot(event.target.files[0]);
+	});
+
+	var dragging = function(evt) {
+		evt.stopPropagation();
+		evt.preventDefault();
+		evt.originalEvent.dataTransfer.dropEffect = 'copy';
+		$("body").removeClass("whiteborder").addClass("greyborder");
+	};
+
+	var endDrag = function(evt) {
+		evt.stopPropagation();
+		evt.preventDefault();
+		evt.originalEvent.dataTransfer.dropEffect = 'copy';
+		$("body").removeClass("greyborder").addClass("whiteborder");
+	};
+
+	var dropped = function(evt) {
+		evt.stopPropagation();
+		evt.preventDefault();
+		$("body").removeClass("greyborder").addClass("whiteborder");
+		parseAndPivot(evt.originalEvent.dataTransfer.files[0]);
+	};
+
+	$("html")
+		.on("dragover", dragging)
+		.on("dragend", endDrag)
+		.on("dragexit", endDrag)
+		.on("dragleave", endDrag)
+		.on("drop", dropped); 
+</script>
+<script src="https://www.gstatic.com/firebasejs/3.7.2/firebase.js"></script>
+<script>
+    if (window.oCom==undefined){
+		// debugger;
+		window.oCom=new Com();
+	}
+</script>
+		<!--
+				pvTitle: Top Players (>={{ratio_thresold}}%MS) ranking for Automation Markets {{size}} $Bn
+				pvCurrency: figures currency
+				pvDisplayUnit: unit (multiple of currency) to display Bn, Mn, Kn, Un (display)
+				pvInternalUnit: unit (multiple of currency) to display Bn, Mn, Kn, Un (internal)
+				pvThresholdShare: market share above which we show competitors
+				pvLinesColor:  color of boxes lines (hex format)
+				pvFillColor: color of boxes fill (hex format)
+				pvHeaderTextColor: color of header text (hex format)
+				pvColumnsTextColor: color of column text (hex format)
+		-->
+        <p style="width: 800px"></p>
+		<table>
+			<tbody>
+			    <tr>
+					<td colspan="9"><input size="108" id="pvTitle" title="Title" placeholder="Top Players (>={{ratio_thresold}}%MS) ranking for Automation Markets {{size}} {{currency}}{{display}}" value="Top Players (>={{ratio_thresold}}%MS) ranking for Automation Markets {{size}} {{currency}}{{display}}"></input></td>
+				<tr>
+					<td><input size="3" id="pvCurrency" title="Currency $,€..." placeholder="$" value="$"></input></td>
+					<td><input size="2" id="pvDisplayUnit" title="Display Unit Bn, Mn, Kn, Un" placeholder="Mn" value="Bn"></input></td>
+					<td><input size="2" id="pvInternalUnit" title="Internal Unit Bn, Mn, Kn, Un" placeholder="Mn" value="Mn"></input></td>
+					<td><input size="4" id="pvThresholdShare" title="Thresold Share (0-100)% no % sign input" placeholder="3" value="3"></input></td>
+					<td ><input id="pvLinesColor" type="color" title="Lines Color" value="#393939"></input></td>
+					<td><input id="pvFillColor" type="color" title="Header Fill Color" value="#c0c0c0"></input></td>
+					<td><input id="pvHeaderTextColor" type="color" title="Header Text Color" value="#393939"></input></td>
+					<td><input id="pvColumnsTextColor" type="color" title="Cells Text Color" value="#393939"></input></td>
+				</tr>
+			</tbody>
+		</table>
+        <div id="output2" style="margin: 30px;"></div>
+		<div id="output3" style="margin: 30px;"></div>
+		<p align="center" style="line-height: 1.5">Drop a CSV file on this page or <label id="filechooser">click here to choose one<input id="csv" type="file" style="display:none"></label><br> <em><small>note: the data never leaves your browser!</small></em></p>
+        <!-- <div id="output" style="margin: 30px;"></div>-->
+<dialog id="colordialog">
+  <h4 >Choose Color?</h4>
+    <div >
+	 <input type="color">
+	</div>
+	<div>
+		 <button type="button" class="close">Ok</button>
+		 <button type="button" class="cancel">Cancel</button>
+	</div>
+</dialog>	
+<dialog id="namesdialog">
+  <h4 >Choose Names?</h4>
+    <div >
+	 short<input type="text" class="short"><br>
+	 long<input type="text" class="long">
+	</div>
+	<div>
+		 <button type="button" class="close">Ok</button>
+		 <button type="button" class="cancel">Cancel</button>
+	</div>
+</dialog>
+<dialog id="namedialog">
+  <h4 >Choose Name?</h4>
+    <div >
+		<input type="text" class="long">
+	</div>
+	<div>
+		 <button type="button" class="close">Ok</button>
+		 <button type="button" class="cancel">Cancel</button>
+	</div>
+</dialog>	
+    </body>
+</html>
