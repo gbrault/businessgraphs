@@ -17,6 +17,7 @@
 
 // Initializes BusinessGraph.
 function BusinessGraph() {
+  
   this.checkSetup();
 
   // Shortcuts to DOM Elements.
@@ -131,19 +132,42 @@ BusinessGraph.prototype.activateMenuItems = function(tabCategory){
 	}
 };
 
+BusinessGraph.prototype.destroyEditor = function(){
+	/*
+	if(window.oAceEditor!=undefined){
+		window.oAceEditor.destroy();
+		document.getElementById('console').innerHTML="";
+	}
+	*/
+};
+
+BusinessGraph.prototype.setEditor = function(){
+	/*
+	document.getElementById('console').innerHTML ='<div id="aceeditor" style="position:absolute;top:50px;right:0;bottom:0;left:0;"></div>';
+	window.oAceEditor = ace.edit("aceeditor");
+	window.oAceEditor.setTheme("ace/theme/monokai");
+	window.oAceEditor.getSession().setMode("ace/mode/javascript");
+	window.oAceEditor.getSession().setValue(vkbeautify.json(JSON.stringify(window.consoleFileStructure.content),4));	
+	*/
+};
+
 BusinessGraph.prototype.do_togglecolors = function(){
+	this.destroyEditor();
 	this.activateMenuItems('togglecolors');
 };
 
 BusinessGraph.prototype.do_togglemarimekko = function(){
+	this.destroyEditor();
 	this.activateMenuItems('togglemarimekko');
 };
 
 BusinessGraph.prototype.do_togglefiles = function(){
+	this.destroyEditor();
 	this.activateMenuItems('togglefiles');
 };
 
 BusinessGraph.prototype.do_toggleconsole = function(){
+	this.setEditor();
 	this.activateMenuItems('toggleconsole');
 };
 
@@ -166,6 +190,7 @@ BusinessGraph.prototype.diffFiles = function(){
 };
 
 BusinessGraph.prototype.pivotSaveExisting = function(){
+	document.body.style.cursor  = 'wait';
 	firebase.database().ref('channels/'+this.channel+'/cmd').set(
 		{	
 			type:"saveExisting",
@@ -245,7 +270,8 @@ BusinessGraph.prototype.pivotSave = function(){
 	dialog.querySelector('.cancel').addEventListener('click', window.nameDialog_cancel);
 };
 
-BusinessGraph.prototype.pivotLoad = function(){	
+BusinessGraph.prototype.pivotLoad = function(){
+	document.body.style.cursor  = 'wait';
 	// get first selected file
 	var data = null;
 	var selectpivot = {
@@ -348,49 +374,13 @@ BusinessGraph.prototype.showFile = function(){
 		if(id!=""){
 			window.consoleFileStructure={id:id};			
 			this.oIOmodule.readFile.bind(this.oIOmodule)(id, function(fileStructure){
-				/*
-				if(window.oCodeMirror!==undefined){
-					window.oCodeMirror.toTextArea();
-					delete window.oCodeMirror;
-				}
-				*/
-				var content = fileStructure.content;
-				window.consoleFileStructure.lastModified=fileStructure.lastModified;
-				window.consoleFileStructure.type=fileStructure.type;
-				window.consoleFileStructure.name = fileStructure.name;
-				/*
-				if(fileStructure.type=="application/json"){
-					content = vkbeautify.json(content, 4 );
-					
-					if(content.length<200000){
-						document.getElementById('txt').innerHTML = "<textarea class='codemirror'></textarea>"				
-						window.oCodeMirror = CodeMirror.fromTextArea(document.getElementById('txt').querySelector('.codemirror'), {
-								mode: "javascript",
-								lineNumbers: true,
-								lineWrapping: true,
-								matchBrackets: true,
-								foldGutter: true,
-								gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-								extraKeys: {"Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }},
-								continueComments: "Enter",	
-						});
-						oCodeMirror.getDoc().setValue(content);	
-					} else {
-						document.getElementById('txt').innerText = content;		
-					}
-				} else {				
-					document.getElementById('txt').innerText = content;				
-				}
-				*/
+				window.consoleFileStructure=fileStructure;
 				document.getElementById('console').innerHTML ='<div id="aceeditor" style="position:absolute;top:50px;right:0;bottom:0;left:0;"></div>';
 				window.oAceEditor = ace.edit("aceeditor");
 				window.oAceEditor.setTheme("ace/theme/monokai");
 				window.oAceEditor.getSession().setMode("ace/mode/javascript");
-				window.oAceEditor.getSession().setValue(vkbeautify.json(JSON.stringify(content),4));
+				window.oAceEditor.getSession().setValue(vkbeautify.json(JSON.stringify(consoleFileStructure.content),4));
 				this.toggleTab('toggleconsole');
-				if(window.oCodeMirror!=undefined){
-					oCodeMirror.setCursor(1,1);
-				}
 			}.bind(this));
 		}
 	}
@@ -644,4 +634,21 @@ window.onload = function() {
   window.BusinessGraph.channel = channel;
   document.getElementById('pivotframe').src="pivot.html?comuid="+channel;
   window.BusinessGraph.toggleTab('togglefiles');
+  
+  /* command feedback */
+  
+  var command = firebase.database().ref('channels/' + channel+'/cmd/done');
+  command.on('value', function(val){	
+	var done = val.val();
+	if(done!==null){
+		document.body.style.cursor  = 'default';
+		if((typeof done.result === 'object')&&(done.result.message!==undefined)){
+			var data = {
+				message: val.val().message,
+				timeout: 3000
+			};
+			this.signInSnackbar.MaterialSnackbar.showSnackbar(data);
+		}
+	}	
+  }.bind(window.BusinessGraph));
 };

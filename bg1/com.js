@@ -43,34 +43,37 @@ Com.prototype.getGlobals = function(){
 	}
 	return globals
 };
+Com.prototype.feedback = function(result) {
+	document.body.style.cursor  = 'default';
+	firebase.database().ref('channels/'+this.channel+'/cmd/done').set({timestamp:Date.now(),result});
+}
 
 Com.prototype.exec = function(cmd) {
 	switch(cmd.type){
 		case "save":
 			// debugger;
 			if(cmd.done==undefined){
-				cmd.done=true;
-				firebase.database().ref('channels/'+this.channel+'/cmd').set(cmd);
+				document.body.style.cursor  = 'wait';
 				var globals = this.getGlobals();
 				var content = {	input:pivotData.input,
-												pivotCustom:pivotData.pivotCustom,
-												pivotConfig,
-												dictionary,
-												globals
-												};
+								pivotCustom:pivotData.pivotCustom,
+								pivotConfig,
+								dictionary,
+								globals,
+								};
 				this.saveFile({content:content,name:cmd.name,type:cmd.filetype});
 			}
 			break;
 		case "saveExisting":
 			if(cmd.done==undefined){
-				cmd.done=true;
-				firebase.database().ref('channels/'+this.channel+'/cmd').set(cmd);
+				document.body.style.cursor  = 'wait';
 				var globals = this.getGlobals();
 				var content = {	input:pivotData.input,
-												pivotCustom:pivotData.pivotCustom,
-												pivotConfig,
-												dictionary,
-												globals};
+								pivotCustom:pivotData.pivotCustom,
+								pivotConfig,
+								dictionary,
+								globals,
+								};
 				if(window.fileStructure!==undefined){
 					window.fileStructure.content = content;
 					this.saveExistingFile(window.fileStructure);
@@ -80,23 +83,24 @@ Com.prototype.exec = function(cmd) {
 			break;
 		case "load":
 			if(cmd.done==undefined){
-				cmd.done=true;
-				firebase.database().ref('channels/'+this.channel+'/cmd').set(cmd);
+				document.body.style.cursor  = 'wait';
 				this.loadFile(cmd.fileID);
 			}			
 			break;
 		case "pivot2marimekko":
 			if(cmd.done==undefined){
-				cmd.done=true;
+				document.body.style.cursor  = 'wait';
 				var globals = this.getGlobals();
-				firebase.database().ref('channels/'+this.channel+'/cmd').set(cmd);
 				content = { pivotCustom:pivotData.pivotCustom,
 							tree:pivotData.tree,
 							allTotal:pivotData.allTotal,
 							colTotals:pivotData.colTotals,
 							rowTotals:pivotData.rowTotals,
 						    pivotConfig,
-							globals};
+							globals,
+							cols:pivotData.getColKeys(),
+							rows:pivotData.getRowKeys()
+							};
 				var marimekko = pivot2marimekko(content);
 				// save marimekko file
 				if(window.fileStructure!==undefined){
@@ -109,21 +113,24 @@ Com.prototype.exec = function(cmd) {
 Com.prototype.getPalette = function(callback){
 	firebase.database().ref('palette/' + this.auth.currentUser.uid).once('value').then( function(palette){
 		if((callback!==undefined)&&(typeof callback === 'function')){
+			this.feedback(true);
 			return callback(palette.val());
 		}
-	});
+	}.bind(this));
 };
 
 Com.prototype.saveNewMarimekko = function(fileStructure,marimekko){
 	// filestructure is the pivot file that is existing ie already saved...
 		var type="application/json";		
 		var name = fileStructure.name.substr(0,fileStructure.name.length-3)+"mmk";
+		this.oIOmodule.feedback = this.feedback.bind(this);
 		this.oIOmodule.writeNewFile.bind(this.oIOmodule)(
 			{name:name,content:marimekko,type:type}
 		);
 };
 
-Com.prototype.loadFile = function(fileID){		
+Com.prototype.loadFile = function(fileID){
+	this.oIOmodule.feedback = this.feedback.bind(this);	
 	this.oIOmodule.readFile.bind(this.oIOmodule)(fileID,function(fileStructure){
 		window.fileStructure=fileStructure;
 		justPivot(fileStructure);
@@ -131,11 +138,13 @@ Com.prototype.loadFile = function(fileID){
 };
 
 Com.prototype.saveFile = function(fileStructure){ // actually save as
+		this.oIOmodule.feedback = this.feedback.bind(this);
 		this.oIOmodule.writeNewFile.bind(this.oIOmodule)(fileStructure);
 };
 
 Com.prototype.saveExistingFile = function(fileStructure){ // content
-		this.oIOmodule.writeExistingFile.bind(this.oIOmodule)(fileStructure);
+	this.oIOmodule.feedback = this.feedback.bind(this);
+	this.oIOmodule.writeExistingFile.bind(this.oIOmodule)(fileStructure);
 };
 
 Com.prototype.UUID = function(){

@@ -163,7 +163,16 @@ function pivot2marimekko(pivotFile){
 		})(),
 		"rows":(function(){
 			var rows = [];
-			var keys = Object.keys(pivotFile.colTotals);
+			var keys = []; // = Object.keys(pivotFile.colTotals);
+			for(var k=0; k<pivotFile.cols.length; k++){
+				var names = pivotFile.cols[k];
+				var key ="";
+				for(var l=0; l<names.length; l++ ){
+					key += names[l]+"\u0000";
+				}
+				key = key.substr(0,key.length-1);
+				keys.push(key);
+			}
 			for(var i=0;i<keys.length;i++){
 				rows.push({ 
 						"title":keys[i],
