@@ -245,6 +245,7 @@ BusinessGraph.prototype.pivotSave = function(){
 		dialog.querySelector('.close').removeEventListener('click',window.nameDialog_close,false);
 	}
 	window.nameDialog_close = function(dialog) {
+		document.body.style.cursor  = 'wait';
 		if ((dialog.open!==undefined)&&(dialog.open))
 			dialog.close();
 		var name = dialog.querySelector('.mdl-textfield__input').value;
@@ -298,7 +299,10 @@ BusinessGraph.prototype.pivotLoad = function(){
 		data = selectpivot;
 	}
 	if (data!==null) // Display a message to the user using a Toast.
+	{
 		this.signInSnackbar.MaterialSnackbar.showSnackbar(data);
+		document.body.style.cursor  = 'default';
+	}
 }
 
 BusinessGraph.prototype.load_palette_file = function(){	
@@ -331,6 +335,7 @@ BusinessGraph.prototype.load_palette_file = function(){
 }
 
 BusinessGraph.prototype.marimekkoLoad = function(){	
+	document.body.style.cursor  = 'wait';
 	// get first selected file
 	var data = null;
 	var selectmarimekko = {
@@ -347,14 +352,8 @@ BusinessGraph.prototype.marimekkoLoad = function(){
 			this.oIOmodule.readFile.bind(this.oIOmodule)(id,function(fileStructure){
 				window.marimekkoFileStructure = fileStructure;
 				svgMarimekko(window.marimekkoFileStructure.content, document.getElementById('marimekkoframe'));
+				document.body.style.cursor  = 'default';
 			});
-			/*
-			firebase.database().ref('files/'+id).once('value').then( function(hfile){
-				window.marimekkoFileStructure.content = JSON.parse(hfile.val().content);
-				window.marimekkoFileStructure.name = hfile.val().name;
-				svgMarimekko(window.marimekkoFileStructure.content, document.getElementById('marimekkoframe'));
-			});
-			*/
 			this.toggleTab('togglemarimekko');
 		} else {			
 			data = selectmarimekko;
@@ -363,7 +362,10 @@ BusinessGraph.prototype.marimekkoLoad = function(){
 		data = selectmarimekko;
 	}
 	if (data!==null) // Display a message to the user using a Toast.
+	{
 		this.signInSnackbar.MaterialSnackbar.showSnackbar(data);
+		document.body.style.cursor  = 'default';
+	}
 }
 
 BusinessGraph.prototype.showFile = function(){
@@ -372,7 +374,8 @@ BusinessGraph.prototype.showFile = function(){
 	if((checkedlabels!==undefined)&&(checkedlabels.length>0)){
 		var id = checkedlabels[0].id;
 		if(id!=""){
-			window.consoleFileStructure={id:id};			
+			window.consoleFileStructure={id:id};	
+			document.body.style.cursor  = 'wait';
 			this.oIOmodule.readFile.bind(this.oIOmodule)(id, function(fileStructure){
 				window.consoleFileStructure=fileStructure;
 				document.getElementById('console').innerHTML ='<div id="aceeditor" style="position:absolute;top:50px;right:0;bottom:0;left:0;"></div>';
@@ -380,6 +383,7 @@ BusinessGraph.prototype.showFile = function(){
 				window.oAceEditor.setTheme("ace/theme/monokai");
 				window.oAceEditor.getSession().setMode("ace/mode/javascript");
 				window.oAceEditor.getSession().setValue(vkbeautify.json(JSON.stringify(consoleFileStructure.content),4));
+				document.body.style.cursor  = 'default';
 				this.toggleTab('toggleconsole');
 			}.bind(this));
 		}
