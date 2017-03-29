@@ -168,6 +168,8 @@ BusinessGraph.prototype.make_pivot_from_dta = function(){
 			  dialog.close();			  
 			}
 			dialog.querySelector('.cancel').addEventListener('click', window.nameDialog_cancel);
+		} else {
+			data = selectdata;
 		}
 	}
 	if (data!==null) // Display a message to the user using a Toast.
