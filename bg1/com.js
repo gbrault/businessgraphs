@@ -50,39 +50,43 @@ Com.prototype.feedback = function(result) {
 
 Com.prototype.exec = function(cmd) {
 	switch(cmd.type){
-		case "save":
+		case "save": // actually save new pivot (two files: .dta = pivot input section, .pvt = pivot context + link to .dta (via id))
 			// debugger;
 			if(cmd.done==undefined){
 				document.body.style.cursor  = 'wait';
+				var dta_name = cmd.name.substr(0,cmd.name.length-3)+"dta";
+				window.fileStructureDTA = {name:dta_name,content:pivotData.input,type:"application/json"};
+				this.saveFile(window.fileStructureDTA,false);
 				var globals = this.getGlobals();
-				var content = {	input:pivotData.input,
+				var content = {	input:window.fileStructureDTA.id,
 								pivotCustom:pivotData.pivotCustom,
 								pivotConfig,
 								dictionary,
 								globals,
 								};
-				this.saveFile({content:content,name:cmd.name,type:cmd.filetype});
+				window.fileStructure={content:content,name:cmd.name,type:cmd.filetype};
+				this.saveFile(window.fileStructure,true);
 			}
 			break;
-		case "saveExisting":
+		case "saveExisting": // actually save existing pivot (only the .pvt side not the associated .dta)
 			if(cmd.done==undefined){
-				document.body.style.cursor  = 'wait';
-				var globals = this.getGlobals();
-				var content = {	input:pivotData.input,
-								pivotCustom:pivotData.pivotCustom,
-								pivotConfig,
-								dictionary,
-								globals,
-								};
 				if(window.fileStructure!==undefined){
+					document.body.style.cursor  = 'wait';
+					var globals = this.getGlobals();
+					var content = {	input:window.fileStructureDTA.id,
+									pivotCustom:pivotData.pivotCustom,
+									pivotConfig,
+									dictionary,
+									globals,
+									};				
 					window.fileStructure.content = content;
-					this.saveExistingFile(window.fileStructure);
+					this.saveExistingFile(window.fileStructure,true);
 				}
 				
 			}
 			break;
 		case "load":
-			if(cmd.done==undefined){
+			if(cmd.done==undefined){  // actually loading a pivot resource
 				document.body.style.cursor  = 'wait';
 				this.loadFile(cmd.fileID);
 			}			
@@ -129,21 +133,31 @@ Com.prototype.saveNewMarimekko = function(fileStructure,marimekko){
 		);
 };
 
-Com.prototype.loadFile = function(fileID){
-	this.oIOmodule.feedback = this.feedback.bind(this);	
-	this.oIOmodule.readFile.bind(this.oIOmodule)(fileID,function(fileStructure){
+Com.prototype.loadFile = function(fileID){		
+	this.oIOmodule.readFile.bind(this.oIOmodule)(fileID,function(fileStructure){		
 		window.fileStructure=fileStructure;
-		justPivot(fileStructure);
-	});
+		this.oIOmodule.feedback = this.feedback.bind(this);
+		// caching dta
+		if(window.fileStructureDTA!==undefined){
+			if(window.fileStructureDTA.id == fileStructure.content.input){
+				justPivot();
+			}
+		} else {
+			this.oIOmodule.readFile.bind(this.oIOmodule)(fileStructure.content.input,function(fileStructure){
+				window.fileStructureDTA=fileStructure;
+				justPivot();
+			}.bind(this));
+		}
+	}.bind(this));
 };
 
-Com.prototype.saveFile = function(fileStructure){ // actually save as
-		this.oIOmodule.feedback = this.feedback.bind(this);
+Com.prototype.saveFile = function(fileStructure,feedback){ // actually save as
+		if(feedback) this.oIOmodule.feedback = this.feedback.bind(this);
 		this.oIOmodule.writeNewFile.bind(this.oIOmodule)(fileStructure);
 };
 
-Com.prototype.saveExistingFile = function(fileStructure){ // content
-	this.oIOmodule.feedback = this.feedback.bind(this);
+Com.prototype.saveExistingFile = function(fileStructure,feedback){ // content
+	if(feedback) this.oIOmodule.feedback = this.feedback.bind(this);
 	this.oIOmodule.writeExistingFile.bind(this.oIOmodule)(fileStructure);
 };
 

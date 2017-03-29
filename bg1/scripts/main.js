@@ -39,6 +39,8 @@ function BusinessGraph() {
   // this.menu_diff = document.getElementById('menu_diff');
   this.menu_delete = document.getElementById('menu_delete');
   this.menu_load_palette = document.getElementById('menu_load_palette');
+  this.menu_make_pivot_from_dta = document.getElementById('menu_make_pivot_from_dta');
+  this.menu_rename = document.getElementById('menu_rename');
   
   /* Pivot menus */
   this.menu_pivot_save = document.getElementById('menu_pivot_save');
@@ -76,6 +78,8 @@ function BusinessGraph() {
   this.menu_load_palette.addEventListener('click', this.load_palette_file.bind(this));
   this.menu_set_palette.addEventListener('click', this.set_palette.bind(this));
   this.menu_save_powerpoint.addEventListener('click', this.download_powerpoint.bind(this));
+  this.menu_make_pivot_from_dta.addEventListener('click', this.make_pivot_from_dta.bind(this));
+  this.menu_rename.addEventListener('click', this.rename_file.bind(this));
 
   // TAB listners  
   this.togglefiles.addEventListener('click', this.do_togglefiles.bind(this));
@@ -86,6 +90,151 @@ function BusinessGraph() {
   
   this.initFirebase();
 };
+
+BusinessGraph.prototype.make_pivot_from_dta = function(){
+	var checkedlabels = document.getElementById('filetable').querySelectorAll('label.is-checked');
+	if(checkedlabels.length>0){
+		var data = null;
+		var selectdata = {
+			message: 'You must select a data file (ends with .dta)',
+			timeout: 3000
+		};	
+		var tr = checkedlabels[0].parentElement.parentElement;
+		var id = checkedlabels[0].id;
+		var fullname = tr.children[1].innerText;
+		var extension="";
+		var i;
+		if((i=fullname.indexOf("."))!=0){
+			extension = fullname.substr(i);
+		}
+		var name ="";
+		if(i>0){
+			name = fullname.substr(0,i);
+		}
+		if(extension==".dta"){
+			// get file name
+			var dialog = document.getElementById('filenamedialog');
+			dialog.querySelector('.mdl-textfield__input').value = name;
+			if (! dialog.showModal) {
+			  dialogPolyfill.registerDialog(dialog);
+			}
+			dialog.showModal();
+			if(window.nameDialog_close!==undefined){
+				dialog.querySelector('.close').removeEventListener('click',window.nameDialog_close,false);
+			}
+			window.nameDialog_close = function(dialog,dta_id) {
+				if ((dialog.open!==undefined)&&(dialog.open))
+					dialog.close();
+				var newname = dialog.querySelector('.mdl-textfield__input').value;
+				newname +=".pvt";
+				var pivot={
+						"input": dta_id,
+						"pivotConfig": {
+						"derivedAttributes": {},
+						"hiddenAttributes": [],
+						"menuLimit": 500,
+						"cols": [],
+						"rows": [],
+						"vals": [],
+						"exclusions": {},
+						"inclusions": {},
+						"unusedAttrsVertical": 85,
+						"autoSortUnusedAttrs": false,
+						"inclusionsInfo": {},
+						"aggregatorName": "Count",
+						"rendererName": "Table"
+					},
+					"dictionary": {},
+					"globals": {
+						"pvTitle": "Top Players (>={{ratio_thresold}}%MS) ranking for Automation Markets {{size}} {{currency}}{{display}}",
+						"pvCurrency": "$",
+						"pvDisplayUnit": "Bn",
+						"pvInternalUnit": "Mn",
+						"pvThresholdShare": "3",
+						"pvLinesColor": "#393939",
+						"pvFillColor": "#c0c0c0",
+						"pvHeaderTextColor": "#393939",
+						"pvColumnsTextColor": "#393939"
+					}
+				}
+				var fileStructure = {name:newname,type:"application/json",content:pivot};
+				this.oIOmodule.writeNewFile.bind(this.oIOmodule)(fileStructure);	
+			}.bind(this,dialog,id);
+			dialog.querySelector('.close').addEventListener('click', window.nameDialog_close);
+			if(window.nameDialog_cancel!==undefined){
+				dialog.querySelector('.close').removeEventListener('click',window.nameDialog_cancel,false);
+			}
+			window.nameDialog_cancel = function() {
+			  dialog.close();			  
+			}
+			dialog.querySelector('.cancel').addEventListener('click', window.nameDialog_cancel);
+		}
+	}
+	if (data!==null) // Display a message to the user using a Toast.
+	{
+		this.signInSnackbar.MaterialSnackbar.showSnackbar(data);		
+	}	
+}
+
+BusinessGraph.prototype.rename_file = function(){
+	var checkedlabels = document.getElementById('filetable').querySelectorAll('label.is-checked');
+	if(checkedlabels.length>0){
+		var tr = checkedlabels[0].parentElement.parentElement;
+		var id = checkedlabels[0].id;
+		var fullname = tr.children[1].innerText;
+		var extension="";
+		var i;
+		if((i=fullname.indexOf("."))!=0){
+			extension = fullname.substr(i);
+		}
+		var name ="";
+		if(i>0){
+			name = fullname.substr(0,i);
+		}
+
+		// get file name
+		var dialog = document.getElementById('filenamedialog');
+		dialog.querySelector('.mdl-textfield__input').value = name;
+		if (! dialog.showModal) {
+		  dialogPolyfill.registerDialog(dialog);
+		}
+		dialog.showModal();
+		if(window.nameDialog_close!==undefined){
+			dialog.querySelector('.close').removeEventListener('click',window.nameDialog_close,false);
+		}
+		window.nameDialog_close = function(dialog,id,name,extension) {
+			if ((dialog.open!==undefined)&&(dialog.open))
+				dialog.close();
+			var name = dialog.querySelector('.mdl-textfield__input').value;
+			name +=extension
+			this.oIOmodule.renameFile.bind(this.oIOmodule)(id,name);	
+		}.bind(this,dialog,id,name,extension);
+		dialog.querySelector('.close').addEventListener('click', window.nameDialog_close);
+		if(window.nameDialog_cancel!==undefined){
+			dialog.querySelector('.close').removeEventListener('click',window.nameDialog_cancel,false);
+		}
+		window.nameDialog_cancel = function() {
+		  dialog.close();
+		}
+		dialog.querySelector('.cancel').addEventListener('click', window.nameDialog_cancel);	
+	}
+}
+	
+BusinessGraph.prototype.save_codemirror_file = function(){  // actually ACE editor... CodeMirror was too low performance...
+	if(window.consoleFileStructure!==undefined){
+		if(window.oAceEditor!==undefined){
+			var content = window.oAceEditor.getSession().getValue();
+			window.oAceEditor.setReadOnly(true);
+			window.consoleFileStructure.content = JSON.parse(content);
+			document.body.style.cursor  = 'wait';		
+			this.oIOmodule.feedback = function(){
+					document.body.style.cursor  = 'default';	
+					window.oAceEditor.setReadOnly(false);
+				};	
+			this.oIOmodule.writeExistingFile.bind(this.oIOmodule)(window.consoleFileStructure);
+		}
+	}
+}
 
 BusinessGraph.prototype.download_powerpoint = function(){
 	if(this.checkSignedInWithMessage()){
@@ -99,19 +248,6 @@ BusinessGraph.prototype.set_palette = function(){
 		palette.lastModified = Date.now();
 		firebase.database().ref('palette/' + this.auth.currentUser.uid).set(palette);		
 	}	
-}
-
-BusinessGraph.prototype.save_codemirror_file = function(){
-	if(window.consoleFileStructure!==undefined){
-		if(window.oCodeMirror!==undefined){
-			var content = oCodeMirror.getDoc().getValue();
-			var lastModified = Date.now();
-			var updates = {};
-			var fileStructure = {name:window.consoleFileStructure.name,lastModified:lastModified,type:window.consoleFileStructure.type,content:content};
-			this.oIOmodule.writeExistingFile.bind(this.oIOmodule)(fileStructure);
-			window.consoleFileStructure = fileStructure;
-		}
-	}
 }
 
 BusinessGraph.prototype.toggleTab = function(tab){
@@ -420,7 +556,7 @@ BusinessGraph.prototype.readSingleFile = function (evt) {
 BusinessGraph.prototype.menuSaveFile = function(){
 	if((this.checkSignedInWithMessage())&&(this.filename!==undefined)){
 		if((this.filetype==undefined)||(this.filetype=="")){
-			if((this.filename.endsWith('mmk'))||(this.filename.endsWith('pvt'))||(this.filename.endsWith('plt'))){
+			if((this.filename.endsWith('mmk'))||(this.filename.endsWith('pvt'))||(this.filename.endsWith('plt'))||(this.filename.endsWith('dta'))){
 				this.filetype='application/json';
 			}
 		}	

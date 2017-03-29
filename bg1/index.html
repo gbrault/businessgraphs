@@ -91,17 +91,19 @@
 				<i class="material-icons">more_vert</i>
 		</button>
 		<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="menu-lower-right" id="ulmenu">
-		  <li class="mdl-menu__item togglepivot" id="menu_pivot_save_existing">Save Pivot</li>
-		  <li class="mdl-menu__item togglepivot" id="menu_pivot_save">Save As Pivot</li>
-		  <li class="mdl-menu__item togglepivot" id="menu_pivot2marimekko">Save Marimekko</li>
-		  <li class="mdl-menu__item togglefiles" id="menu_show">Show File</li>
-		  <li class="mdl-menu__item togglefiles" id="menu_load_pivot">Load Pivot</li>
-		  <li class="mdl-menu__item togglefiles" id="menu_load_marimekko">Load Marimekko</li>
-		  <li class="mdl-menu__item togglefiles" id="menu_load_palette">Load Palette</li>
+		  <li class="mdl-menu__item togglepivot" id="menu_pivot_save_existing" title="Save an existing pivot file (overwrite)">Save Pivot</li>
+		  <li class="mdl-menu__item togglepivot" id="menu_pivot_save" title="Save as a new pivot including associated dta input (new name)">Save As Pivot</li>
+		  <li class="mdl-menu__item togglepivot" id="menu_pivot2marimekko" title="Create a new marimekko file based on the current pivot">Save Marimekko</li>
+		  <li class="mdl-menu__item togglefiles" id="menu_show" title="Display and Edit File in Console">Show File</li>
+		  <li class="mdl-menu__item togglefiles" id="menu_load_pivot" title="Load an exiting pivot file">Load Pivot</li>
+		  <li class="mdl-menu__item togglefiles" id="menu_make_pivot_from_dta" title="Create a new pivot based on the selected .dta input">Make Pivot from dta</li>
+		  <li class="mdl-menu__item togglefiles" id="menu_load_marimekko" title="Load and Display an existing marimekko file">Load Marimekko</li>
+		  <li class="mdl-menu__item togglefiles" id="menu_load_palette" title="Load an existing .plt file and set the current palette">Load Palette</li>
 		  <!-- <li class="mdl-menu__item togglefiles" id="menu_diff">File Diff</li>-->
-		  <li class="mdl-menu__item togglefiles" id="menu_delete">Delete Files</li>
-		  <li class="mdl-menu__item toggleconsole" id="menu_save_codemirror_file">Save</li>
-		  <li class="mdl-menu__item toggleconsole" id="menu_save_file">Save As File</li>
+		  <li class="mdl-menu__item togglefiles" id="menu_delete" title="Delete selected files">Delete Files</li>
+		  <li class="mdl-menu__item togglefiles" id="menu_rename" title="Rename selected files">Rename File</li>
+		  <li class="mdl-menu__item toggleconsole" id="menu_save_codemirror_file" title="Save the file under edition (overwrite)">Save</li>
+		  <li class="mdl-menu__item toggleconsole" id="menu_save_file" title="save a newly uploaded file">Save As File</li>
 		  <li class="mdl-menu__item toggleconsole">
 			<div class="mdl-textfield mdl-js-textfield mdl-textfield--file">
 				<input class="mdl-textfield__input" placeholder="File" type="text" id="uploadFileName" readonly/></div>

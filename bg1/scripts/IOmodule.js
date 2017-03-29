@@ -65,9 +65,7 @@ IOmodule.prototype.writeExistingFile = function(fileStructure){
 			var lastModified = Date.now();
 			fileStructure.lastModified=lastModified;
 			var updates = {};
-			var content = LZUTF8.encodeBase64(LZUTF8.compress(JSON.stringify(fileStructure.content)));// JSON.stringify(fileStructure.content);// JSON.stringify(fileStructure.content);// new TextEncoder().encode(JSON.stringify(fileStructure.content));
-			// var gzip = new Zlib.Gzip(content);
-			// var compressed = gzip.compress();
+			var content = LZUTF8.encodeBase64(LZUTF8.compress(JSON.stringify(fileStructure.content)));
 			var size = content.length; // compressed.length;
 			fileStructure.size=size;
 			updates["/users/"+ this.firebaseStructure.auth.currentUser.uid+"/files/"+fileStructure.id] = 
@@ -97,9 +95,7 @@ IOmodule.prototype.readFile = function (uuid,callback){
 		if(callback!==undefined){
 			firebase.database().ref('files/'+uuid).once('value').then( function(uuid,callback,hfile){
 				var val =  hfile.val();
-				// var gunzip = new Zlib.Gunzip(val.content);
-				// new TextDecoder();
-				var content = JSON.parse(LZUTF8.decompress(LZUTF8.decodeBase64(val.content)));// JSON.parse(val.content);// (new TextDecoder().decode(new Uint8Array(val.content)));  // gunzip.decompress()
+				var content = JSON.parse(LZUTF8.decompress(LZUTF8.decodeBase64(val.content)));
 				var fileStructure = {id:uuid,name:val.name,lastModified:val.lastModified,content:content,size:val.size,userid:val.userid,type:val.type};
 				if(this.feedback) this.feedback(true);
 				return callback(fileStructure);
@@ -113,5 +109,19 @@ IOmodule.prototype.deleteFile = function (uuid){
 		firebase.database().ref('users/' + this.firebaseStructure.auth.currentUser.uid+"/files/"+uuid).remove();
 		firebase.database().ref('files/'+uuid).remove();
 		if(this.feedback) this.feedback(true);
+	}
+}
+
+IOmodule.prototype.renameFile = function (uuid,name){
+	if(this.firebaseStructure.auth.currentUser!==undefined){ 
+			var updates = {};
+			var lastModified=Date.now();
+			updates["/users/"+ this.firebaseStructure.auth.currentUser.uid+"/files/"+uuid+"/name"] = name;
+			updates["/users/"+ this.firebaseStructure.auth.currentUser.uid+"/files/"+uuid+"/lastModified"] = lastModified;
+			updates["/files/"+uuid+"/name"] =name;
+			updates["/files/"+uuid+"/lastModified"] =lastModified;
+			window.firebase.database().ref().update(updates).then(function(){
+				if(this.feedback) this.feedback(true);
+			}.bind(this));
 	}
 }

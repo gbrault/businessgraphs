@@ -451,8 +451,10 @@
 			}
 		});
  
-	var justPivot = function(fileStructure) {
-		var parsed = fileStructure.content;
+var justPivot = function() {
+	if(window.fileStructureDTA!==undefined){
+		document.getElementById('dta').innerText=window.fileStructureDTA.name+"("+window.fileStructureDTA.id+")";
+		var parsed = window.fileStructure.content;
 		if(parsed.globals!==undefined){
 			window.globals=parsed.globals;
 			var keys = Object.keys(parsed.globals);
@@ -500,8 +502,9 @@
 					}
 			};
 		$("#output2").html("<p align='center' style='color:grey;'>(processing...)</p>")
-		$("#output3").pivotUI(parsed.input,parsed.pivotConfig , true);
-	};
+		$("#output3").pivotUI(window.fileStructureDTA.content,parsed.pivotConfig , true);
+	}
+};
 	
 	var parseAndPivot = function(f) {
 		$("#output2").html("<p align='center' style='color:grey;'>(processing...)</p>")
@@ -611,10 +614,11 @@
 					<td><input size="2" id="pvDisplayUnit" title="Display Unit Bn, Mn, Kn, Un" placeholder="Mn" value="Bn"></input></td>
 					<td><input size="2" id="pvInternalUnit" title="Internal Unit Bn, Mn, Kn, Un" placeholder="Mn" value="Mn"></input></td>
 					<td><input size="4" id="pvThresholdShare" title="Thresold Share (0-100)% no % sign input" placeholder="3" value="3"></input></td>
-					<td ><input id="pvLinesColor" type="color" title="Lines Color" value="#393939"></input></td>
+					<td><input id="pvLinesColor" type="color" title="Lines Color" value="#393939"></input></td>
 					<td><input id="pvFillColor" type="color" title="Header Fill Color" value="#c0c0c0"></input></td>
 					<td><input id="pvHeaderTextColor" type="color" title="Header Text Color" value="#393939"></input></td>
 					<td><input id="pvColumnsTextColor" type="color" title="Cells Text Color" value="#393939"></input></td>
+					<td><span id="dta"></span></td>
 				</tr>
 			</tbody>
 		</table>
