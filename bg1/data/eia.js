@@ -1,3 +1,1107 @@
+let gav ={
+readDataSet : function (a) {
+			var a = gav.d(a),
+			c = new gav.data.provider.UnicodeFormatReader;
+			c.sheetArray = a;
+			c.processData();
+			return c;
+},
+
+d: function(a) {
+		var a = -1 < a.indexOf("\r\n") ? a.split("\r\n") : a.split("\n"),b = a.length;
+		"" === a[b - 1] && (a.pop(), b--);
+		for (var f = 0; f < b; f++)
+			a[f] = a[f].split("\t");
+		return [a]
+}
+}
+gav.Klass = function (c, f) {
+		!f && "string" != typeof c && (f = c, c = null);
+		for (var e = "Anonym", g = this, j = c ? c.split(".") : [], k = 1; k < j.length; k++)
+			g[j[k]] || (g[j[k]] = {}), k < j.length - 1 && (g = g[j[k]]), e = j[k];
+		var m;
+		f.extend ? ("function" == typeof f.extend ? (a = !0, j = new f.extend,
+				a = !1) : j = f.extend, m = f.extend, delete f.extend) : j = {};
+		var o = e;
+		f.className && f.className.length && (o = f.className, delete f.className);
+		var n = f.implement;
+		delete f.implement;
+		var p = [];
+		for (c in f)
+			 / ^[_A - Z] + $ / .test(c), /^@/.test(c) ? p.push({
+				name : c.substr(1),
+				option : f[c]
+			}) : j[c] = f[c];
+		j.getClassName = function () {
+			return o
+		};
+		for (var r = function () {
+			this.displayName = o
+		}, k = 0; k < p.length; k++)
+			r[p[k].name] = p[k].option;
+		delete p;
+		r.prototype = j;
+		r.prototype.constructor = r;
+		j && !j.destroy && (j.destroy = function () {});
+		n && "function" != typeof n.splice && (n = [n]);
+		if (n && n.length) {
+			for (k = 0; k < n.length; k++) {
+				p = n[k];
+				d(r, p);
+				for (var v in p)
+					"toString" !== v && !j[v] && (j[v] = p[v])
+			}
+			delete n
+		}
+		r.prototype.implementsInterface = function (a) {
+			return b(r, a)
+		};
+		r.prototype.isIFace = function (a) {
+			return !a ? !1 : b(r, a) ? !0 : m ? b(m, a) : !1
+		};
+		r.prototype.self = r;
+		return g[e] =
+			r
+};
+(function () {
+	gav.Klass("gav.data.provider.UnicodeFormatReader", {
+		init : function () {
+			this.sheetArray = []
+		},
+		processData : function () {
+			var d = this.sheetArray[0],
+			b = d ? d.length : 0,
+			a,
+			c = !0,
+			f = 0;
+			this._metaTextToRowIndexMapping = {};
+			for (this._numOfMetaRows = 0; this._numOfMetaRows < b && c; )
+				a = d[this._numOfMetaRows], a = void 0 !== a && 0 < a.length && void 0 !== a[0] ? a[0].toString().toUpperCase() : void 0, void 0 === a || "" === a ? c = !1 : (this._metaTextToRowIndexMapping[a] =
+							f, f += 1, this._numOfMetaRows += 1);
+			void 0 != this._metaTextToRowIndexMapping.SHEET && (this._metaTextToRowIndexMapping.SHEET = this._metaTextToRowIndexMapping.SHEET);
+			void 0 != this._metaTextToRowIndexMapping.SLICE && (this._metaTextToRowIndexMapping.SHEET = this._metaTextToRowIndexMapping.SLICE);
+			void 0 != this._metaTextToRowIndexMapping.CAPTURED && (this._metaTextToRowIndexMapping.SHEET = this._metaTextToRowIndexMapping.CAPTURED);
+			void 0 != this._metaTextToRowIndexMapping.TIMESTEP && (this._metaTextToRowIndexMapping.SHEET =
+					this._metaTextToRowIndexMapping.TIMESTEP);
+			var d = this.sheetArray[0],
+			e,
+			g,
+			j,
+			k;
+			this._numOfMetaColumns = 2;
+			void 0 !== this._metaTextToRowIndexMapping.PARSETYPE && (b = d[this._metaTextToRowIndexMapping.PARSETYPE], e = void 0 !== b[2] ? b[2].toString().toUpperCase() : void 0);
+			void 0 !== this._metaTextToRowIndexMapping.UNIT && (b = d[this._metaTextToRowIndexMapping.UNIT], g = void 0 !== b[2] ? b[2].toString().toUpperCase() : void 0);
+			void 0 !== this._metaTextToRowIndexMapping.PRECISION && (b = d[this._metaTextToRowIndexMapping.PRECISION], j = void 0 !==
+					b[2] ? b[2].toString().toUpperCase() : void 0);
+			void 0 !== this._metaTextToRowIndexMapping.SHEET && (b = d[this._metaTextToRowIndexMapping.SHEET], k = void 0 !== b[2] ? b[2].toString().toUpperCase() : void 0);
+			"S" === e && gav.data.DataAnalysisHelper.isEmptyOrNaNString(g) && gav.data.DataAnalysisHelper.isEmptyOrNaNString(j) && gav.data.DataAnalysisHelper.isEmptyOrNaNString(k) && (this._numOfMetaColumns = 3);
+			g = this.sheetArray[0];
+			e = gav.utils.ArrayHelper.getRowLength(g[this._metaTextToRowIndexMapping.META]);
+			this._sliceNameToSliceIndexMapping = {};
+			if (void 0 !== this._metaTextToRowIndexMapping.SHEET) {
+				this._sliceNameRow = g[this._metaTextToRowIndexMapping.SHEET];
+				this._sliceNames = [];
+				g = gav.utils.ArrayHelper.getRowLength(this._sliceNameRow);
+				if (g < e)
+					for (j = this._numOfMetaColumns; j < e; j++)
+						this._sliceNameRow[j] = "NA";
+				for (j = this._numOfMetaColumns; j < e; j++)
+					g = this._sliceNameRow[j], "" === g || "-" == g || "NA" == g.toUpperCase() ? this._sliceNameRow[j] = "NA" : void 0 === this._sliceNameToSliceIndexMapping[g] && (this._sliceNameToSliceIndexMapping[g] = 1, this._sliceNames.push(g));
+				e > this._numOfMetaColumns && 0 == this._sliceNames.length && (this._sliceNames = ["NA"]);
+				this._numOfSlices = this._sliceNames.length;
+				for (j = 0; j < this._numOfSlices; j++)
+					this._sliceNameToSliceIndexMapping[this._sliceNames[j]] = j;
+				this._sliceNameToSliceIndexMapping.NA = 0
+			} else {
+				this._sliceNameRow = Array(e);
+				for (j = 1; j < e; j++)
+					this._sliceNameRow[j] = "NA";
+				this._sliceNameRow[0] = "TIMESTEP";
+				this._sliceNames = ["NA"];
+				this._sliceNameToSliceIndexMapping.NA = 0;
+				this._numOfSlices = this._sliceNames.length
+			}
+			g = this.sheetArray[0];
+			e = Array(this._numOfSlices);
+			for (j = 0; j < this._numOfSlices; j++)
+				e[j] = [];
+			this._attributeNameRow = g[this._metaTextToRowIndexMapping.META];
+			this._attributeNameRowLength = gav.utils.ArrayHelper.getRowLength(this._attributeNameRow);
+			for (j = this._numOfMetaColumns; j < this._attributeNameRowLength; j++)
+				g = this._attributeNameRow[j], k = this._sliceNameRow[j], k = this._sliceNameToSliceIndexMapping[k], k = e[k], k.push(g);
+			this._attributeNames = gav.utils.ArrayHelper.mergeOrderedArrays(e);
+			this._attributeNameToAttributeInfoMapping = {};
+			this._numOfAllAttributes = this._attributeNames.length;
+			for (g = 0; g < this._numOfAllAttributes; g++)
+				e = Array(8), e[0] = g, e[6] = [], this._attributeNameToAttributeInfoMapping[this._attributeNames[g]] = e;
+			this._columnIndexToSliceIndexMapping = Array(this._attributeNameRowLength);
+			for (j = this._numOfMetaColumns; j < this._attributeNameRowLength; j++)
+				k = this._sliceNameRow[j], this._columnIndexToSliceIndexMapping[j] = this._sliceNameToSliceIndexMapping[k];
+			j = this.sheetArray[0];
+			c = / /g;
+			f = /"/g;
+			if (void 0 !== this._metaTextToRowIndexMapping.PARSETYPE) {
+				k = j[this._metaTextToRowIndexMapping.PARSETYPE];
+				d = Math.min(this._attributeNameRowLength, gav.utils.ArrayHelper.getRowLength(k));
+				for (e = this._numOfMetaColumns; e < d; e++)
+					b = void 0 !== k[e] ? k[e].toString().toUpperCase() : "", g = this._attributeNameRow[e], g = this._attributeNameToAttributeInfoMapping[g], g[1] = gav.data.DataAnalysisHelper.determineDataTypeValueOfDataTypeString(b)
+			}
+			if (void 0 !== this._metaTextToRowIndexMapping.ID) {
+				k = j[this._metaTextToRowIndexMapping.ID];
+				d = Math.min(this._attributeNameRowLength, gav.utils.ArrayHelper.getRowLength(k));
+				for (e = this._numOfMetaColumns; e <
+					d; e++)
+					b = void 0 !== k[e] ? k[e].toString() : void 0, b = b.replace(c, "_"), g = this._attributeNameRow[e], g = this._attributeNameToAttributeInfoMapping[g], g[2] = b
+			}
+			if (void 0 !== this._metaTextToRowIndexMapping.DESCRIPTION) {
+				k = j[this._metaTextToRowIndexMapping.DESCRIPTION];
+				d = Math.min(this._attributeNameRowLength, gav.utils.ArrayHelper.getRowLength(k));
+				for (e = this._numOfMetaColumns; e < d; e++)
+					b = void 0 !== k[e] ? k[e].toString() : void 0, g = this._attributeNameRow[e], g = this._attributeNameToAttributeInfoMapping[g], g[3] = b
+			}
+			if (void 0 !==
+				this._metaTextToRowIndexMapping.UNIT) {
+				k = j[this._metaTextToRowIndexMapping.UNIT];
+				d = Math.min(this._attributeNameRowLength, gav.utils.ArrayHelper.getRowLength(k));
+				for (e = this._numOfMetaColumns; e < d; e++)
+					b = void 0 !== k[e] ? k[e].toString() : void 0, g = this._attributeNameRow[e], g = this._attributeNameToAttributeInfoMapping[g], g[4] = b
+			}
+			if (void 0 !== this._metaTextToRowIndexMapping.PRECISION) {
+				k = j[this._metaTextToRowIndexMapping.PRECISION];
+				d = Math.min(this._attributeNameRowLength, gav.utils.ArrayHelper.getRowLength(k));
+				for (e =
+						this._numOfMetaColumns; e < d; e++)
+					g = this._attributeNameRow[e], g = this._attributeNameToAttributeInfoMapping[g], g[5] = k[e]
+			}
+			if (void 0 !== this._metaTextToRowIndexMapping.SHEET) {
+				d = Math.min(this._attributeNameRowLength, gav.utils.ArrayHelper.getRowLength(this._sliceNameRow));
+				for (e = this._numOfMetaColumns; e < d; e++)
+					g = this._attributeNameRow[e], g = this._attributeNameToAttributeInfoMapping[g], g[6].push(this._sliceNameRow[e])
+			} else
+				for (e = 0; e < this._numOfAllAttributes; e++)
+					g = this._attributeNames[e], g = this._attributeNameToAttributeInfoMapping[g],
+					2 == g[1] ? g[6].push("NA") : g[6].push("0");
+			if (void 0 !== this._metaTextToRowIndexMapping.CATEGORIES) {
+				k = j[this._metaTextToRowIndexMapping.CATEGORIES];
+				d = Math.min(this._attributeNameRowLength, gav.utils.ArrayHelper.getRowLength(k));
+				for (e = this._numOfMetaColumns; e < d; e++)
+					b = void 0 !== k[e] ? k[e].toString() : "", b = b.replace(f, ""), g = this._attributeNameRow[e], g = this._attributeNameToAttributeInfoMapping[g], g[7] = b
+			}
+			if (void 0 !== this._metaTextToRowIndexMapping.FLAGS) {
+				k = j[this._metaTextToRowIndexMapping.FLAGS];
+				d = Math.min(this._attributeNameRowLength,
+						gav.utils.ArrayHelper.getRowLength(k));
+				for (e = this._numOfMetaColumns; e < d; e++)
+					g = this._attributeNameRow[e], g = this._attributeNameToAttributeInfoMapping[g], void 0 != k[e] && "" != k[e] && (g[8] = k[e])
+			}
+			this._attributeDataTypes = Array(this._numOfAllAttributes);
+			this._numericAttributeGlobalIndices = [];
+			this._numericAttributeIds = [];
+			this._numericAttributeNames = [];
+			this._numericAttributeDescriptions = [];
+			this._numericAttributeUnits = [];
+			this._numericAttributePrecisions = [];
+			this._stringAttributeGlobalIndices = [];
+			this._stringAttributeNames =
+				[];
+			this._stringAttributeUnits = [];
+			this.categoricalAttributeGlobalIndices = [];
+			this._categoricalAttributeNames = [];
+			this._categoricalAttributeUnits = [];
+			this._sliceNamesOfNumericAttributes = [];
+			this._sliceNamesOfStringAttributes = [];
+			this._sliceNamesOfCategoricalAttributes = [];
+			this._categoricalAttributeOrderedCategories = [];
+			this._numericAttributeFlagsDescriptions = [];
+			for (e = 0; e < this._numOfAllAttributes; e++)
+				g = this._attributeNameToAttributeInfoMapping[this._attributeNames[e]], g[6].sort(), this._attributeDataTypes[e] =
+					g[1], 0 === g[1] ? (this._stringAttributeGlobalIndices.push(e), this._stringAttributeNames.push(this._attributeNames[e]), this._stringAttributeUnits.push(g[4]), this._sliceNamesOfStringAttributes.push(g[6])) : 1 === g[1] ? (this._numericAttributeGlobalIndices.push(e), this._numericAttributeIds.push(g[2]), this._numericAttributeNames.push(this._attributeNames[e]), this._numericAttributeDescriptions.push(g[3]), this._numericAttributeUnits.push(g[4]), this._numericAttributePrecisions.push(g[5]), this._sliceNamesOfNumericAttributes.push(g[6]),
+					this._numericAttributeFlagsDescriptions.push(g[8])) : 2 === g[1] && (this.categoricalAttributeGlobalIndices.push(e), this._categoricalAttributeNames.push(this._attributeNames[e]), this._categoricalAttributeUnits.push(g[4]), this._sliceNamesOfCategoricalAttributes.push(g[6]), g[7] && 0 < g[7].length && this._categoricalAttributeOrderedCategories.push(g[7].split(";")));
+			this._numOfNumericAttributes = this._numericAttributeGlobalIndices.length;
+			this._numOfStringAttributes = this._stringAttributeGlobalIndices.length;
+			this._numOfCategoricalAttributes =
+				this.categoricalAttributeGlobalIndices.length;
+			this._columnIndicesOfNumericData = [];
+			this._columnIndicesOfStringData = [];
+			this._columnIndicesOfCategoricalData = [];
+			this._slideIndicesOfAllCategoricalAttributes = [];
+			this._slideIndicesOfCategoricalAttributes = Array(this._numOfCategoricalAttributes);
+			this._constantStatusOfCategoricalAttributes = Array(this._numOfCategoricalAttributes);
+			this._columnIndexToAttributeIndexMapping = Array(this._attributeNameRowLength);
+			for (e = 0; e < this._numOfCategoricalAttributes; e++)
+				this._slideIndicesOfCategoricalAttributes[e] =
+					[], this._constantStatusOfCategoricalAttributes[e] = 1 == this._sliceNamesOfCategoricalAttributes[e].length && "NA" == this._sliceNamesOfCategoricalAttributes[e][0] ? !0 : !1;
+			for (e = this._numOfMetaColumns; e < this._attributeNameRowLength; e++)
+				g = this._attributeNameRow[e], g = this._attributeNameToAttributeInfoMapping[g], 0 === g[1] ? (this._columnIndicesOfStringData.push(e), this._columnIndexToAttributeIndexMapping[e] = this._stringAttributeGlobalIndices.indexOf(g[0])) : 1 === g[1] ? (this._columnIndicesOfNumericData.push(e), this._columnIndexToAttributeIndexMapping[e] =
+						this._numericAttributeGlobalIndices.indexOf(g[0])) : 2 === g[1] && (this._columnIndicesOfCategoricalData.push(e), j = this._columnIndexToSliceIndexMapping[e], -1 == this._slideIndicesOfAllCategoricalAttributes.indexOf(j) && this._slideIndicesOfAllCategoricalAttributes.push(j), g = this.categoricalAttributeGlobalIndices.indexOf(g[0]), this._columnIndexToAttributeIndexMapping[e] = g, -1 == this._slideIndicesOfCategoricalAttributes[g].indexOf(j) && this._slideIndicesOfCategoricalAttributes[g].push(j));
+			e = this.sheetArray[0];
+			g =
+				gav.utils.ArrayHelper.getNumRowsOfSheet(e);
+			var m;
+			this._numOfRecords = g - this._numOfMetaRows;
+			this._recordInfoArray = Array(this._numOfRecords);
+			this._flagsList = [];
+			this._categoricalData = this._stringData = this._numericData = void 0;
+			0 < this._numOfNumericAttributes && (this._numericData = gav.utils.ArrayHelper.createArray3DWithValue(this._numOfSlices, this._numOfRecords, this._numOfNumericAttributes, NaN));
+			0 < this._numOfStringAttributes && (this._stringData = gav.utils.ArrayHelper.createArray3D(this._numOfSlices, this._numOfRecords,
+						this._numOfStringAttributes));
+			0 < this._numOfCategoricalAttributes && (1 < this._numOfSlices && 1 == this._slideIndicesOfAllCategoricalAttributes.length ? (j = gav.utils.ArrayHelper.createArray2DWithValue(this._numOfRecords, this._numOfCategoricalAttributes, ""), this._categoricalData = gav.utils.ArrayHelper.createArrayWithValue(this._numOfSlices, j)) : this._categoricalData = gav.utils.ArrayHelper.createArray3DWithValue(this._numOfSlices, this._numOfRecords, this._numOfCategoricalAttributes, ""));
+			if (void 0 == this._metaTextToRowIndexMapping.FLAGS) {
+				if (2 ===
+					this._numOfMetaColumns)
+					for (d = this._numOfMetaRows; d < g; d++) {
+						b = d - this._numOfMetaRows;
+						k = e[d];
+						j = void 0 !== k[1] ? k[1].toString() : "";
+						this._recordInfoArray[b] = [j, j];
+						m = this._columnIndicesOfNumericData.length;
+						for (j = 0; j < m; j++)
+							c = this._columnIndicesOfNumericData[j], f = this._columnIndexToSliceIndexMapping[c], this._numericData[f][b][this._columnIndexToAttributeIndexMapping[c]] = void 0 !== k[c] && "" !== k[c].toString() ? Number(k[c]) : NaN;
+						a = this._columnIndicesOfStringData.length;
+						for (j = 0; j < a; j++)
+							c = this._columnIndicesOfStringData[j],
+							f = this._columnIndexToSliceIndexMapping[c], this._stringData[f][b][this._columnIndexToAttributeIndexMapping[c]] = k[c];
+						a = this._columnIndicesOfCategoricalData.length;
+						for (j = 0; j < a; j++)
+							c = this._columnIndicesOfCategoricalData[j], f = this._columnIndexToSliceIndexMapping[c], this._categoricalData[f][b][this._columnIndexToAttributeIndexMapping[c]] = k[c]
+					}
+				if (3 === this._numOfMetaColumns)
+					for (d = this._numOfMetaRows; d < g; d++) {
+						b = d - this._numOfMetaRows;
+						k = e[d];
+						j = void 0 !== k[1] ? k[1].toString() : "";
+						c = void 0 !== k[2] ? k[2].toString() :
+							"";
+						this._recordInfoArray[b] = [j, c];
+						m = this._columnIndicesOfNumericData.length;
+						for (j = 0; j < m; j++)
+							c = this._columnIndicesOfNumericData[j], f = this._columnIndexToSliceIndexMapping[c], this._numericData[f][b][this._columnIndexToAttributeIndexMapping[c]] = void 0 !== k[c] && "" !== k[c].toString() ? Number(k[c]) : NaN;
+						a = this._columnIndicesOfStringData.length;
+						for (j = 0; j < a; j++)
+							c = this._columnIndicesOfStringData[j], f = this._columnIndexToSliceIndexMapping[c], this._stringData[f][b][this._columnIndexToAttributeIndexMapping[c]] = k[c];
+						a = this._columnIndicesOfCategoricalData.length;
+						for (j = 0; j < a; j++)
+							c = this._columnIndicesOfCategoricalData[j], f = this._columnIndexToSliceIndexMapping[c], this._categoricalData[f][b][this._columnIndexToAttributeIndexMapping[c]] = k[c]
+					}
+			} else {
+				if (2 === this._numOfMetaColumns)
+					for (d = this._numOfMetaRows; d < g; d++) {
+						b = d - this._numOfMetaRows;
+						k = e[d];
+						j = void 0 !== k[1] ? k[1].toString() : "";
+						this._recordInfoArray[b] = [j, j];
+						m = this._columnIndicesOfNumericData.length;
+						for (j = 0; j < m; j++)
+							c = this._columnIndicesOfNumericData[j], f = this._columnIndexToSliceIndexMapping[c],
+							a = gav.utils.DataSetUtils.extractFlags(k[c], b, f, this._columnIndexToAttributeIndexMapping[c], this._flagsList), this._numericData[f][b][this._columnIndexToAttributeIndexMapping[c]] = void 0 !== a && "" != a ? Number(a) : NaN;
+						a = this._columnIndicesOfStringData.length;
+						for (j = 0; j < a; j++)
+							c = this._columnIndicesOfStringData[j], f = this._columnIndexToSliceIndexMapping[c], this._stringData[f][b][this._columnIndexToAttributeIndexMapping[c]] = k[c];
+						a = this._columnIndicesOfCategoricalData.length;
+						for (j = 0; j < a; j++)
+							c = this._columnIndicesOfCategoricalData[j],
+							f = this._columnIndexToSliceIndexMapping[c], this._categoricalData[f][b][this._columnIndexToAttributeIndexMapping[c]] = k[c]
+					}
+				if (3 === this._numOfMetaColumns)
+					for (d = this._numOfMetaRows; d < g; d++) {
+						b = d - this._numOfMetaRows;
+						k = e[d];
+						j = void 0 !== k[1] ? k[1].toString() : "";
+						c = void 0 !== k[2] ? k[2].toString() : "";
+						this._recordInfoArray[b] = [j, c];
+						m = this._columnIndicesOfNumericData.length;
+						for (j = 0; j < m; j++)
+							c = this._columnIndicesOfNumericData[j], f = this._columnIndexToSliceIndexMapping[c], a = gav.utils.DataSetUtils.extractFlags(k[c], b, f,
+									this._columnIndexToAttributeIndexMapping[c], this._flagsList), this._numericData[f][b][this._columnIndexToAttributeIndexMapping[c]] = void 0 !== a && "" != a ? Number(a) : NaN;
+						a = this._columnIndicesOfStringData.length;
+						for (j = 0; j < a; j++)
+							c = this._columnIndicesOfStringData[j], f = this._columnIndexToSliceIndexMapping[c], this._stringData[f][b][this._columnIndexToAttributeIndexMapping[c]] = k[c];
+						a = this._columnIndicesOfCategoricalData.length;
+						for (j = 0; j < a; j++)
+							c = this._columnIndicesOfCategoricalData[j], f = this._columnIndexToSliceIndexMapping[c],
+							this._categoricalData[f][b][this._columnIndexToAttributeIndexMapping[c]] = k[c]
+					}
+			}
+			if (1 < this._slideIndicesOfAllCategoricalAttributes.length)
+				for (j = 0; j < this._numOfCategoricalAttributes; j++)
+					if (!1 == this._constantStatusOfCategoricalAttributes[j] && 1 == this._slideIndicesOfCategoricalAttributes[j].length && 0 === this._slideIndicesOfCategoricalAttributes[j][0]) {
+						e = j;
+						k = g = void 0;
+						for (g = 0; g < this._numOfRecords; g++)
+							for (k = 1; k < this._numOfSlices; k++)
+								this._categoricalData[k][g][e] = this._categoricalData[0][g][e]
+					}
+			this._numericData &&
+			(this._dataCube = gav.data.DataCube.createWithArray(this._numericData));
+			this._categoricalData && (this._classCube = gav.data.ClassCube.createWithArray(this._categoricalData, this._categoricalAttributeNames, this._categoricalAttributeOrderedCategories, this._constantStatusOfCategoricalAttributes))
+		},
+		getDataCube : function () {
+			return this._dataCube
+		},
+		getClassCube : function () {
+			return this._classCube
+		},
+		getNumOfRecords : function () {
+			return this._numOfRecords
+		},
+		getNumOfSlices : function () {
+			return this._numOfSlices
+		},
+		getNumOfNumericAttributes : function () {
+			return this._numOfNumericAttributes
+		},
+		getNumOfStringAttributes : function () {
+			return this._numOfStringAttributes
+		},
+		getNumOfCategoricalAttributes : function () {
+			return this._numOfCategoricalAttributes
+		},
+		getNumericAttributeIds : function () {
+			return this._numericAttributeIds
+		},
+		getNumericAttributeNames : function () {
+			return this._numericAttributeNames
+		},
+		getSliceNamesOfNumericAttributes : function () {
+			return this._sliceNamesOfNumericAttributes
+		},
+		getNumericAttributePrecisions : function () {
+			return this._numericAttributePrecisions
+		},
+		getNumericAttributeUnits : function () {
+			return this._numericAttributeUnits
+		},
+		getNumericAttributeDescriptions : function () {
+			return this._numericAttributeDescriptions
+		},
+		getNumericAttributeFlagsDescriptions : function () {
+			return this._numericAttributeFlagsDescriptions
+		},
+		getCategoricalAttributeNames : function () {
+			return this._categoricalAttributeNames
+		},
+		getRecordInfoArray : function () {
+			return this._recordInfoArray
+		},
+		getSliceNames : function () {
+			return this._sliceNames
+		},
+		getFlagsList : function () {
+			return this._flagsList
+		},
+		"@META" : "META",
+		"@ID" : "ID",
+		"@PARSETYPE" : "PARSETYPE",
+		"@SHEET" : "SHEET",
+		"@SLICE" : "SLICE",
+		"@TIMESTEP" : "TIMESTEP",
+		"@CAPTURED" : "CAPTURED",
+		"@UNIT" : "UNIT",
+		"@PRECISION" : "PRECISION",
+		"@DESCRIPTION" : "DESCRIPTION",
+		"@CATEGORIES" : "CATEGORIES",
+		"@FLAGS" : "FLAGS"
+	})
+})();
+(function () {
+	gav.data || (gav.data = {});
+	gav.data.DataAnalysisHelper = {
+		getDictionaryOfNaNValueStrings : function () {
+			void 0 === this._dictionaryOfNaNValueStrings && (this._dictionaryOfNaNValueStrings = {}, this._dictionaryOfNaNValueStrings[""] = 1, this._dictionaryOfNaNValueStrings[" "] = 1, this._dictionaryOfNaNValueStrings["-"] = 1, this._dictionaryOfNaNValueStrings["..."] = 1, this._dictionaryOfNaNValueStrings[":"] = 1, this._dictionaryOfNaNValueStrings.NaN = 1, this._dictionaryOfNaNValueStrings.nan = 1, this._dictionaryOfNaNValueStrings.NAN =
+					1, this._dictionaryOfNaNValueStrings.NA = 1, this._dictionaryOfNaNValueStrings.na = 1);
+			return this._dictionaryOfNaNValueStrings
+		},
+		getDictionaryOfNaNStrings : function () {
+			void 0 === this._dictionaryOfNaNStrings && (this._dictionaryOfNaNStrings = {}, this._dictionaryOfNaNStrings[""] = 1, this._dictionaryOfNaNStrings[" "] = 1, this._dictionaryOfNaNStrings.NaN = 1, this._dictionaryOfNaNStrings.nan = 1, this._dictionaryOfNaNStrings.NAN = 1, this._dictionaryOfNaNStrings.NA = 1, this._dictionaryOfNaNStrings.na = 1, this._dictionaryOfNaNStrings["-"] =
+					1);
+			return this._dictionaryOfNaNStrings
+		},
+		getDataTypeStringToDataTypeValueMapping : function () {
+			void 0 === this._dataTypeStringToDataTypeValueMapping && (this._dataTypeStringToDataTypeValueMapping = {}, this._dataTypeStringToDataTypeValueMapping[0] = 0, this._dataTypeStringToDataTypeValueMapping[1] = 1, this._dataTypeStringToDataTypeValueMapping[2] = 2, this._dataTypeStringToDataTypeValueMapping["0"] = 0, this._dataTypeStringToDataTypeValueMapping["1"] = 1, this._dataTypeStringToDataTypeValueMapping["2"] = 1, this._dataTypeStringToDataTypeValueMapping.S =
+					0, this._dataTypeStringToDataTypeValueMapping.s = 0, this._dataTypeStringToDataTypeValueMapping.F = 1, this._dataTypeStringToDataTypeValueMapping.f = 1, this._dataTypeStringToDataTypeValueMapping.C = 2, this._dataTypeStringToDataTypeValueMapping.c = 2);
+			return this._dataTypeStringToDataTypeValueMapping
+		},
+		isNaNValueString : function (d) {
+			return null == d ? !0 : 1 == gav.data.DataAnalysisHelper.getDictionaryOfNaNValueStrings()[d] ? !0 : !1
+		},
+		isEmptyOrNaNString : function (d) {
+			return void 0 === d ? !0 : 1 === gav.data.DataAnalysisHelper.getDictionaryOfNaNStrings()[d] ?
+			!0 : !1
+		},
+		determineDataTypeValueOfDataTypeString : function (d) {
+			if (void 0 === d)
+				return 0;
+			var b = gav.data.DataAnalysisHelper.getDataTypeStringToDataTypeValueMapping();
+			return void 0 === b[d] ? 0 : b[d]
+		}
+	}
+	function d(a, b, f, e) {
+		for (; 0 < e; ) {
+			if (void 0 !== b[f[e - 1]])
+				return a.indexOf(f[e - 1]);
+			e--
+		}
+		return -1
+	}
+	function b(a, b, f, e) {
+		for (var g = f ? f.length : 0; e < g - 1; ) {
+			if (void 0 !== b[f[e + 1]])
+				return a.indexOf(f[e + 1]);
+			e++
+		}
+		return Number.MAX_VALUE
+	}
+	gav.utils || (gav.utils = {});
+	gav.utils.ArrayHelper = {
+		getRowLength : function (a) {
+			for (var b = a ? a.length : 0, f = !0, e; 0 < b && f; )
+				e = a[b - 1], void 0 === e || "" === e || " " === e ? b-- : f = !1;
+			return b
+		},
+		mergeOrderedArrays : function (a) {
+			var c = a ? a.length : 0;
+			if (0 != c) {
+				if (1 == c)
+					return a[0];
+				var f,
+				e = a[0],
+				g,
+				j = Array(c),
+				k,
+				m;
+				for (k = 1; k < c; k++) {
+					f = {};
+					g = (e = a[k]) ? e.length : 0;
+					for (m = 0; m < g; m++)
+						f[e[m]] = m;
+					j[k] = f
+				}
+				var o = {},
+				e = a[0];
+				f = void 0 === e ? [] : e.concat();
+				g = e ? e.length : 0;
+				for (m = 0; m < g; m++)
+					o[e[m]] = 1;
+				var n,
+				p,
+				r;
+				for (k = 1; k < c; k++) {
+					g = (e = a[k]) ? e.length : 0;
+					for (m = 0; m < g; m++)
+						if (void 0 === o[e[m]]) {
+							n = -1;
+							p = Number.MAX_VALUE;
+							for (var v = 1; v < c; v++)
+								void 0 !== j[v][e[m]] && (r = j[v][e[m]], n = Math.max(n, d(f, o, a[v], r)), p = Math.min(p, b(f, o, a[v], r)));
+							n = -1 === n ? Math.min(p, f.length) : Math.min(n + 1, f.length);
+							f.splice(n, 0, e[m]);
+							o[e[m]] = 1
+						}
+				}
+				return f
+			}
+		},
+		binaryGlobalSearchLowBoundByScaledValue : function (a,
+			b, f, e) {
+			if (!a || !a.length || !f || !f.getNumRecords())
+				return -1;
+			for (var g = 0, d = a.length - 1, k, m, o = f.getNumRecords(), n; d > g + 1; )
+				k = Math.floor((g + d) / 2), n = a[k], m = Math.floor(n / o), n %= o, m = f.getScaledValue(n, e, m), m < b ? g = k : d = k;
+			n = a[g];
+			m = Math.floor(n / o);
+			m = f.getScaledValue(n % o, e, m);
+			if (m >= b)
+				return g;
+			n = a[d];
+			m = Math.floor(n / o);
+			m = f.getScaledValue(n % o, e, m);
+			return m >= b ? d : a.length
+		},
+		binaryGlobalSearchHighBoundByScaledValue : function (a, b, f, e) {
+			if (!a || !a.length || !f || !f.getNumRecords())
+				return -1;
+			for (var g = 0, d = a.length - 1, k, m, o = f.getNumRecords(),
+				n; d > g + 1; )
+				k = Math.floor((g + d) / 2), n = a[k], m = Math.floor(n / o), n %= o, m = f.getScaledValue(n, e, m), m <= b ? g = k : d = k;
+			n = a[d];
+			m = Math.floor(n / o);
+			m = f.getScaledValue(n % o, e, m);
+			if (m <= b)
+				return d + 1;
+			n = a[g];
+			m = Math.floor(n / o);
+			m = f.getScaledValue(n % o, e, m);
+			return m <= b ? g + 1 : 0
+		},
+		getNumRowsOfSheet : function (a) {
+			for (var b = a ? a.length : 0, f = 0; f < b && !this.isRowEmpty(a[f]); )
+				f++;
+			return f
+		},
+		isRowEmpty : function (a) {
+			for (var b = a ? a.length : 0, f = !0, e; 0 < b && f; )
+				void 0 === a[b - 1] ? b-- : (e = a[b - 1], void 0 === e || "" === e || " " === e ? b-- : f = !1);
+			return 0 === b ? !0 : !1
+		},
+		createArray3D : function (a,
+			b, f) {
+			for (var e = Array(a), g = 0; g < a; g++)
+				e[g] = this.createArray2D(b, f);
+			return e
+		},
+		createArray3DWithValue : function (a, b, f, e) {
+			for (var g = Array(a), d = 0; d < a; d++)
+				g[d] = this.createArray2DWithValue(b, f, e);
+			return g
+		},
+		createArray2D : function (a, b) {
+			for (var f = Array(a), e = 0; e < a; e++)
+				f[e] = Array(b);
+			return f
+		},
+		createArray2DWithValue : function (a, b, f) {
+			for (var e = Array(a), g = 0; g < a; g++)
+				e[g] = gav.utils.ArrayHelper.createArrayWithValue(b, f);
+			return e
+		},
+		initArray2D : function (a, b) {
+			for (var f = Array(a), e = 0; e < a; e++) {
+				f[e] = Array(b);
+				for (var g = 0; g < b; g++)
+					f[e][g] =
+						[]
+			}
+			return f
+		},
+		createArrayWithValue : function (a, b) {
+			for (var f = Array(a), e = 0; e < a; e++)
+				f[e] = b;
+			return f
+		},
+		range : function (a, b) {
+			if (a >= b)
+				return [];
+			for (var f = Array(b - a), e = a; e < b; e++)
+				f[e - a] = e;
+			return f
+		},
+		getBinItemLists : function (a, b) {
+			for (var f = Array(b), e = a / b, g = 0; g < b; g++)
+				f[g] = gav.utils.ArrayHelper.range(Math.ceil(g * e), Math.floor((g + 1) * e));
+			return f
+		},
+		compareArrays : function (a, b) {
+			var f = a ? a.length : 0;
+			if (f != (b ? b.length : 0))
+				return !1;
+			if (0 == f)
+				return !0;
+			for (var e = 0; e < f; e++)
+				if (a[e] !== b[e])
+					return !1;
+			return !0
+		},
+		sortArray : function (a) {
+			a &&
+			0 != a.length && (gav.utils.ArrayHelper.isNumberArray(a) ? a.sort(function (a, b) {
+					return a - b
+				}) : a.sort())
+		},
+		isNumberArray : function (a) {
+			for (var b = a ? a.length : 0, f = 0; f < b; f += 1)
+				if (!gav.helpers.isNumber(a[f]))
+					return !1;
+			return !0
+		},
+		getIntersectionOfNumericalArrays : function (a, b) {
+			for (var f = a.slice().sort(function (a, b) {
+						return a - b
+					}), e = b.slice().sort(function (a, b) {
+						return a - b
+					}), g = []; 0 < f.length && 0 < e.length; )
+				f[0] < e[0] ? f.shift() : (f[0] > e[0] || g.push(f.shift()), e.shift());
+			return g
+		},
+		getDifferenceOfNumericalArrays : function (a, b) {
+			var f =
+				a.filter(function (a) {
+					return !(-1 < b.indexOf(a))
+				}),
+			e = b.filter(function (b) {
+					return !(-1 < a.indexOf(b))
+				});
+			return f.concat(e)
+		}
+	}
+})();
+(function (d) {
+	gav.Klass("gav.data.DataCube", {
+		init : function (b) {
+			var a = [];
+			this._data = a;
+			this._numSlices = this._numAttributes = this._numRecords = 0;
+			this._mergedData = null;
+			this._mergedDataUpdated = !1;
+			if (b) {
+				this._numRecords = b.records;
+				this._numAttributes = b.attributes;
+				this._numSlices = b.slices;
+				var b = b.fillWithValue,
+				c,
+				f,
+				e,
+				g,
+				j;
+				for (j = 0; j < this._numSlices; j++) {
+					f = [];
+					for (e = 0; e < this._numRecords; e++) {
+						c = [];
+						for (g = 0; g < this._numAttributes; g++)
+							"random" ===
+							b ? 0 < j ? c.push(a[j - 1][e][g] + 0.4 * (Math.random() - 0.5) * a[j - 1][e][g]) : c.push(10 + 300 * Math.random() * (g + 1)) : NaN === b ? c.push(NaN) : "undefined" != typeof b ? c.push(b) : c.push(d);
+						f.push(c)
+					}
+					a.push(f)
+				}
+				this.calculateSupportingData();
+				this._createSortedStatusList(this._numSlices, this._numAttributes)
+			}
+		},
+		calculateSupportingData : function () {
+			this._localMinValues = Array(this._numSlices);
+			this._localMaxValues = Array(this._numSlices);
+			this._localSumValues = Array(this._numSlices);
+			for (var b = 0; b < this._numSlices; b++) {
+				for (var a = Array(this._numAttributes),
+					c = Array(this._numAttributes), f = Array(this._numAttributes), e = 0; e < this._numAttributes; e++)
+					a[e] = Number.MAX_VALUE, c[e] = -Number.MAX_VALUE, f[e] = 0;
+				this._localMinValues[b] = a;
+				this._localMaxValues[b] = c;
+				this._localSumValues[b] = f
+			}
+			this._globalMinValues = Array(this._numAttributes);
+			this._globalMaxValues = Array(this._numAttributes);
+			this._globalSumValues = Array(this._numAttributes);
+			this._globalDifferenceMaxMinValues = Array(this._numAttributes);
+			this._globalMinValues2 = Array(this._numAttributes);
+			this._globalDifferenceMaxMinValues2 =
+				Array(this._numAttributes);
+			for (e = 0; e < this._numAttributes; e++)
+				this._globalMinValues[e] = Number.MAX_VALUE, this._globalMaxValues[e] = -Number.MAX_VALUE, this._globalSumValues[e] = 0;
+			this._localNumNaNAttributes = Array(this._numSlices);
+			for (b = 0; b < this._numSlices; b++) {
+				this._localNumNaNAttributes[b] = Array(this._numAttributes);
+				for (a = 0; a < this._numAttributes; a++)
+					this._localNumNaNAttributes[b][a] = 0
+			}
+			this._globalNumNaNAttributes = Array(this._numAttributes);
+			for (b = 0; b < this._numAttributes; b++)
+				this._globalNumNaNAttributes[b] =
+					0;
+			for (a = 0; a < this._numAttributes; a++) {
+				for (c = 0; c < this._numSlices; c++) {
+					for (f = 0; f < this._numRecords; f++)
+						b = this._data[c][f][a], b === b ? (this._localMaxValues[c][a] = Math.max(this._localMaxValues[c][a], b), this._localMinValues[c][a] = Math.min(this._localMinValues[c][a], b), this._localSumValues[c][a] += b) : this._localNumNaNAttributes[c][a]++;
+					this._globalMaxValues[a] = Math.max(this._localMaxValues[c][a], this._globalMaxValues[a]);
+					this._globalMinValues[a] = Math.min(this._localMinValues[c][a], this._globalMinValues[a]);
+					this._globalNumNaNAttributes[a] += this._localNumNaNAttributes[c][a];
+					this._globalSumValues[a] += this._localSumValues[c][a]
+				}
+				this._globalMaxValues[a] === -Number.MAX_VALUE && (this._globalMaxValues[a] = NaN);
+				this._globalMinValues[a] === Number.MAX_VALUE && (this._globalMinValues[a] = NaN);
+				this._globalMinValues2[a] = Math.min(0, this._globalMinValues[a]);
+				this._globalDifferenceMaxMinValues[a] = this._globalMaxValues[a] - this._globalMinValues[a];
+				this._globalDifferenceMaxMinValues2[a] = this._globalMaxValues[a] - this._globalMinValues2[a]
+			}
+		},
+		getLocalMaxValue : function (b, a) {
+			return this._localMaxValues[b][a]
+		},
+		getLocalMinValue : function (b, a) {
+			return this._localMinValues[b][a]
+		},
+		getMaxValue : function (b) {
+			return this._globalMaxValues[b]
+		},
+		getMinValue : function (b) {
+			return this._globalMinValues[b]
+		},
+		getMinValue2 : function (b) {
+			return this._globalMinValues2[b]
+		},
+		getMaxMinDifferenceValue : function (b) {
+			return this._globalDifferenceMaxMinValues[b]
+		},
+		getMaxMinDifferenceValue2 : function (b) {
+			return this._globalDifferenceMaxMinValues2[b]
+		},
+		getValue : function (b, a, c) {
+			return !this._data ?
+			d : this._data[c][b][a]
+		},
+		setValue : function (b, a, c, f) {
+			this._data[c][b][a] = f
+		},
+		getScaledValue : function (b, a, c) {
+			var f = this._globalDifferenceMaxMinValues[a];
+			return 0 === f ? 0.5 : (this._data[c][b][a] - this._globalMinValues[a]) / f
+		},
+		getScaledValue2 : function (b, a, c) {
+			var f = this._globalDifferenceMaxMinValues2[a];
+			return 0 === f ? 0.5 : (this._data[c][b][a] - this._globalMinValues2[a]) / f
+		},
+		getLerpValue : function (b, a, c) {
+			if (gav.isInteger(c))
+				return this.getValue(b, a, Math.round(c));
+			var f = Math.floor(c),
+			e = Math.ceil(c),
+			c = (c - f) / (f - e),
+			f = this.getValue(b,
+					a, f),
+			b = this.getValue(b, a, e);
+			return c * (f - b) + f
+		},
+		getLerpScaledValue : function (b, a, c) {
+			if (gav.isInteger(c))
+				return this.getScaledValue(b, a, Math.round(c));
+			var f = Math.floor(c),
+			e = Math.ceil(c),
+			c = (c - f) / (f - e),
+			f = this.getScaledValue(b, a, f),
+			b = this.getScaledValue(b, a, e);
+			return c * (f - b) + f
+		},
+		getMeanValue : function (b) {
+			return this._globalSumValues[b] / (this._numRecords * this._numSlices - this._globalNumNaNAttributes[b])
+		},
+		getScaledMeanValue : function (b) {
+			var a = this._globalDifferenceMaxMinValues[b];
+			return 0 === a ? 0.5 : (this._globalSumValues[b] /
+				(this._numRecords * this._numSlices - this._globalNumNaNAttributes[b]) - this._globalMinValues[b]) / a
+		},
+		getScaledMeanValue2 : function (b) {
+			var a = this._globalDifferenceMaxMinValues2[b];
+			return 0 === a ? 0.5 : (this._globalSumValues[b] / (this._numRecords * this._numSlices - this._globalNumNaNAttributes[b]) - this._globalMinValues2[b]) / a
+		},
+		getNumRecords : function () {
+			return this._numRecords
+		},
+		getNumAttributes : function () {
+			return this._numAttributes
+		},
+		getNumSlices : function () {
+			return this._numSlices
+		},
+		getSortedIndices : function (b, a) {
+			if (b >=
+				this._numAttributes)
+				throw Error("Attribute out of bounds");
+			if (a >= this._numSlices)
+				throw Error("Slice out of bounds");
+			var c;
+			this._sortedStatusList[a][b] || (c = this._data[a], c = null === c ? null : this._getAttributeSortedIndices(c, b), this._sortedStatusList[a][b] = !0, this._sortedIndicesList[a][b][0] = c);
+			return c = this._sortedIndicesList[a][b][0]
+		},
+		getSortedIndicesGlobally : function (b) {
+			if (b >= this._numAttributes)
+				throw Error("Attribute out of bounds");
+			!1 === this._mergedDataUpdated && this._generateMergedData();
+			var a,
+			c;
+			this._sortedStatusListOfMergedData[b] ||
+			(a = this._mergedData ? this._getAttributeSortedIndices(this._mergedData, b) : null, this._sortedStatusListOfMergedData[b] = !0, this._sortedIndicesListOfMergedData[b][0] = a, c = this._findNaNIndex(a, this._mergedData, b), a = -1 === c ? a : a.slice(0, c), this._sortedIndicesListOfMergedData[b][1] = a);
+			return this._sortedIndicesListOfMergedData[b][1]
+		},
+		toArrayString : function () {
+			function b(a) {
+				var c = [];
+				if (Array.isArray(a) && Array.isArray(a[0]))
+					for (var f = 0; f < a.length; f++)
+						c = c.concat(b(a[f]));
+				else
+					Array.isArray(a) && (c = c.concat(a));
+				return c
+			}
+			return b(this._data).join(",")
+		},
+		_getAttributeSortedIndices : function (b, a) {
+			for (var c = b.length, f = Array(c), e = 0, d = 0, j = 0; j < c; j++)
+				isNaN(b[j][a]) ? e++ : (f[d] = [j, b[j][a]], d++);
+			f.splice(d, e);
+			try {
+				f = f.sort(function (a, b) {
+						return a[1] - b[1]
+					})
+			} catch (k) {}
+
+			c = Array(d);
+			for (j = 0; j < d; j++)
+				c[j] = f[j][0];
+			return c
+		},
+		_generateMergedData : function () {
+			if ((this._mergedData ? _mergedData.length : 0) !== this._numSlices * this._numRecords)
+				this._mergedData = Array(this._numSlices * this._numRecords);
+			for (var b = 0, a = 0; a < this.getNumSlices(); a++)
+				for (var c =
+						0; c < this.getNumRecords(); c++)
+					this._mergedData[b++] = this._data[a][c];
+			this._mergedDataUpdated = !0
+		},
+		_createSortedStatusList : function (b, a) {
+			this._sortedStatusList = Array(b);
+			this._sortedIndicesList = gav.utils.ArrayHelper.createArray3D(b, a, 2);
+			for (var c, f = 0; f < b; f++) {
+				this._sortedStatusList[f] = Array(a);
+				for (c = 0; c < a; c++)
+					this._sortedStatusList[f][c] = !1
+			}
+			this._mergedDataUpdated = !1;
+			this._sortedStatusListOfMergedData = Array(a);
+			this._sortedIndicesListOfMergedData = gav.utils.ArrayHelper.createArray2D(a, 2);
+			for (c = 0; c < a; c++)
+				this._sortedStatusListOfMergedData[c] =
+					!1
+		},
+		_findNaNIndex : function (b, a, c) {
+			if (!b || 0 === b.length)
+				return -1;
+			for (var f, e = b.length - 1; 0 <= e; e--)
+				if (f = a[b[e]][c], !isNaN(f))
+					return e + 1;
+			return 0
+		}
+	});
+	gav.data.DataCube.createWithArray = function (b) {
+		var a = new gav.data.DataCube,
+		c = b.length,
+		f = b[0].length,
+		e = b[0][0].length;
+		a._numSlices = c;
+		a._numRecords = f;
+		a._numAttributes = e;
+		a._data = b;
+		a.calculateSupportingData();
+		a._createSortedStatusList(c, e);
+		return a
+	}
+})();
+(function () {
+	function d() {
+		var b,
+		a,
+		c;
+		this._assignments = Array(this._numSlices);
+		this._categoricalValues = Array(this._numAttributes);
+		this._itemsOfCategoricalValues = Array(this._numSlices);
+		for (c = 0; c < this._numAttributes; c++)
+			this._categoricalValues[c] = [];
+		for (b = 0; b < this._numSlices; b++) {
+			this._itemsOfCategoricalValues[b] = Array(this._numAttributes);
+			for (c = 0; c < this._numAttributes; c++)
+				this._itemsOfCategoricalValues[b][c] = [];
+			var f = Array(this._numRecords);
+			for (a = 0; a < this._numRecords; a++) {
+				var e = Array(this._numAttributes);
+				for (c = 0; c < this._numAttributes; c++)
+					e[c] = -1;
+				f[a] = e
+			}
+			this._assignments[b] = f
+		}
+	}
+	gav.Klass("gav.data.ClassCube", {
+		init : function () {
+			this._numSlices = this._numAttributes = this._numRecords = 0
+		},
+		setArray : function (b) {
+			this._numSlices = b.length;
+			this._numRecords = b[0].length;
+			this._numAttributes = b[0][0].length;
+			this._categoricalIndicatorNames = Array(this._numAttributes);
+			this._orderedCategoricalValues = Array(this._numAttributes);
+			d.call(this);
+			var a,
+			c,
+			f;
+			for (a = 0; a < this._numSlices; a++)
+				for (c = 0; c < this._numRecords; c++)
+					for (f = 0; f < this._numAttributes; f++)
+						this.setValue(c, f, a, b[a][c][f])
+		},
+		getNumRecords : function () {
+			return this._numRecords
+		},
+		getNumAttributes : function () {
+			return this._numAttributes
+		},
+		getNumSlices : function () {
+			return this._numSlices
+		},
+		setOrderedCategoricalValues : function (b, a) {
+			this._orderedCategoricalValues[a] = b
+		},
+		getOrderedCategoricalValueIndex : function (b, a) {
+			return this._orderedCategoricalValues[a].indexOf(b)
+		},
+		getOrderedCategoricalValues : function (b) {
+			return this._orderedCategoricalValues[b] &&
+			"" != this._orderedCategoricalValues[b] && "-" != this._orderedCategoricalValues[b] ? this._orderedCategoricalValues[b] : this.getCategoricalValues(b)
+		},
+		setValue : function (b, a, c, f) {
+			var e = this._categoricalValues[a].indexOf(f);
+			-1 === e && (this._categoricalValues[a].push(f), e = this._categoricalValues[a].length - 1);
+			this._assignments[c][b][a] = e;
+			void 0 === this._itemsOfCategoricalValues[c][a][e] && (this._itemsOfCategoricalValues[c][a][e] = []);
+			this._itemsOfCategoricalValues[c][a][e].push(b)
+		},
+		setValue2 : function (b, a, c, f, e) {
+			var d =
+				this._categoricalValues[a].indexOf(e);
+			-1 === d && (this._categoricalValues[a].push(e), d = this._categoricalValues[a].length - 1);
+			e = c;
+			this._assignments[e][b][a] = d;
+			void 0 === this._itemsOfCategoricalValues[e][a][d] && (this._itemsOfCategoricalValues[e][a][d] = []);
+			this._itemsOfCategoricalValues[e][a][d].push(b);
+			for (e = c + 1; e < f; e += 1)
+				this._assignments[e][b][a] = d, this._itemsOfCategoricalValues[e][a][d] = this._itemsOfCategoricalValues[c][a][d]
+		},
+		getValue : function (b, a, c) {
+			return this._categoricalValues[a][this._assignments[c][b][a]]
+		},
+		getCategoricalValueIndexOfItem : function (b, a, c) {
+			return this._assignments[c][b][a]
+		},
+		getCategoricalIndicatorNames : function () {
+			return this._categoricalIndicatorNames
+		},
+		getCategoricalIndicatorName : function (b) {
+			return this._categoricalIndicatorNames[b]
+		},
+		setCategoricalIndicatorName : function (b, a) {
+			this._categoricalIndicatorNames[b] = a
+		},
+		getCategoricalValues : function (b) {
+			return this._categoricalValues[b]
+		},
+		getItemsOfCategoricalValue : function (b, a, c) {
+			return this._itemsOfCategoricalValues[c][a][b]
+		},
+		isConstantCategoricalIndicator : function (b) {
+			return this._constantStatusOfCategoricalAttributes &&
+			!0 == this._constantStatusOfCategoricalAttributes[b] ? !0 : !1
+		},
+		toArrayString : function () {
+			function b(a) {
+				var c = [];
+				if (Array.isArray(a) && Array.isArray(a[0]))
+					for (var f = 0; f < a.length; f++)
+						c = c.concat(b(a[f]));
+				else
+					Array.isArray(a) && (c = c.concat(a));
+				return c
+			}
+			return b(this._assigments).join(",")
+		}
+	});
+	gav.data.ClassCube.createWithSize = function (b, a, c) {
+		var f = new gav.data.ClassCube;
+		f._numSlices = c;
+		f._numRecords = b;
+		f._numAttributes = a;
+		f._categoricalIndicatorNames = Array(a);
+		f._orderedCategoricalValues = Array(a);
+		d.call(f);
+		return f
+	};
+	gav.data.ClassCube.createWithArray = function (b, a, c, f) {
+		var e = b.length,
+		d = b[0].length,
+		j = b[0][0].length,
+		k = gav.data.ClassCube.createWithSize(d, j, e);
+		f && (k._constantStatusOfCategoricalAttributes = f);
+		var m,
+		o,
+		n,
+		p;
+		if (void 0 === c)
+			for (p = 0; p < j; p++)
+				if (k.setCategoricalIndicatorName(p, a[p]), !f || !1 == f[p])
+					for (n = 0; n < d; n++)
+						for (o = 0; o < e; o++)
+							m = b[o][n][p], k.setValue(n, p, o, m);
+				else
+					for (n = 0; n < d; n++)
+						m = b[0][n][p], k.setValue2(n, p, 0, e, m);
+		else {
+			var r;
+			m = !1;
+			for (p = 0; p < j; p++) {
+				if (c && c.length > p) {
+					if (r = c[p], m = !0, !r || !r.length)
+						r = [], m = !1
+				} else
+					r =
+						[], m = !1;
+				k.setCategoricalIndicatorName(p, a[p]);
+				if (m)
+					if (!f || !1 == f[p])
+						for (n = 0; n < d; n++)
+							for (o = 0; o < e; o++)
+								m = b[o][n][p], k.setValue(n, p, o, m);
+					else
+						for (n = 0; n < d; n++)
+							m = b[0][n][p], k.setValue2(n, p, 0, e, m);
+				else {
+					if (!f || !1 == f[p])
+						for (n = 0; n < d; n++)
+							for (o = 0; o < e; o++)
+								m = b[o][n][p], k.setValue(n, p, o, m), -1 == r.indexOf(m) && r.push(m);
+					else
+						for (n = 0; n < d; n++)
+							m = b[0][n][p], k.setValue2(n, p, 0, e, m), -1 == r.indexOf(m) && r.push(m);
+					r.sort()
+				}
+				k.setOrderedCategoricalValues(r, p)
+			}
+		}
+		return k
+	};
+	gav.data.ClassCube.createWithArrayOld = function (b, a, c) {
+		var f =
+			b.length,
+		e = b[0].length,
+		d = b[0][0].length,
+		j = gav.data.ClassCube.createWithSize(e, d, f),
+		k,
+		m,
+		o,
+		n,
+		p;
+		m = !1;
+		for (p = 0; p < d; p++) {
+			if (c && c.length > p) {
+				if (k = c[p], m = !0, !k || !k.length)
+					k = [], m = !1
+			} else
+				k = [], m = !1;
+			j.setCategoricalIndicatorName(p, a[p]);
+			if (m)
+				for (n = 0; n < e; n++)
+					for (o = 0; o < f; o++)
+						m = b[o][n][p], j.setValue(n, p, o, m);
+			else {
+				for (n = 0; n < e; n++)
+					for (o = 0; o < f; o++)
+						m = b[o][n][p], j.setValue(n, p, o, m), -1 == k.indexOf(m) && k.push(m);
+				k.sort()
+			}
+			j.setOrderedCategoricalValues(k, p)
+		}
+		return j
+	}
+})();
+/* ---------------------------------------------------------------------------------------------------------------------*/
 let  source = [
          {
             "file": [
@@ -2301,7 +3405,7 @@ let http = require('http');
 //The url we want is: 'www.iea.org/Sankey/data/Armenia_D.txt'
 let options = {
   host: 'www.iea.org',
-  path: '/Sankey/data/Armenia_D.txt'
+  path: '/Sankey/data/Denmark_D.txt'
 };
 
 callback = function(response) {
@@ -2315,6 +3419,7 @@ callback = function(response) {
   //the whole response has been recieved, so we just print it out here
   response.on('end', function () {
     console.log(str);
+	var p = gav.readDataSet(str);
   });
 }
 
