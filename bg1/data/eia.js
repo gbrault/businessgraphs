@@ -1,4 +1,4 @@
-var  source = [
+let  source = [
          {
             "file": [
                {
@@ -2295,3 +2295,27 @@ var  source = [
             "_name": "Zimbabwe"
          }
       ];
+/* ============================================================================================================== */
+let http = require('http');
+
+//The url we want is: 'www.iea.org/Sankey/data/Armenia_D.txt'
+let options = {
+  host: 'www.iea.org',
+  path: '/Sankey/data/Armenia_D.txt'
+};
+
+callback = function(response) {
+  var str = '';
+
+  //another chunk of data has been recieved, so append it to `str`
+  response.on('data', function (chunk) {
+    str += chunk;
+  });
+
+  //the whole response has been recieved, so we just print it out here
+  response.on('end', function () {
+    console.log(str);
+  });
+}
+
+http.request(options, callback).end();
