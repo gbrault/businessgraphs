@@ -36,6 +36,9 @@ if (marimekko.graphtype == "marimekko") {
     switch (marimekko.display) {
         case "Bn":
             switch (marimekko.internal) {
+                case "Bn":
+                    ratio = 1;
+                    break;
                 case "Mn":
                     ratio = 1000;
                     break;
@@ -44,6 +47,38 @@ if (marimekko.graphtype == "marimekko") {
                     break;
                 case "Un":
                     ratio = 1000000000;
+                    break;
+            }
+            break;
+		case "Mn":
+            switch (marimekko.internal) {
+                case "Bn":
+                    ratio = 0.001;
+                    break;
+                case "Mn":
+                    ratio = 1;
+                    break;
+                case "Kn":
+                    ratio = 1000;
+                    break;
+                case "Un":
+                    ratio = 1000000;
+                    break;
+            }
+            break;
+		case "Kn":
+            switch (marimekko.internal) {
+                case "Bn":
+                    ratio = 0.000001;
+                    break;
+                case "Mn":
+                    ratio = 0.001;
+                    break;
+                case "Kn":
+                    ratio = 1;
+                    break;
+                case "Un":
+                    ratio = 1000;
                     break;
             }
             break;
@@ -252,7 +287,7 @@ function SVGGenJS(outputFrame) {
         }
         temp += this.htmlend + "\n";
 		// image/svg+xml?
-		this.outputFrame.src = "data:text/html;charset=utf-8," + escape(temp);
+		this.outputFrame.src = "data:text/html;charset=utf-8," + temp;  // escape?
 		this.outputFrame.height = window.innerHeight;
 		this.outputFrame.width = window.innerWidth;	
 		/*

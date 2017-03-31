@@ -23,20 +23,54 @@ var stemp = marimekko.title.replace(/{{ratio_thresold}}/,marimekko.ratio_thresho
 var ratio = 1;
 switch(marimekko.display)
     {
-  		case "Bn":
-    		switch(marimekko.internal)
-                {
-              		case "Mn":
-                		ratio = 1000;
-                		break;
-              		case "Kn":
-                		ratio = 1000000;
-                		break;
-              		case "Un":
-                		ratio = 1000000000;
-                		break;
-                }
-    		break;
+         case "Bn":
+            switch (marimekko.internal) {
+                case "Bn":
+                    ratio = 1;
+                    break;
+                case "Mn":
+                    ratio = 1000;
+                    break;
+                case "Kn":
+                    ratio = 1000000;
+                    break;
+                case "Un":
+                    ratio = 1000000000;
+                    break;
+            }
+            break;
+		case "Mn":
+            switch (marimekko.internal) {
+                case "Bn":
+                    ratio = 0.001;
+                    break;
+                case "Mn":
+                    ratio = 1;
+                    break;
+                case "Kn":
+                    ratio = 1000;
+                    break;
+                case "Un":
+                    ratio = 1000000;
+                    break;
+            }
+            break;
+		case "Kn":
+            switch (marimekko.internal) {
+                case "Bn":
+                    ratio = 0.000001;
+                    break;
+                case "Mn":
+                    ratio = 0.001;
+                    break;
+                case "Kn":
+                    ratio = 1;
+                    break;
+                case "Un":
+                    ratio = 1000;
+                    break;
+            }
+            break;
     }
 stemp = stemp.replace(/{{size}}/,Math.round((marimekko.size/ratio)*100)/100);
 stemp = stemp.replace(/{{currency}}/,marimekko.currency);
