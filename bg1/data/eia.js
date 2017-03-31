@@ -1,21 +1,14 @@
-let gav ={
-readDataSet : function (a) {
-			var a = gav.d(a),
-			c = new gav.data.provider.UnicodeFormatReader;
-			c.sheetArray = a;
-			c.processData();
-			return c;
-},
-
-d: function(a) {
-		var a = -1 < a.indexOf("\r\n") ? a.split("\r\n") : a.split("\n"),b = a.length;
-		"" === a[b - 1] && (a.pop(), b--);
-		for (var f = 0; f < b; f++)
-			a[f] = a[f].split("\t");
-		return [a]
-}
-}
-gav.Klass = function (c, f) {
+let gav ={};
+(function () {
+	function d(a, b) {
+		a.__implementsInterfaces || (a.__implementsInterfaces = []);
+		0 > a.__implementsInterfaces.indexOf(b) && a.__implementsInterfaces.push(b)
+	}
+	function b(a, b) {
+		return !a.__implementsInterfaces ? !1 : 0 <= a.__implementsInterfaces.indexOf(b) ? !0 : !1
+	}
+	var a = !1;
+	gav.Klass = function (c, f) {
 		!f && "string" != typeof c && (f = c, c = null);
 		for (var e = "Anonym", g = this, j = c ? c.split(".") : [], k = 1; k < j.length; k++)
 			g[j[k]] || (g[j[k]] = {}), k < j.length - 1 && (g = g[j[k]]), e = j[k];
@@ -36,6 +29,8 @@ gav.Klass = function (c, f) {
 			return o
 		};
 		for (var r = function () {
+			a || ("function" == typeof this.init && this.init.apply(this, arguments), this.__initialized = !0, this.hasEventListener && this.hasEventListener("initComplete") && (this.dispatchEvent("initComplete"),
+					this.removeEventListener("initComplete")));
 			this.displayName = o
 		}, k = 0; k < p.length; k++)
 			r[p[k].name] = p[k].option;
@@ -62,7 +57,138 @@ gav.Klass = function (c, f) {
 		r.prototype.self = r;
 		return g[e] =
 			r
-};
+	};
+	gav.IFace = function (a, b) {
+		for (var e, g = a.split("."), d = window, k = 0; k < g.length; k++)
+			d[g[k]] || (d[g[k]] = {}), k < g.length - 1 && (d = d[g[k]]), e = g[k];
+		delete b.implement;
+		b.hasOwnProperty("toString") || (b.toString = function () {
+			return e
+		});
+		d[e] = b;
+		return d[e]
+	}
+})();
+(function () {
+	function d(a) {
+		var a = -1 < a.indexOf("\r\n") ? a.split("\r\n") : a.split("\n"),
+		b = a.length;
+		"" === a[b - 1] && (a.pop(), b--);
+		for (var f = 0; f < b; f++)
+			a[f] = a[f].split("\t");
+		return [a]
+	}
+	function b(a) {
+		var b = a.getNumOfRecords(),
+		f = a.getNumOfSlices(),
+		e = a.getNumOfNumericAttributes(),
+		d = a.getNumOfCategoricalAttributes(),
+		j = a.getNumericAttributeIds(),
+		k = a.getNumericAttributeNames(),
+		m = a.getSliceNamesOfNumericAttributes(),
+		o = a.getNumericAttributePrecisions(),
+		n = a.getNumericAttributeUnits(),
+		p = a.getNumericAttributeDescriptions(),
+		r = a.getCategoricalAttributeNames(),
+		v = a.getRecordInfoArray(),
+		t = a.getSliceNames(),
+		u = Array(e),
+		q = Array(d),
+		z,
+		x = Array(b),
+		w,
+		B = Array(f);
+		for (w = 0; w < e; w++)
+			z = new gav.data.IndicatorInformation(j[w], k[w]), z.timePeriods = m[w], z.precision = parseInt(o[w]), z.unit = n[w], z.description = p[w], u[w] = z;
+		for (w = 0; w < d; w++)
+			j = new gav.data.IndicatorInformation(r[w], r[w]), q[w] = j;
+		for (r = 0; r < b; r++)
+			w = v[r][0].toString(), d = v[r][1].toString(), x[r] = new gav.data.RecordInformation(w, d);
+		for (w = 0; w < f; w++)
+			B[w] = new gav.data.SheetInformation(t[w], t[w]);
+		t = a.getDataCube();
+		f = a.getClassCube();
+		v = a.getFlagsList();
+		d = a.getNumericAttributeFlagsDescriptions();
+		a = {};
+		if (d)
+			for (w = 0; w < e; w++) {
+				j = (r = (r = d[w]) ? r.split(";") : null) ? r.length : 0;
+				for (k = 0; k < j; k++)
+					(m = (m = r[k]) ? m.split("=") : null) && (a[m[0]] = m[1])
+			}
+		b = gav.utils.DataSetUtils.convertFlagsArray3DToFlagsArray1D(v, b, e);
+		u = new gav.data.DataSet(t, u, f, b, a);
+		u.setRecordInformation(x);
+		u.setSliceInformation(B);
+		f && u.setCategoricalIndicatorInformation(q);
+		return u
+	}
+	gav.Klass("gav.data.provider.UnicodeTextDataProvider", {
+		init : function () {
+			this.fileList = {}
+		},
+		setInputFileName : function (a) {
+			if (this.fileList.hasOwnProperty(a))
+				this.readFileContent(this.fileList[a].content);
+			else {
+				var b = this;
+				this.readFile(a, function (a) {
+					b.readFileContent(a)
+				})
+			}
+		},
+		getDataSet : function () {
+			return this._dataSet
+		},
+		readFile : function (a, b) {
+			this.fileList.hasOwnProperty(a) || (this.fileList[a] = {}, this.fileList[a].loadingStatus = gav.constants.LoadStatus.NOT_LOADED, this.fileList[a].callbackList = []);
+			if (this.fileList[a].loadingStatus ===
+				gav.constants.LoadStatus.LOADED)
+				"function" == typeof b && b(this.fileList[a].content);
+			else if (this.fileList[a].loadingStatus === gav.constants.LoadStatus.LOADING)
+				"function" == typeof b && this.fileList[a].callbackList.push(b);
+			else {
+				var f = this;
+				this.fileList[a].loadingStatus = gav.constants.LoadStatus.LOADING;
+				b && "function" == typeof b && this.fileList[a].callbackList.push(b);
+				$.ajax({
+					type : "GET",
+					url : a,
+					dataType : "text",
+					success : function (b) {
+						f.fileList[a].loadingStatus = gav.constants.LoadStatus.LOADED;
+						f.fileList[a].content =
+							b;
+						var c = f.fileList[a].callbackList;
+						if (0 < c.length)
+							for (; c.length; )
+								c.shift()(b)
+					}
+				})
+			}
+		},
+		readFileContent : function (a, b) {
+			this.readDataSet(a);
+			b && "function" == typeof b && b(a)
+		},
+		readDataSet : function (a) {
+			var a = d(a),
+			c = new gav.data.provider.UnicodeFormatReader;
+			c.sheetArray = a;
+			c.processData();
+			this._dataSet = b(c)
+		}
+	});
+	gav.data.provider.UnicodeTextDataProvider.createDataSet = function (a) {
+		var a = d(a),
+		c = new gav.data.provider.UnicodeFormatReader;
+		c.sheetArray =
+			a;
+		c.processData();
+		return b(c)
+	}
+})();
 (function () {
 	gav.Klass("gav.data.provider.UnicodeFormatReader", {
 		init : function () {
@@ -1099,6 +1225,225 @@ gav.Klass = function (c, f) {
 			j.setOrderedCategoricalValues(k, p)
 		}
 		return j
+	}
+})();
+(function () {
+	function d() {
+		this._numRecords = this._dataCube ? this._dataCube.getNumRecords() : 0;
+		this._numAttributes = this._dataCube ? this._dataCube.getNumAttributes() : 0;
+		this._numSlices = this._dataCube ? this._dataCube.getNumSlices() : 0
+	}
+	gav.Klass("gav.data.DataSet", {
+		init : function (b, a, c, f, e) {
+			this._dataCube = b;
+			this._indicatorInformation = a;
+			this._classCube = c;
+			this._flagsList = f;
+			this._flagDescriptions = e;
+			this._recordIdToRecordIndexMappingNeedToUpdate =
+				this._changed = this._availableFlagsUpdateNeeded = !0;
+			d.call(this)
+		},
+		getDataCube : function () {
+			return this._dataCube
+		},
+		setDataCube : function (b) {
+			if (this._dataCube !== b) {
+				var a = this._dataCube;
+				this._dataCube = b;
+				d.call(this);
+				if (this._dataCube) {
+					for (var c = [], b = 0; b < this._numRecords; b++)
+						c.push({
+							id : "rec_" + b,
+							name : "Record " + b
+						});
+					this.setRecordInformation(c);
+					for (var f = [], c = 0; c < this._numAttributes; c++)
+						f.push({
+							name : "Attribute " + c,
+							id : "attr_" + b
+						});
+					this.setIndicatorInformation(f);
+					f = [];
+					for (c = 0; c < this._numSlices; c++)
+						f.push({
+							name : "200" +
+							c,
+							id : "slice_" + b
+						});
+					this.setSliceInformation(f);
+				}
+				this._changed = !0
+			}
+		},
+		getClassCube : function () {
+			return this._classCube
+		},
+		setClassCube : function (b) {
+			this._classCube !== b && (this._classCube = b, this._changed = !0)
+		},
+		getRecordInformation : function () {
+			return this._recordInformation
+		},
+		setRecordInformation : function (b) {
+			this._recordInformation = b;
+			this._recordIdToRecordIndexMappingNeedToUpdate = this._changed = !0
+		},
+		getRecordIdToRecordIndexMapping : function () {
+			if (this._recordIdToRecordIndexMappingNeedToUpdate) {
+				this._recordIdToRecordIndexMapping = {};
+				for (var b = this._recordInformation ? this._recordInformation.length : 0, a, c = 0; c < b; c++)
+					a = this._recordInformation[c], this._recordIdToRecordIndexMapping[a.id] = c;
+				this._recordIdToRecordIndexMappingNeedToUpdate = !1
+			}
+			return this._recordIdToRecordIndexMapping
+		},
+		getIndicatorInformation : function () {
+			return this._indicatorInformation
+		},
+		setIndicatorInformation : function (b) {
+			this._indicatorInformation = b;
+			this._changed = !0
+		},
+		getCategoricalIndicatorInformation : function () {
+			return this._categoricalIndicatorInformation
+		},
+		setCategoricalIndicatorInformation : function (b) {
+			this._categoricalIndicatorInformation = b;
+			this._changed = !0
+		},
+		getSliceInformation : function () {
+			return this._sliceInformation
+		},
+		setSliceInformation : function (b) {
+			this._sliceInformation =
+				b;
+			this._changed = !0
+		},
+		setMapName : function (b) {
+			this._mapName = b
+		},
+		getMapName : function () {
+			return this._mapName
+		},
+		hasTimeData : function () {
+			return this._dataCube && 1 < this._dataCube.getNumSlices()
+		},
+		hasCategoricalData : function () {
+			return this._classCube && 1 <= this._classCube.getNumAttributes()
+		},
+		setMetaDataFlags : function (b, a, c, f) {
+			this._flagsList[[a, c, f].join()] = b;
+			this._availableFlagsUpdateNeeded = !0
+		},
+		getMetaDataFlags : function (b, a, c) {
+			return this._flagsList ?
+			this._flagsList[[b, a, c].join()] : null
+		},
+		getMetaDataFlagsDescription : function (b) {
+			return this._flagDescriptions ? this._flagDescriptions[b] : null
+		},
+		getAllFlags : function () {
+			if (this._availableFlagsUpdateNeeded) {
+				this._availableFlags = [];
+				var b,
+				a,
+				c,
+				f;
+				for (f in this._flagsList) {
+					c = (b = this._flagsList[f]) ? b.length : 0;
+					for (var e = 0; e < c; e++)
+						a = b[e], -1 == this._availableFlags.indexOf(a) && this._availableFlags.push(a)
+				}
+				this._availableFlagsUpdateNeeded = !1
+			}
+			return this._availableFlags
+		},
+		getSourceFlagList : function () {
+			return this._flagsList
+		},
+		getSourceFlagDescriptions : function () {
+			return this._flagDescriptions
+		},
+		getIndicatorGroupings : function () {
+			return this._indicatorGroupings
+		},
+		setIndicatorGroupings : function (b) {
+			this._indicatorGroupings = b
+		},
+		toString : function () {
+			this._unicodeWriter || (this._unicodeWriter = new gav.data.provider.UnicodeFormatWriter);
+			if (this._changed || !this._unicodeString)
+				this._changed = !1, this._unicodeString = this._unicodeWriter.getDataSetAsFormattedText(this);
+			return this._unicodeString
+		}
+	})
+})();
+gav.Klass("gav.data.IndicatorInformation", {
+	init : function (d, b) {
+		d || (d = "ind");
+		b || (b = "");
+		this.id = d;
+		this.name = b
+	},
+	toString : function () {
+		return this.name
+	}
+});
+gav.Klass("gav.data.RecordInformation", {
+	init : function (d, b) {
+		d || (d = "rec");
+		b || (b = "");
+		this.id = d;
+		this.name = b
+	},
+	toString : function () {
+		return this.name
+	}
+});
+gav.Klass("gav.data.SheetInformation", {
+	init : function (d, b) {
+		d || (d = "ind");
+		b || (b = "");
+		this.id = d;
+		this.name = b
+	},
+	toString : function () {
+		return this.name
+	}
+});
+(function () {
+	gav.utils || (gav.utils = {});
+	gav.utils.DataSetUtils = {
+		flagMarkerLeft : "(",
+		flagMarkerRight : ")",
+		extractFlags : function (d, b, a, c, f) {
+			if (void 0 == d)
+				return d;
+			var e = d.indexOf(this.flagMarkerLeft),
+			g = d.indexOf(this.flagMarkerRight);
+			if (-1 == e || -1 == g)
+				return d;
+			e++;
+			g = d.substr(e, g - e);
+			f[b] || (f[b] = []);
+			f[b][a] || (f[b][a] = []);
+			f[b][a][c] = g.split(",");
+			return d.substr(0, e - 1)
+		},
+		convertFlagsArray3DToFlagsArray1D : function (d) {
+			for (var b = d ? d.length : 0, a, c, f, e, g = {}, j = 0; j < b; j += 1) {
+				c = (a = d[j]) ? a.length : 0;
+				for (var k = 0; k < c; k += 1) {
+					e =
+						(f = a[k]) ? f.length : 0;
+					for (var m = 0; m < e; m += 1)
+						f[m] && (g[[j, m, k].join()] = d[j][k][m])
+				}
+			}
+			return g
+		}
 	}
 })();
 /* ---------------------------------------------------------------------------------------------------------------------*/
@@ -3419,7 +3764,7 @@ callback = function(response) {
   //the whole response has been recieved, so we just print it out here
   response.on('end', function () {
     console.log(str);
-	var p = gav.readDataSet(str);
+	var p = gav.data.provider.UnicodeTextDataProvider.createDataSet(str);
   });
 }
 
