@@ -3746,26 +3746,71 @@ let  source = [
       ];
 /* ============================================================================================================== */
 let http = require('http');
+let json2csv = require('json2csv');
+var fs = require('fs');
 
-//The url we want is: 'www.iea.org/Sankey/data/Armenia_D.txt'
-let options = {
-  host: 'www.iea.org',
-  path: '/Sankey/data/Denmark_D.txt'
-};
+callback = function(country,response) {
+	var str = '';
 
-callback = function(response) {
-  var str = '';
+	//another chunk of data has been recieved, so append it to `str`
+	response.on('data', function (chunk) {
+		str += chunk;
+	});
 
-  //another chunk of data has been recieved, so append it to `str`
-  response.on('data', function (chunk) {
-    str += chunk;
-  });
-
-  //the whole response has been recieved, so we just print it out here
-  response.on('end', function () {
-    console.log(str);
-	var p = gav.data.provider.UnicodeTextDataProvider.createDataSet(str);
-  });
+	//the whole response has been recieved, so we just print it out here
+	response.on('end', function () {
+		console.log(str);
+		var p = gav.data.provider.UnicodeTextDataProvider.createDataSet(str);
+		var v = p.getClassCube();
+		for(var i=0;i<p.getRecordInformation().length;i++){
+			for(var j=0; j<p.getIndicatorInformation().length;j++){
+				for(var k=0;k<p.getSliceInformation().length;k++){
+					var category,usage;
+					category=usage="";				
+					for(var l=0;l<v.getCategoricalValues(0).length;l++){
+						if(p.getRecordInformation()[i].name.startsWith(v.getCategoricalValues(0)[l].replace(/\//g," "))){
+							category=v.getCategoricalValues(0)[l];
+							usage = p.getRecordInformation()[i].name.substr(category.length);
+						}
+					}
+					if(category==""){
+						usage = p.getRecordInformation()[i].name;
+					}
+					var oo={country:country,category:category,usage:usage,unit:p.getIndicatorInformation()[j].unit,year:p.getSliceInformation()[k].name,value:p.getDataCube().getValue(i,j,k)};
+					o.push(oo);
+				}
+			}
+		}
+		
+		done++;
+		if(done==source.length){
+			var fields = ['country', 'category', 'usage','unit','year','value'];
+			var csv = json2csv({data:o,fields:fields});
+			fs.writeFile('eia.csv',csv,function(err){
+				if(err) throw err;
+				console.log('file saved');
+			});
+			// console.log(JSON.stringify(o));
+		} else {
+			doit();
+		}
+	});
 }
 
-http.request(options, callback).end();
+let done = 0;
+let o=[];
+let todo = 0;
+
+function doit(){
+	var country = source[todo]._name;
+	var options = { //The url we want is: 'www.iea.org/Sankey/data/Armenia_D.txt'
+					host: 'www.iea.org',
+					path: '/Sankey/'+escape(source[todo].file[1]._src)
+	};
+	todo++;
+	http.request(options, callback.bind(null,country)).end();
+}
+
+doit();
+
+
