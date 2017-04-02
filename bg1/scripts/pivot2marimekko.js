@@ -230,7 +230,7 @@ function pivot2marimekko(pivotFile){
 		Other.size = 100-share;
 		Other.box.Top=h;
 		Other.box.Height = row.box.Height;
-		Other.box.Width =  (width*factor*scalex*(1-headerratio))-totalWidth;
+		Other.box.Width =  (width*factor*scalex)-totalWidth;
 		// reorder cols according to size, biggest left
 		cols.sort(function(a,b){return (b.size-a.size)});
 		var w=row.box.Width;

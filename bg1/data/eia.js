@@ -3777,7 +3777,8 @@ callback = function(country,response) {
 						usage = p.getRecordInformation()[i].name;
 					}
 					var oo={country:country,category:category,usage:usage,unit:p.getIndicatorInformation()[j].unit,year:p.getSliceInformation()[k].name,value:p.getDataCube().getValue(i,j,k)};
-					o.push(oo);
+					if(oo.value!=0)
+							o.push(oo);
 				}
 			}
 		}
@@ -3786,7 +3787,7 @@ callback = function(country,response) {
 		if(done==source.length){
 			var fields = ['country', 'category', 'usage','unit','year','value'];
 			var csv = json2csv({data:o,fields:fields});
-			fs.writeFile('eia.csv',csv,function(err){
+			fs.writeFile('eia_source.csv',csv,function(err){
 				if(err) throw err;
 				console.log('file saved');
 			});
