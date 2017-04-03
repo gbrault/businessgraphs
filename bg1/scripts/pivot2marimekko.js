@@ -220,7 +220,7 @@ function pivot2marimekko(pivotFile){
 		for(var j=0; j<row.cols.length;j++){
 			var col = row.cols[j];
 			col.box.Top = h;
-			if ((col.title!="Other")&&(col.size>=(pivotFile.globals.pvThresholdShare))){
+			if ((col.title.toLowerCase()!="other")&&(col.title.toLowerCase()!="others")&&(col.size>=(pivotFile.globals.pvThresholdShare))){
 				cols.push(col);
 				share += col.size;
 				totalWidth += col.box.Width;
