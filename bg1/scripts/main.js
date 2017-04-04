@@ -541,6 +541,14 @@ BusinessGraph.prototype.readSingleFile = function (evt) {
     if (f) {
       var r = new FileReader();
       r.onload = function(e) { 
+	    filestructure={name:f.name,content:e.target.result,lastModified:f.lastModified,type:f.type,size:f.size}
+		window.consoleFileStructure=fileStructure;
+		document.getElementById('console').innerHTML ='<div id="aceeditor" style="position:absolute;top:50px;right:0;bottom:0;left:0;"></div>';
+		window.oAceEditor = ace.edit("aceeditor");
+		window.oAceEditor.setTheme("ace/theme/monokai");
+		window.oAceEditor.getSession().setMode("ace/mode/javascript");
+		window.oAceEditor.getSession().setValue(vkbeautify.json(JSON.stringify(consoleFileStructure.content),4));
+	    /*
 		var txt = document.getElementById('txt');
 	    var contents = e.target.result;
 		txt.innerText=contents;
@@ -548,6 +556,7 @@ BusinessGraph.prototype.readSingleFile = function (evt) {
 		this.filelastModified=f.lastModified;
 		this.filetype=f.type;
 		this.filesize=f.size;
+		*/
       }.bind(this);
       r.readAsText(f);
     } else { 
