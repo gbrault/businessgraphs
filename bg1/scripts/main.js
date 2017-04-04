@@ -31,6 +31,7 @@ function BusinessGraph() {
   this.menu_save_file = document.getElementById('menu_save_file');
   this.menu_save_codemirror_file = document.getElementById('menu_save_codemirror_file');
   this.uploadFile=document.getElementById('uploadFile');
+  this.menu_download_file = document.getElementById('menu_download_file');
   
   /* File menus */
   this.menu_show = document.getElementById('menu_show');
@@ -80,6 +81,7 @@ function BusinessGraph() {
   this.menu_save_powerpoint.addEventListener('click', this.download_powerpoint.bind(this));
   this.menu_make_pivot_from_dta.addEventListener('click', this.make_pivot_from_dta.bind(this));
   this.menu_rename.addEventListener('click', this.rename_file.bind(this));
+  this.menu_download_file.addEventListener('click', this.download_file.bind(this));
 
   // TAB listners  
   this.togglefiles.addEventListener('click', this.do_togglefiles.bind(this));
@@ -91,6 +93,16 @@ function BusinessGraph() {
   this.initFirebase();
 };
 
+BusinessGraph.prototype.download_file = function(){
+	if(window.consoleFileStructure!==undefined){
+		if(window.oAceEditor!==undefined){
+			var content = window.oAceEditor.getSession().getValue();
+			window.consoleFileStructure.content = content;
+			var blob = new Blob([content], {type:window.consoleFileStructure.type });
+			saveAs(blob, window.consoleFileStructure.name);
+		}
+	}	
+}
 BusinessGraph.prototype.make_pivot_from_dta = function(){
 	var checkedlabels = document.getElementById('filetable').querySelectorAll('label.is-checked');
 	if(checkedlabels.length>0){
@@ -572,8 +584,12 @@ BusinessGraph.prototype.menuSaveFile = function(){
 			if((this.filename.endsWith('mmk'))||(this.filename.endsWith('pvt'))||(this.filename.endsWith('plt'))||(this.filename.endsWith('dta'))){
 				this.filetype='application/json';
 			}
-		}	
-		var fileStructure = {name:this.filename,type:this.filetype,content:this.filecontent};
+		}
+		var content=this.filecontent;
+		if(this.filetype=='application/json'){
+			content = JSON.parse(content);
+		}
+		var fileStructure = {name:this.filename,type:this.filetype,content:content};
 		this.oIOmodule.writeNewFile.bind(this.oIOmodule)(fileStructure);	
 	}
 };
