@@ -551,8 +551,9 @@ BusinessGraph.prototype.readSingleFile = function (evt) {
 	    /*
 		var txt = document.getElementById('txt');
 	    var contents = e.target.result;
-	    */
+	   
 		txt.innerText=contents;
+		 */
 		this.filecontent=contents;
 		this.filelastModified=f.lastModified;
 		this.filetype=f.type;
