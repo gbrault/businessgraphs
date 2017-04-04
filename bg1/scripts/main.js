@@ -541,7 +541,7 @@ BusinessGraph.prototype.readSingleFile = function (evt) {
     if (f) {
       var r = new FileReader();
       r.onload = function(e) { 
-	    filestructure={name:f.name,content:e.target.result,lastModified:f.lastModified,type:f.type,size:f.size}
+	    var filestructure={name:f.name,content:e.target.result,lastModified:f.lastModified,type:f.type,size:f.size}
 		window.consoleFileStructure=fileStructure;
 		document.getElementById('console').innerHTML ='<div id="aceeditor" style="position:absolute;top:50px;right:0;bottom:0;left:0;"></div>';
 		window.oAceEditor = ace.edit("aceeditor");
