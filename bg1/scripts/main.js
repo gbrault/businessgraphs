@@ -547,7 +547,7 @@ BusinessGraph.prototype.readSingleFile = function (evt) {
 		window.oAceEditor = ace.edit("aceeditor");
 		window.oAceEditor.setTheme("ace/theme/monokai");
 		window.oAceEditor.getSession().setMode("ace/mode/javascript");
-		window.oAceEditor.getSession().setValue(vkbeautify.json(JSON.stringify(consoleFileStructure.content),4));
+		window.oAceEditor.getSession().setValue(vkbeautify.json(consoleFileStructure.content,4));
 	    /*
 		var txt = document.getElementById('txt');
 	    var contents = e.target.result;
