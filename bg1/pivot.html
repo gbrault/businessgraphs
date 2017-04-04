@@ -76,6 +76,18 @@
 		}.bind(null,attr);
 	}
 	
+	if(!(typeof Object.entries == 'function')){
+		Object.entries = function (O) {
+			var entrys = [];
+			for (var key in O) {
+				if (O.propertyIsEnumerable(key)) {
+					entrys.push([key, O[key]]);
+				}
+			}
+			return entrys;
+		};
+	}
+	
 	function Dictionary(pivotData){
 		var i,j;
 		var dictionary={};
