@@ -554,7 +554,7 @@ BusinessGraph.prototype.readSingleFile = function (evt) {
 	   
 		txt.innerText=contents;
 		 */
-		this.filecontent=contents;
+		this.filecontent=fileStructure.content;
 		this.filelastModified=f.lastModified;
 		this.filetype=f.type;
 		this.filesize=f.size;
