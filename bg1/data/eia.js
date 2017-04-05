@@ -3776,7 +3776,11 @@ callback = function(country,response) {
 					if(category==""){
 						usage = p.getRecordInformation()[i].name;
 					}
-					var oo={country:country,category:category,usage:usage,unit:p.getIndicatorInformation()[j].unit,year:p.getSliceInformation()[k].name,value:p.getDataCube().getValue(i,j,k)};
+					var unit = p.getIndicatorInformation()[j].unit.trim();
+					var value = p.getDataCube().getValue(i,j,k);
+					if (unit=='ktoe') { value /=1000; unit='Mtoe';}
+					if (unit=='TJ') { value /=1000; unit='PJ';}
+					var oo={country:country.trim(),category:category.trim(),usage:usage.trim(),unit:unit,year:p.getSliceInformation()[k].name.trim(),value:value};
 					if(oo.value!=0)
 							o.push(oo);
 				}
