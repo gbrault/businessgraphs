@@ -42,6 +42,7 @@ function BusinessGraph() {
   this.menu_load_palette = document.getElementById('menu_load_palette');
   this.menu_make_pivot_from_dta = document.getElementById('menu_make_pivot_from_dta');
   this.menu_rename = document.getElementById('menu_rename');
+  this.menu_copy = document.getElementById('menu_copy');
   
   /* Pivot menus */
   this.menu_pivot_save = document.getElementById('menu_pivot_save');
@@ -82,6 +83,7 @@ function BusinessGraph() {
   this.menu_make_pivot_from_dta.addEventListener('click', this.make_pivot_from_dta.bind(this));
   this.menu_rename.addEventListener('click', this.rename_file.bind(this));
   this.menu_download_file.addEventListener('click', this.download_file.bind(this));
+  this.menu_copy.addEventListener('click', this.copy_file.bind(this));
 
   // TAB listners  
   this.togglefiles.addEventListener('click', this.do_togglefiles.bind(this));
@@ -92,6 +94,24 @@ function BusinessGraph() {
   
   this.initFirebase();
 };
+
+BusinessGraph.prototype.copy_file = function(){
+	// get first selected file
+	var checkedlabels = document.getElementById('filetable').querySelectorAll('label.is-checked');
+	if((checkedlabels!==undefined)&&(checkedlabels.length>0)){
+		var id = checkedlabels[0].id;
+		if(id!=""){
+			window.consoleFileStructure={id:id};	
+			document.body.style.cursor  = 'wait';
+			this.oIOmodule.readFile.bind(this.oIOmodule)(id, function(fileStructure){
+				this.oIOmodule.feedback = function(){
+					document.body.style.cursor  = 'default';					
+				};	
+				this.oIOmodule.writeNewFile.bind(this.oIOmodule)(fileStructure);
+			}.bind(this));
+		}
+	}	
+}
 
 BusinessGraph.prototype.download_file = function(){
 	if(window.consoleFileStructure!==undefined){
