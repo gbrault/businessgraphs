@@ -309,17 +309,15 @@
 					} else if((key=='apply_palette')){
 						
 						// delete all existing colors
-						if(window.pivotCustom!==undefined){
-							var categories = Object.keys(window.pivotCustom);
-							for(var i=0; i<categories.length; i++){
-								var names=Object.keys(window.pivotCustom[categories[i]]);
-								for(var j=0; j<names.length; j++){
-									if(window.pivotCustom[categories[i]][names[j]].color!==undefined){
-										delete window.pivotCustom[categories[i]][names[j]].color;
-									}
+						var categories = Object.keys(window.pivotCustom);
+						for(var i=0; i<categories.length; i++){
+							var names=Object.keys(window.pivotCustom[categories[i]]);
+							for(var j=0; j<names.length; j++){
+								if(window.pivotCustom[categories[i]][names[j]].color!==undefined){
+									delete window.pivotCustom[categories[i]][names[j]].color;
 								}
-							}	
-						}
+							}
+						}						
 						// add the palette colors to the first items
 						oCom.getPalette(function(palette){
 							var colors = palette.colors;

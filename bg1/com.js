@@ -56,16 +56,18 @@ Com.prototype.exec = function(cmd) {
 				document.body.style.cursor  = 'wait';
 				var dta_name = cmd.name.substr(0,cmd.name.length-3)+"dta";
 				window.fileStructureDTA = {name:dta_name,content:pivotData.input,type:"application/json"};
-				this.saveFile(window.fileStructureDTA,false);
-				var globals = this.getGlobals();
-				var content = {	input:window.fileStructureDTA.id,
-								pivotCustom:pivotData.pivotCustom,
-								pivotConfig,
-								dictionary,
-								globals,
-								};
-				window.fileStructure={content:content,name:cmd.name,type:cmd.filetype};
-				this.saveFile(window.fileStructure,true);
+				this.saveFile(window.fileStructureDTA,function(cmd,result){
+					var globals = this.getGlobals();
+					var content = {	input:window.fileStructureDTA.id,
+									pivotCustom:pivotData.pivotCustom,
+									pivotConfig,
+									dictionary,
+									globals,
+								   };
+					window.fileStructure={content:content,name:cmd.name,type:cmd.filetype};
+					this.saveFile(window.fileStructure,true);
+				}.bind(this,cmd));
+
 			}
 			break;
 		case "saveExisting": // actually save existing pivot (only the .pvt side not the associated .dta)
@@ -152,7 +154,11 @@ Com.prototype.loadFile = function(fileID){
 };
 
 Com.prototype.saveFile = function(fileStructure,feedback){ // actually save as
-		if(feedback) this.oIOmodule.feedback = this.feedback.bind(this);
+        if((feedback!==undefined)&&(typeof feedback ==='function')){
+			this.oIOmodule.feedback = feedback;
+		} else if (typeof feedback === 'boolean'){
+			this.oIOmodule.feedback = this.feedback.bind(this);
+		}
 		this.oIOmodule.writeNewFile.bind(this.oIOmodule)(fileStructure);
 };
 

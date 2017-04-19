@@ -1,3 +1,0 @@
-debug node application
-
-node --inspect --debug-brk eia.js
