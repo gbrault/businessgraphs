@@ -315,15 +315,24 @@ function Slide(presentation) {
                     '" width="' + oShaphe.w*presentation.dpi.x +
                     '" height="' + oShaphe.h*presentation.dpi.y +
                     '" style="fill:#' + oShaphe.fill + ';stroke:#' + oShaphe.color + '"' +
-                    '></rect>');
+                    '></rect>'+
+                    '<foreignobject class="node" x="' + oShaphe.x*presentation.dpi.x +
+                    '" y="' + oShaphe.y*presentation.dpi.y +
+                    '" width="' + oShaphe.w*presentation.dpi.x +
+                    '" height="' + oShaphe.h*presentation.dpi.y+
+	            '>'+
+		    '<div>'+sText+'</div>'
+		    '</foreignobject>');
                 break;
         }
+	    /*
 		this.svgContent.push(	'<text x="'+(oShaphe.x*presentation.dpi.x+(oShaphe.w*presentation.dpi.x)/2
                                 -getTextLength(sText,oShaphe.font_size)/2)+
-								'" y="'+(oShaphe.y*presentation.dpi.y+(oShaphe.h*presentation.dpi.y)/2)+
+				'" y="'+(oShaphe.y*presentation.dpi.y+(oShaphe.h*presentation.dpi.y)/2)+
                                 '" font-size="'+oShaphe.font_size+
                                 '">'+sText+
-								'</text>');		
+								'</text>');
+	   */
         this.svgContent.push("</g>");
     };
 	this.save = function() {
