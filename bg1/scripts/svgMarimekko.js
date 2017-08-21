@@ -321,7 +321,7 @@ function Slide(presentation) {
                     '" width="' + oShaphe.w*presentation.dpi.x +
                     '" height="' + oShaphe.h*presentation.dpi.y+
 	            '>'+
-		    '<div>'+sText+'</div>'
+		    '<div>'+sText+'</div>'+
 		    '</foreignobject>');
                 break;
         }
