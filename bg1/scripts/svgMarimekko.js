@@ -321,7 +321,7 @@ function Slide(presentation) {
                     '" width="' + oShaphe.w*presentation.dpi.x +
                     '" height="' + oShaphe.h*presentation.dpi.y+
 	            '">'+
-		    '<div style="text-align: center;">'+sText+'</div>'+
+		    '<div style="text-align: center;display: flex;justify-content: center;align-items: center;">'+sText+'</div>'+
 		    '</foreignobject>');
                 break;
         }
