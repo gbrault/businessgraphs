@@ -813,11 +813,11 @@ BusinessGraph.prototype.getCookie = function (cname) {
     return "";
 };
 
-BusinessGraph.prototype.animateHourGlass = function(hg,state) {
-	window.hgstate = ! window.hgstate;
+BusinessGraph.prototype.animateHourGlass = function(hg,context) {
+	context.state = ! context.state;
 	var hg_e = document.querySelector("#"+hg+"_e");
 	var hg_f = document.querySelector("#"+hg+"_f");
-	if(window.hgstate){
+	if(context.state){
 		hg_e.style="display:none;";
 		hg_f.style="display:initial;";
 	} else {
