@@ -826,6 +826,15 @@ BusinessGraph.prototype.animateHourGlass = function(hg,context) {
 	}
 }
 
+BusinessGraph.prototype.startHourGlass = function(hg,context){
+	// context.state must be set to true at start
+	return setInterval(animateHourGlass.bind(null,hg,context), 1000);
+}
+
+BusinessGraph.prototype.stopHourGlass = function(handle){
+	clearInterval(handle);
+}
+
 window.onload = function() {
   window.BusinessGraph = new BusinessGraph();
   var channel = window.BusinessGraph.getCookie('channel');
