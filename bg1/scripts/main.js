@@ -813,6 +813,19 @@ BusinessGraph.prototype.getCookie = function (cname) {
     return "";
 };
 
+BusinessGraph.prototype.animateHourGlass = function(hg,state) {
+	window.hgstate = ! window.hgstate;
+	var hg_e = document.querySelector("#"+hg+"_e");
+	var hg_f = document.querySelector("#"+hg+"_f");
+	if(window.hgstate){
+		hg_e.style="display:none;";
+		hg_f.style="display:initial;";
+	} else {
+		hg_e.style="display:initial;";
+		hg_f.style="display:none;";
+	}
+}
+
 window.onload = function() {
   window.BusinessGraph = new BusinessGraph();
   var channel = window.BusinessGraph.getCookie('channel');
