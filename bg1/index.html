@@ -168,7 +168,11 @@
 	</div>
 </dialog>
 
-<!--- see https://codepen.io/jczimm/pen/vEBpoL for a waiting spin to add for people wait end of firebase task execution  -->
+<dialog class="mdl-dialog" id="waithourglass">
+	<h4 class="mdl-dialog__title">Please wait for competion...</h4>
+	<i id="waithourglass_e" class="material-icons" style="display:none;" >hourglass_empty</i>
+	<i id="waithourglass_f" class="material-icons" style="display:none;" >hourglass_full</i>
+</dialog>
 <!-- Firebase -->
 <!-- ***********************************************************************************************************************
      * initialization snippet from: Firebase Console > Overview > Add Firebase to your web app.                            *
