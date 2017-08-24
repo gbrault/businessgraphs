@@ -867,7 +867,7 @@ window.onload = function() {
 			};
 			this.signInSnackbar.MaterialSnackbar.showSnackbar(data);
 		}
-		if((hwaithourglass!=undefined)&&(hwaithourglass!=null)){
+		if((window.hwaithourglass!=undefined)&&(window.hwaithourglass!=null)){
 			clearInterval(hwaithourglass);
 			window.dialogHourGlass.close();
 		}
