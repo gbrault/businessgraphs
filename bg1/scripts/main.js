@@ -830,7 +830,8 @@ BusinessGraph.prototype.animateHourGlass = function(hg,context) {
 
 BusinessGraph.prototype.startHourGlass = function(hg,context){
 	// context.state must be set to true at start
-	return setInterval(this.animateHourGlass.bind(null,hg,context), 1000);
+	// return setInterval(this.animateHourGlass.bind(null,hg,context), 1000);
+	return null;
 }
 
 BusinessGraph.prototype.stopHourGlass = function(handle){
@@ -843,8 +844,8 @@ BusinessGraph.prototype.setHourGlassDialog  = function(){
       		dialogPolyfill.registerDialog(window.dialogHourGlass);
     	}
 	window.dialogHourGlass.showModal();
-	window.swaithourglass = {state:true};
-	window.hwaithourglass = this.startHourGlass("waithourglass",window.swaithourglass);
+	// window.swaithourglass = {state:true};
+	// window.hwaithourglass = this.startHourGlass("waithourglass",window.swaithourglass);
 }
 
 window.onload = function() {
@@ -872,12 +873,12 @@ window.onload = function() {
 			};
 			this.signInSnackbar.MaterialSnackbar.showSnackbar(data);
 		}
-		if((window.hwaithourglass!=undefined)&&(window.hwaithourglass!=null)){
-			clearInterval(window.hwaithourglass);
+		if((window.dialogHourGlass!=undefined)&&(window.dialogHourGlass!=null)){
+			// clearInterval(window.hwaithourglass);
 			window.dialogHourGlass.close();
 			delete window.dialogHourGlass;
-			delete window.hwaithourglass;
-			delete window.swaithourglass;			
+			// delete window.hwaithourglass;
+			// delete window.swaithourglass;			
 		}
 	}	
   }.bind(window.BusinessGraph));
