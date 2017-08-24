@@ -872,8 +872,11 @@ window.onload = function() {
 			this.signInSnackbar.MaterialSnackbar.showSnackbar(data);
 		}
 		if((window.hwaithourglass!=undefined)&&(window.hwaithourglass!=null)){
-			clearInterval(hwaithourglass);
+			clearInterval(window.hwaithourglass);
 			window.dialogHourGlass.close();
+			delete window.dialogHourGlass;
+			delete window.hwaithourglass;
+			delete window.swaithourglass;			
 		}
 	}	
   }.bind(window.BusinessGraph));
