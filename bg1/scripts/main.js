@@ -462,7 +462,7 @@ BusinessGraph.prototype.pivotLoad = function(){
 				}
 			);
 			this.toggleTab('togglepivot');
-			var window.dialogHourGlass = document.getElementById('waithourglass');
+			window.dialogHourGlass = document.getElementById('waithourglass');
 			if (! window.dialogHourGlass.showModal) {
       				dialogPolyfill.registerDialog(window.dialogHourGlass);
     			}
