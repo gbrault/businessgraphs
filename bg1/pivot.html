@@ -464,7 +464,7 @@
 		});
  
 var justPivot = function() {
-	if(window.fileStructureDTA!==undefined){
+	if((window.fileStructureDTA!==undefined)&&(window.fileStructureDTA!=null)){
 		document.getElementById('dta').innerText=window.fileStructureDTA.name+"("+window.fileStructureDTA.id+")";
 		var parsed = window.fileStructure.content;
 		if(parsed.globals!==undefined){
