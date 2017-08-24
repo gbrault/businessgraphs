@@ -366,6 +366,7 @@ BusinessGraph.prototype.pivotSaveExisting = function(){
 			type:"saveExisting",
 			timestamp: Date.now(),
 		});
+	this.setHourGlassDialog();
 };
 
 BusinessGraph.prototype.pivot2marimekko = function(){
