@@ -462,13 +462,7 @@ BusinessGraph.prototype.pivotLoad = function(){
 				}
 			);
 			this.toggleTab('togglepivot');
-			window.dialogHourGlass = document.getElementById('waithourglass');
-			if (! window.dialogHourGlass.showModal) {
-      				dialogPolyfill.registerDialog(window.dialogHourGlass);
-    			}
-			window.dialogHourGlass.showModal();
-			window.swaithourglass = {state:true};
-			window.hwaithourglass = this.startHourGlass("waithourglass",window.swaithourglass);
+			this.setHourGlassDialog();
 		} else {			
 			data = selectpivot;
 		}
@@ -840,6 +834,16 @@ BusinessGraph.prototype.startHourGlass = function(hg,context){
 
 BusinessGraph.prototype.stopHourGlass = function(handle){
 	clearInterval(handle);
+}
+
+BusinessGraph.prototype.setHourGlassDialog  = function(){
+	window.dialogHourGlass = document.getElementById('waithourglass');
+	if (! window.dialogHourGlass.showModal) {
+      		dialogPolyfill.registerDialog(window.dialogHourGlass);
+    	}
+	window.dialogHourGlass.showModal();
+	window.swaithourglass = {state:true};
+	window.hwaithourglass = this.startHourGlass("waithourglass",window.swaithourglass);
 }
 
 window.onload = function() {
