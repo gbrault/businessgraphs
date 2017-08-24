@@ -467,7 +467,7 @@ BusinessGraph.prototype.pivotLoad = function(){
       				dialogPolyfill.registerDialog(window.dialogHourGlass);
     			}
 			window.dialogHourGlass.showModal();
-			window.swaithourglass = true;
+			window.swaithourglass = {state:true};
 			window.hwaithourglass = this.startHourGlass("waithourglass",window.swaithourglass);
 		} else {			
 			data = selectpivot;
