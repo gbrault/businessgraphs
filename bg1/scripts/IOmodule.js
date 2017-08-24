@@ -33,22 +33,27 @@ IOmodule.prototype.writeNewFile = function(fileStructure){
 			// var compressed = gzip.compress();
 			var size = content.length; // compressed.length;
 			fileStructure.size=size;
-			window.firebase.database().ref('users/' + fileStructure.userid +"/files/"+uuid).set(
-				{	name:fileStructure.name,
+			try {
+				window.firebase.database().ref('users/' + fileStructure.userid +"/files/"+uuid).set(
+				       {name:fileStructure.name,
 					lastModified:fileStructure.lastModified,
 					type:fileStructure.type,
 					size:size,
 					userid:fileStructure.userid
-				}
-			);
-			firebase.database().ref('files/'+uuid).set(
-				{	name:fileStructure.name,
+					}
+				);
+				window.firebase.database().ref('files/'+uuid).set(
+					{name:fileStructure.name,
 					content: content, //compressed,
 					lastModified:fileStructure.lastModified,
 					type:fileStructure.type,
 					userid:fileStructure.userid
-				}
-			);
+					}
+				);
+			} catch(err){
+				if(this.feedback) this.feedback({error:true,message:err.message});
+				return;
+			}
 			if(this.feedback) this.feedback(true);
 		}
 	}
