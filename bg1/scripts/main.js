@@ -869,7 +869,7 @@ window.onload = function() {
 		document.body.style.cursor  = 'default';
 		if((typeof done.result === 'object')&&(done.result.message!==undefined)){
 			var data = {
-				message: val.val().message,
+				message: done.result.message,
 				timeout: 3000
 			};
 			this.signInSnackbar.MaterialSnackbar.showSnackbar(data);
