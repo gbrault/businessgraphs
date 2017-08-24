@@ -435,8 +435,8 @@ BusinessGraph.prototype.pivotSave = function(){
 	if(window.nameDialog_cancel!==undefined){
 		dialog.querySelector('.close').removeEventListener('click',window.nameDialog_cancel,false);
 	}
-	window.nameDialog_cancel = function() {
-      dialog.close();
+    window.nameDialog_cancel = function() {
+      document.getElementById('filenamedialog').close();
     }
 	dialog.querySelector('.cancel').addEventListener('click', window.nameDialog_cancel);
 };
