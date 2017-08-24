@@ -429,6 +429,7 @@ BusinessGraph.prototype.pivotSave = function(){
 					filetype:"application/json"
 				}
 			);
+			this.setHourGlassDialog();
 		}		
     }.bind(this,dialog);
 	dialog.querySelector('.close').addEventListener('click', window.nameDialog_close);
