@@ -100,10 +100,15 @@ IOmodule.prototype.readFile = function (uuid,callback){
 		if(callback!==undefined){
 			firebase.database().ref('files/'+uuid).once('value').then( function(uuid,callback,hfile){
 				var val =  hfile.val();
-				var content = JSON.parse(LZUTF8.decompress(LZUTF8.decodeBase64(val.content)));
-				var fileStructure = {id:uuid,name:val.name,lastModified:val.lastModified,content:content,size:val.size,userid:val.userid,type:val.type};
-				if(this.feedback) this.feedback(true);
-				return callback(fileStructure);
+				if(val!=null){
+					var content = JSON.parse(LZUTF8.decompress(LZUTF8.decodeBase64(val.content)));
+					var fileStructure = {id:uuid,name:val.name,lastModified:val.lastModified,content:content,size:val.size,userid:val.userid,type:val.type};
+					if(this.feedback) this.feedback(true);
+					return callback(fileStructure);
+				} else {
+					if(this.feedback) this.feedback({error:true,message:"file not existing uid("+uuid+")"});
+					return callback(null);
+				}
 			}.bind(this,uuid,callback));
 		}
 	}
