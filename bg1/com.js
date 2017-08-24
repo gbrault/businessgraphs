@@ -140,7 +140,7 @@ Com.prototype.loadFile = function(fileID){
 		window.fileStructure=fileStructure;
 		this.oIOmodule.feedback = this.feedback.bind(this);
 		// caching dta
-		if(window.fileStructureDTA!==undefined){
+		if((window.fileStructureDTA!==undefined)&&(window.fileStructureDTA!==null)){
 			if(window.fileStructureDTA.id == fileStructure.content.input){
 				justPivot();
 			}
