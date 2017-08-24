@@ -462,6 +462,13 @@ BusinessGraph.prototype.pivotLoad = function(){
 				}
 			);
 			this.toggleTab('togglepivot');
+			var window.dialogHourGlass = document.getElementById('waithourglass');
+			if (! window.dialogHourGlass.showModal) {
+      				dialogPolyfill.registerDialog(window.dialogHourGlass);
+    			}
+			dialog.showModal();
+			window.swaithourglass = true;
+			window.hwaithourglass = startHourGlass("waithourglass",window.swaithourglass);
 		} else {			
 			data = selectpivot;
 		}
@@ -859,6 +866,10 @@ window.onload = function() {
 				timeout: 3000
 			};
 			this.signInSnackbar.MaterialSnackbar.showSnackbar(data);
+		}
+		if((hwaithourglass!=undefined)&&(hwaithourglass!=null)){
+			clearInterval(hwaithourglass);
+			window.dialogHourGlass.close();
 		}
 	}	
   }.bind(window.BusinessGraph));
