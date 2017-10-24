@@ -714,8 +714,8 @@ BusinessGraph.prototype.displayFiles= function (files){
     html += '<input type="checkbox" id="table-header" class="mdl-checkbox__input" />';
     html += '</label>';
     html += '</th>';
-	html += '<th class="mdl-data-table__cell--non-numeric">File Name</th>';
-	html += '<th class="mdl-data-table__cell--non-numeric">Date</th>';
+	html += '<th class="mdl-data-table__cell--non-numeric" style="cursor:pointer" onclick="w3.sortHTML(\'#filetable\', \'.frow\', \'td:nth-child(2)\')">File Name</th>';
+	html += '<th class="mdl-data-table__cell--non-numeric" style="cursor:pointer" onclick="w3.sortDate(\'#filetable\', \'.frow\', \'td:nth-child(3)\')">Date</th>';
 	html += '<th>Size</th>';
 	html += '<th class="mdl-data-table__cell--non-numeric">Type</th>';
 	html += '<th class="mdl-data-table__cell--non-numeric">UUID</th>';
