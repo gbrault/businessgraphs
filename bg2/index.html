@@ -1,0 +1,204 @@
+<!doctype html>
+<!--
+  Copyright 2015 Google Inc. All rights reserved.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+      https://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License
+-->
+<html lang="en">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="Learn how to use the Firebase platform on the Web">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Graph</title>
+
+  <!-- Disable tap highlight on IE -->
+  <meta name="msapplication-tap-highlight" content="no">
+
+  <!-- Web Application Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Add to homescreen for Chrome on Android -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="Friendly Chat">
+  <meta name="theme-color" content="#303F9F">
+
+  <!-- Add to homescreen for Safari on iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Friendly Chat">
+  <meta name="apple-mobile-web-app-status-bar-style" content="#303F9F">
+
+  <!-- Tile icon for Win8 -->
+  <meta name="msapplication-TileColor" content="#3372DF">
+  <meta name="msapplication-navbutton-color" content="#303F9F">
+
+  <!-- Material Design Lite -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.orange-indigo.min.css">
+  <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+
+  <!-- App Styling -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en' rel='stylesheet' type='text/css'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="styles/main.css">
+  <!-- other scripts: cyphering, Dialog polyfill... -->
+  <script type="text/javascript" src="scripts/aes.js"></script>
+  <link rel="stylesheet" type="text/css" href="styles/dialog-polyfill.css" />
+  <script src="scripts/dialog-polyfill.js"></script>
+  <script type="text/javascript" src="scripts/aes.js"></script>
+  <script type="text/javascript" src="scripts/w3.js"></script>
+  <script type="text/javascript" src="scripts/IOmodule.js"></script>
+  <script src="scripts/vkbeautify.js"></script>
+  <script src="scripts/svgMarimekko.js"></script>
+  <script type="text/javascript" src="scripts/color-scheme.js"></script>
+  <script type="text/javascript" src="scripts/pptxmarimekko.js"></script>
+  <script lang="javascript" src="scripts/jszip.min.js"></script>
+  <script lang="javascript" src="scripts/filesaver.min.js"></script>
+  <script lang="javascript" src="scripts/pptxgen.js"></script>
+  <script lang="javascript" src="scripts/pptxgen.shapes.js"></script>
+   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js"></script>
+	<script id="lzutf8" src="https://unpkg.com/lzutf8@0.4.4"></script>
+</head>
+<body>
+<div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-header">
+
+  <!-- Header section containing logo -->
+  <header class="mdl-layout__header mdl-color-text--white mdl-color--light-blue-700">
+    <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+      <div class="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
+        <h3><i class="material-icons" style="font-size: 36px;">view_quilt</i> Business Graph</h3>	  
+      </div>
+      <div id="user-container">
+        <div hidden id="user-pic"></div>
+        <div hidden id="user-name"></div>
+        <button hidden id="sign-out" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+          Sign-out
+        </button>
+        <button hidden id="sign-in"  class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--white">
+          <i class="material-icons" style="font-size: 36px;">account_circle</i>Sign-in with Google
+        </button>
+		<div id="mainmenu">
+		<button id="menu-lower-right" class="mdl-button mdl-js-button mdl-button--icon">
+				<i class="material-icons">more_vert</i>
+		</button>
+		<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="menu-lower-right" id="ulmenu">
+		  <li class="mdl-menu__item togglepivot" id="menu_pivot_save_existing" title="Save an existing pivot file (overwrite)">Save Pivot</li>
+		  <li class="mdl-menu__item togglepivot" id="menu_pivot_save" title="Save as a new pivot including associated dta input (new name)">Save As Pivot</li>
+		  <li class="mdl-menu__item togglepivot" id="menu_pivot2marimekko" title="Create a new marimekko file based on the current pivot">Save Marimekko</li>
+		  <li class="mdl-menu__item togglefiles" id="menu_show" title="Display and Edit File in Console">Show File</li>
+		  <li class="mdl-menu__item togglefiles" id="menu_load_pivot" title="Load an exiting pivot file">Load Pivot</li>
+		  <li class="mdl-menu__item togglefiles" id="menu_make_pivot_from_dta" title="Create a new pivot based on the selected .dta input">Make Pivot from dta</li>
+		  <li class="mdl-menu__item togglefiles" id="menu_load_marimekko" title="Load and Display an existing marimekko file">Load Marimekko</li>
+		  <li class="mdl-menu__item togglefiles" id="menu_load_palette" title="Load an existing .plt file and set the current palette">Load Palette</li>
+		  <!-- <li class="mdl-menu__item togglefiles" id="menu_diff">File Diff</li>-->
+		  <li class="mdl-menu__item togglefiles" id="menu_delete" title="Delete selected files">Delete Files</li>
+		  <li class="mdl-menu__item togglefiles" id="menu_rename" title="Rename selected files">Rename File</li>
+		  <li class="mdl-menu__item togglefiles" id="menu_copy" title="Copy selected file">Copy File</li>
+		  <li class="mdl-menu__item toggleconsole" id="menu_download_file" title="donwload file under edition on the local computer">Dowload File</li>
+		  <li class="mdl-menu__item toggleconsole" id="menu_save_codemirror_file" title="Save the file under edition (overwrite)">Save</li>
+		  <li class="mdl-menu__item toggleconsole" id="menu_save_file" title="save a newly uploaded file">Save As File</li>
+		  <li class="mdl-menu__item toggleconsole">
+			<div class="mdl-textfield mdl-js-textfield mdl-textfield--file">
+				<input class="mdl-textfield__input" placeholder="File" type="text" id="uploadFileName" readonly/></div>
+				<div class="mdl-button mdl-button--primary mdl-button--icon mdl-button--file">
+					<i class="material-icons">attach_file</i>
+					<input type="file" id="uploadFile">
+				</div>			
+		  </li>
+		  <li class="mdl-menu__item togglecolors" id="menu_save_palette_file" title="save as a file in firebase">Save As Palette</li>
+		  <li class="mdl-menu__item togglecolors" id="menu_set_palette" title="set the firebase palette">Set Palette</li>
+		  <li class="mdl-menu__item togglemarimekko" id="menu_save_powerpoint" title="download powerpoint">Download Powerpoint</li>
+		</ul>
+		</div>		
+      </div>
+
+    </div>
+  </header>
+
+	<main class="mdl-layout__content mdl-color--grey-100">
+		<div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+			<div class="mdl-tabs__tab-bar">
+				<a href="#files" class="mdl-tabs__tab is-active" id="togglefiles">Files</a>
+				<a href="#pivot" class="mdl-tabs__tab " id="togglepivot">Pivot</a>
+				<a href="#marimekko" class="mdl-tabs__tab" id="togglemarimekko">Marimekko</a>
+				<a href="#console" class="mdl-tabs__tab" id="toggleconsole" >Console</a>
+				<a href="#colors" class="mdl-tabs__tab" id="togglecolors" >Palette</a>
+				<!-- <a href="#filediff" class="mdl-tabs__tab" id="togglefilediff">Files Diff</a>-->
+			</div>
+			<div class="mdl-tabs__panel" id="pivot">
+				<iframe id="pivotframe" frameborder="0"></iframe>
+			</div>
+			<div class="mdl-tabs__panel" id="marimekko">
+				<iframe id="marimekkoframe" frameborder="0"></iframe>
+			</div>
+			<div class="mdl-tabs__panel is-active" id="files">
+				<div id="file_list_container"></div>
+			</div>
+			<div class="mdl-tabs__panel" id="console">
+				<pre id="txt"></pre>
+			</div>
+			<div class="mdl-tabs__panel" id="colors">
+				<div id="colordiv"></div>
+			</div>			
+			<!-- <div class="mdl-tabs__panel" id="filediff"></div>-->
+		</div>
+        <div id="must-signin-snackbar" class="mdl-js-snackbar mdl-snackbar">
+        <div class="mdl-snackbar__text"></div>
+        <button class="mdl-snackbar__action" type="button"></button>
+      </div>
+  </main>
+</div>
+<dialog class="mdl-dialog" id="filenamedialog">
+  <h4 class="mdl-dialog__title">File Name?</h4>
+    <div class="mdl-dialog__content">
+	 <input class="mdl-textfield__input" type="text">
+	</div>
+	<div class="mdl-dialog__actions">
+		 <button type="button" class="mdl-button close">Ok</button>
+		 <button type="button" class="mdl-button cancel">Cancel</button>
+	</div>
+</dialog>
+
+<dialog class="mdl-dialog" id="waithourglass">
+	<h4 class="mdl-dialog__title">Waiting...</h4>
+	<div class="mdl-dialog__content">
+	<!--
+	  <i id="waithourglass_e" class="material-icons" style="display:none;" >hourglass_empty</i>
+	  <i id="waithourglass_f" class="material-icons" style="display:none;" >hourglass_full</i>
+	  <img src="images/hourglass.gif" width="20%" height="20%" />
+        -->		
+		<div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+	</div>
+</dialog>
+<!-- Firebase -->
+<!-- ***********************************************************************************************************************
+     * initialization snippet from: Firebase Console > Overview > Add Firebase to your web app.                            *
+     *********************************************************************************************************************** -->
+  
+<script src="https://www.gstatic.com/firebasejs/3.7.2/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyBZJLQp5xaL0tdFvUsx3I97kfweCAQ2C4w",
+    authDomain: "businessgraphs-27585.firebaseapp.com",
+    databaseURL: "https://businessgraphs-27585.firebaseio.com",
+    storageBucket: "businessgraphs-27585.appspot.com",
+    messagingSenderId: "441454731465"
+  };
+  firebase.initializeApp(config);
+</script>
+
+<script src="scripts/main.js"></script>
+<script src="scripts/colors.js"></script>
+</body>
+</html>
