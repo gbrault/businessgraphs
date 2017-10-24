@@ -762,13 +762,17 @@ BusinessGraph.prototype.displayFiles= function (files){
 		var headerCheckHandler = function(event) {
 			if (event.target.checked) {
 				for (var i = 0, length = boxes.length; i < length; i++) {
-					boxes[i].MaterialCheckbox.check();
-					boxes[i].MaterialCheckbox.updateClasses_();
+					if(boxes[i].parentElement.parentElement.style.display!='none'){
+						boxes[i].MaterialCheckbox.check();
+						boxes[i].MaterialCheckbox.updateClasses_();
+					}
 				}
 			} else {
 				for (var i = 0, length = boxes.length; i < length; i++) {
-					boxes[i].MaterialCheckbox.uncheck();
-					boxes[i].MaterialCheckbox.updateClasses_();
+					if(boxes[i].parentElement.parentElement.style.display!='none'){
+						boxes[i].MaterialCheckbox.uncheck();
+						boxes[i].MaterialCheckbox.updateClasses_();
+					}
 				}
 			}
 		};
