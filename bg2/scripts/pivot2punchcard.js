@@ -9,7 +9,7 @@ function pivot2punchcard(pivotFile){
 		pivotCustom	gives colors, short and longname for row headers and cell labels
 		pivotConfig	gives the definition of rows and columns headers
 		dictionary	not needed
-		globals     various parameters needs to build the marimekko file
+		globals     various parameters needs to build the punchcard file
 	*/
 		// parameters
 		var headerratio = 0.1;
@@ -27,7 +27,6 @@ function pivot2punchcard(pivotFile){
 		"lwidth":width.toString(),
 		"lheight":height.toString(),
 		"title":pivotFile.globals.pvTitle,
-		"size":pivotFile.allTotal.sum,
 		"currency":pivotFile.globals.pvCurrency,
 		"display":pivotFile.globals.pvDisplayUnit,
 		"internal":pivotFile.globals.pvInternalUnit,
@@ -267,7 +266,7 @@ function pivot2punchcard(pivotFile){
 			})(),
 		}
 	}
-    // Calculate Total Market size
+    // Calculate Total Market size by "Products"
 	var totals={};
 	var rp=[];
 	var rq=[];
@@ -354,6 +353,7 @@ function pivot2punchcard(pivotFile){
 		totals.totals.value += totals[totalskeys[i]].value;
 	}
 	punchcard.totals=totals;
+	punchcard.size = totals.totals.value;
 	
 	return punchcard;
 }

@@ -37,6 +37,7 @@ function BusinessGraph() {
   this.menu_show = document.getElementById('menu_show');
   this.menu_load_pivot = document.getElementById('menu_load_pivot');
   this.menu_load_marimekko = document.getElementById('menu_load_marimekko');
+  this.menu_load_punchcard = document.getElementById('menu_load_punchcard');
   // this.menu_diff = document.getElementById('menu_diff');
   this.menu_delete = document.getElementById('menu_delete');
   this.menu_load_palette = document.getElementById('menu_load_palette');
@@ -60,6 +61,7 @@ function BusinessGraph() {
   // TAB elements
   this.togglepivot = document.getElementById('togglepivot');
   this.togglemarimekko = document.getElementById('togglemarimekko');
+  this.togglepunchcard= document.getElementById('togglepunchcard');
   this.togglefiles = document.getElementById('togglefiles');
   this.toggleconsole = document.getElementById('toggleconsole');
   this.togglecolors = document.getElementById('togglecolors');
@@ -75,6 +77,7 @@ function BusinessGraph() {
   this.menu_pivot_save_existing.addEventListener('click', this.pivotSaveExisting.bind(this));
   this.menu_load_pivot.addEventListener('click', this.pivotLoad.bind(this));
   this.menu_load_marimekko.addEventListener('click', this.marimekkoLoad.bind(this));
+  this.menu_load_punchcard.addEventListener('click', this.punchcardLoad.bind(this));
   this.menu_pivot2marimekko.addEventListener('click', this.pivot2marimekko.bind(this));
   this.menu_pivot2punchcard.addEventListener('click', this.pivot2punchcard.bind(this));
   this.menu_save_codemirror_file.addEventListener('click', this.save_codemirror_file.bind(this));
@@ -92,6 +95,7 @@ function BusinessGraph() {
   this.toggleconsole.addEventListener('click', this.do_toggleconsole.bind(this));
   this.togglepivot.addEventListener('click', this.do_togglepivot.bind(this));
   this.togglemarimekko.addEventListener('click', this.do_togglemarimekko.bind(this));
+  this.togglepunchcard.addEventListener('click', this.do_togglepunchcard.bind(this));
   this.togglecolors.addEventListener('click', this.do_togglecolors.bind(this));
   
   this.initFirebase();
@@ -333,6 +337,11 @@ BusinessGraph.prototype.do_togglemarimekko = function(){
 	this.activateMenuItems('togglemarimekko');
 };
 
+BusinessGraph.prototype.do_togglepunchcard = function(){
+	this.destroyEditor();
+	this.activateMenuItems('togglepunch');
+};
+
 BusinessGraph.prototype.do_togglefiles = function(){
 	this.destroyEditor();
 	this.activateMenuItems('togglefiles');
@@ -543,6 +552,40 @@ BusinessGraph.prototype.marimekkoLoad = function(){
 		}
 	} else {		
 		data = selectmarimekko;
+	}
+	if (data!==null) // Display a message to the user using a Toast.
+	{
+		this.signInSnackbar.MaterialSnackbar.showSnackbar(data);
+		document.body.style.cursor  = 'default';
+	}
+}
+
+BusinessGraph.prototype.punchcardLoad = function(){	
+	document.body.style.cursor  = 'wait';
+	// get first selected file
+	var data = null;
+	var selectpunchcard = {
+		message: 'You must select a punch card file (ends with .pcd)',
+		timeout: 3000
+	};			
+	var checkedlabels = document.getElementById('filetable').querySelectorAll('label.is-checked');
+	if(checkedlabels.length>0){
+		var tr = checkedlabels[0].parentElement.parentElement;
+		var id = checkedlabels[0].id;
+		if((id!="")&&(tr.children[1].innerText.endsWith('.pcd'))){
+			// load the punch card file and render it
+			window.punchcardFileStructure = {id:id};
+			this.oIOmodule.readFile.bind(this.oIOmodule)(id,function(fileStructure){
+				window.punchcardFileStructure = fileStructure;
+				svgPunchCard(window.punchcardFileStructure.content, document.getElementById('punchcardframe'));
+				document.body.style.cursor  = 'default';
+			});
+			this.toggleTab('togglepunchcard');
+		} else {			
+			data = selectpunchcard;
+		}
+	} else {		
+		data = selectpunchcard
 	}
 	if (data!==null) // Display a message to the user using a Toast.
 	{

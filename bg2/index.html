@@ -58,7 +58,9 @@
   <script type="text/javascript" src="scripts/w3.js"></script>
   <script type="text/javascript" src="scripts/IOmodule.js"></script>
   <script src="scripts/vkbeautify.js"></script>
+  <script src="scripts/svgUtils.js"></script>
   <script src="scripts/svgMarimekko.js"></script>
+  <script src="scripts/svgPunchCard.js"></script>
   <script type="text/javascript" src="scripts/color-scheme.js"></script>
   <script type="text/javascript" src="scripts/pptxmarimekko.js"></script>
   <script lang="javascript" src="scripts/jszip.min.js"></script>
@@ -100,6 +102,7 @@
 		  <li class="mdl-menu__item togglefiles" id="menu_load_pivot" title="Load an exiting pivot file">Load Pivot</li>
 		  <li class="mdl-menu__item togglefiles" id="menu_make_pivot_from_dta" title="Create a new pivot based on the selected .dta input">Make Pivot from dta</li>
 		  <li class="mdl-menu__item togglefiles" id="menu_load_marimekko" title="Load and Display an existing marimekko file">Load Marimekko</li>
+		  <li class="mdl-menu__item togglefiles" id="menu_load_punchcard" title="Load and Display an existing punch card file">Load Punch Card</li>
 		  <li class="mdl-menu__item togglefiles" id="menu_load_palette" title="Load an existing .plt file and set the current palette">Load Palette</li>
 		  <!-- <li class="mdl-menu__item togglefiles" id="menu_diff">File Diff</li>-->
 		  <li class="mdl-menu__item togglefiles" id="menu_delete" title="Delete selected files">Delete Files</li>
@@ -132,6 +135,7 @@
 				<a href="#files" class="mdl-tabs__tab is-active" id="togglefiles">Files</a>
 				<a href="#pivot" class="mdl-tabs__tab " id="togglepivot">Pivot</a>
 				<a href="#marimekko" class="mdl-tabs__tab" id="togglemarimekko">Marimekko</a>
+				<a href="#punchcard" class="mdl-tabs__tab" id="togglepunchcard">Punch Card</a>
 				<a href="#console" class="mdl-tabs__tab" id="toggleconsole" >Console</a>
 				<a href="#colors" class="mdl-tabs__tab" id="togglecolors" >Palette</a>
 				<!-- <a href="#filediff" class="mdl-tabs__tab" id="togglefilediff">Files Diff</a>-->
@@ -141,6 +145,9 @@
 			</div>
 			<div class="mdl-tabs__panel" id="marimekko">
 				<iframe id="marimekkoframe" frameborder="0"></iframe>
+			</div>
+			<div class="mdl-tabs__panel" id="punchcard">
+				<iframe id="punchcardframe" frameborder="0"></iframe>
 			</div>
 			<div class="mdl-tabs__panel is-active" id="files">
 				<div id="file_list_container"></div>
