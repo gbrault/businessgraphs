@@ -96,21 +96,50 @@ Com.prototype.exec = function(cmd) {
 		case "pivot2marimekko":
 			if(cmd.done==undefined){
 				document.body.style.cursor  = 'wait';
-				var globals = this.getGlobals();
-				content = { pivotCustom:pivotData.pivotCustom,
-							tree:pivotData.tree,
-							allTotal:pivotData.allTotal,
-							colTotals:pivotData.colTotals,
-							rowTotals:pivotData.rowTotals,
-						    pivotConfig,
-							globals,
-							cols:pivotData.getColKeys(),
-							rows:pivotData.getRowKeys()
-							};
-				var marimekko = pivot2marimekko(content);
-				// save marimekko file
-				if(window.fileStructure!==undefined){
-					this.saveNewMarimekko(window.fileStructure,marimekko);
+				if(window.pivotData!=undefined){
+					var globals = this.getGlobals();
+					content = { pivotCustom:window.pivotData.pivotCustom,
+								tree:window.pivotData.tree,
+								allTotal:window.pivotData.allTotal,
+								colTotals:window.pivotData.colTotals,
+								rowTotals:window.pivotData.rowTotals,
+								pivotConfig,
+								globals,
+								cols:window.pivotData.getColKeys(),
+								rows:window.pivotData.getRowKeys()
+								};
+					var marimekko = pivot2marimekko(content);
+					// save marimekko file
+					if(window.fileStructure!==undefined){
+						this.saveNewMarimekko(window.fileStructure,marimekko);
+					}
+				} else {
+					this.feedback(false);
+				}
+			}			
+			break;		
+			case "pivot2punchcard":
+			if(cmd.done==undefined){
+				document.body.style.cursor  = 'wait';
+				if(window.pivotData!=undefined){
+					var globals = this.getGlobals();
+					content = { pivotCustom:window.pivotData.pivotCustom,
+								tree:window.pivotData.tree,
+								allTotal:window.pivotData.allTotal,
+								colTotals:window.pivotData.colTotals,
+								rowTotals:window.pivotData.rowTotals,
+								pivotConfig,
+								globals,
+								cols:window.pivotData.getColKeys(),
+								rows:window.pivotData.getRowKeys()
+								};
+					var punchcard = pivot2punchcard(content);
+					// save marimekko file
+					if(window.fileStructure!==undefined){
+						this.saveNewPunchCard(window.fileStructure,punchcard);
+					}
+				} else {
+					this.feedback(false);
 				}
 			}			
 			break;
@@ -132,6 +161,16 @@ Com.prototype.saveNewMarimekko = function(fileStructure,marimekko){
 		this.oIOmodule.feedback = this.feedback.bind(this);
 		this.oIOmodule.writeNewFile.bind(this.oIOmodule)(
 			{name:name,content:marimekko,type:type}
+		);
+};
+
+Com.prototype.saveNewPunchCard = function(fileStructure,punchcard){
+	// filestructure is the pivot file that is existing ie already saved...
+		var type="application/json";		
+		var name = fileStructure.name.substr(0,fileStructure.name.length-3)+"pcd";
+		this.oIOmodule.feedback = this.feedback.bind(this);
+		this.oIOmodule.writeNewFile.bind(this.oIOmodule)(
+			{name:name,content:punchcard,type:type}
 		);
 };
 

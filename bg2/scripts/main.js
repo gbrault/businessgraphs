@@ -48,6 +48,7 @@ function BusinessGraph() {
   this.menu_pivot_save = document.getElementById('menu_pivot_save');
   this.menu_pivot_save_existing = document.getElementById('menu_pivot_save_existing');
   this.menu_pivot2marimekko = document.getElementById('menu_pivot2marimekko');
+  this.menu_pivot2punchcard = document.getElementById('menu_pivot2punchcard');
   
   /* colors menu (palette) */
   this.menu_save_palette_file = document.getElementById('menu_save_palette_file');
@@ -75,6 +76,7 @@ function BusinessGraph() {
   this.menu_load_pivot.addEventListener('click', this.pivotLoad.bind(this));
   this.menu_load_marimekko.addEventListener('click', this.marimekkoLoad.bind(this));
   this.menu_pivot2marimekko.addEventListener('click', this.pivot2marimekko.bind(this));
+  this.menu_pivot2punchcard.addEventListener('click', this.pivot2punchcard.bind(this));
   this.menu_save_codemirror_file.addEventListener('click', this.save_codemirror_file.bind(this));
   this.menu_save_palette_file.addEventListener('click', this.save_palette_file.bind(this));
   this.menu_load_palette.addEventListener('click', this.load_palette_file.bind(this));
@@ -373,6 +375,14 @@ BusinessGraph.prototype.pivot2marimekko = function(){
 	firebase.database().ref('channels/'+this.channel+'/cmd').set(
 		{	
 			type:"pivot2marimekko",
+			timestamp: Date.now(),
+		});
+};
+
+BusinessGraph.prototype.pivot2punchcard = function(){
+	firebase.database().ref('channels/'+this.channel+'/cmd').set(
+		{	
+			type:"pivot2punchcard",
 			timestamp: Date.now(),
 		});
 };
