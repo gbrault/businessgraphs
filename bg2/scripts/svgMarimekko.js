@@ -4,8 +4,8 @@
 function svgMarimekko(marimekko,outputFrame){
 	var inch = 2.54;
 if (marimekko.graphtype == "marimekko") {
-    var scalex = marimekko.scalex;
-    var scaley = marimekko.scaley;
+    var scalex = marimekko.scalex * 0.4;
+    var scaley = marimekko.scaley * 0.5;
     var offsetx = marimekko.offsetx;
     var lwidth = marimekko.lwidth;
     var lheight = marimekko.lheight;
@@ -19,8 +19,8 @@ if (marimekko.graphtype == "marimekko") {
     var pptx = new SVGGenJS(outputFrame);
     pptx.setLayout({
         name: 'A4',
-        width: (lwidth / inch),
-        height: (lheight / inch)
+        width: (lwidth),
+        height: (lheight)
     });
     var optsTitle = {
         color: '9F9F9F',
@@ -86,6 +86,7 @@ if (marimekko.graphtype == "marimekko") {
     stemp = stemp.replace(/{{size}}/, Math.round((marimekko.size / ratio) * 100) / 100);
     stemp = stemp.replace(/{{currency}}/, marimekko.currency);
     stemp = stemp.replace(/{{display}}/, marimekko.display);
+	/*
     slide.addTable([
         [{
             text: stemp,
@@ -95,7 +96,17 @@ if (marimekko.graphtype == "marimekko") {
         x: (1 / inch),
         y: (1 / inch),
         w: (20 / inch)
-    });
+    });*/
+	
+	slide.addText(stemp,
+				{
+					shape:pptx.shapes.TEXT,
+					x:0,  // cm
+					y:0,  // cm
+					w:20, // cm
+					h:1   // cm
+				}
+			 );
 
     for (var rows = 0; rows < marimekko.rows.length; rows++) {
         var fs = 12,
