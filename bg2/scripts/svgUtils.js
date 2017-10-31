@@ -43,7 +43,8 @@ function SVGGenJS(outputFrame) {
 		CIRCLE:1,
 		SECTOR:2,
 		TEXT:3,
-		LINE:4
+		LINE:4,
+		SECTOR:5
     };
     this.save = function(filename) {
         var temp = this.htmlbegin + "\n";
@@ -74,7 +75,7 @@ function SVGGenJS(outputFrame) {
 
 function Slide(presentation) {
     this.presentation = presentation;
-    this.svgbegin = "<svg width=" + presentation.layout.width + " height=" + presentation.layout.height + ">";
+    this.svgbegin = "<svg id=\"slide_"+presentation.slides.length+"\"width=" + presentation.layout.width + " height=" + presentation.layout.height + ">";
     this.svgend = "</svg>";
     this.svgContent = [];
     this.addText = function(sText, oShaphe) { // combinanison of text and shape
@@ -136,7 +137,7 @@ function Slide(presentation) {
 					var txt="";
 					if(sText.length!=0){
 						txt = '<foreignobject class="node" x="' + presentation.xs(oShaphe.x) +
-						'" y="' + presentation.ys(oShaphe.y) +
+						'" y="' + presentation.ys(oShaphe.y) +   
 						'" width="' + presentation.xs(oShaphe.r) +
 						'" height="' + presentation.ys(oShaphe.r)+
 						'">'+
@@ -146,11 +147,24 @@ function Slide(presentation) {
 					this.svgContent.push('<line x1="' + presentation.xs(oShaphe.x1) +
 						'" y1="' + presentation.ys(oShaphe.y1) +
 						'" x2="' + presentation.xs(oShaphe.x2) +
-						'" y2="' + presentation.xs(oShaphe.y2) +
+						'" y2="' + presentation.ys(oShaphe.y2) +
 						'" style="width:#' + oShaphe.width + ';stroke:#' + oShaphe.color + '"' +
 						'></circle>'+txt);
 				}
                 break;
+			case 5: // SECTOR
+				{
+					this.svgContent.push('<path d="' + 
+						angularSectorString(presentation.xs(oShaphe.x),  // startX, startY, startAngle, endAngle, radius
+											presentation.ys(oShaphe.y),
+											oShaphe.a0,
+											oShaphe.a1,
+											presentation.xs(oShaphe.r)
+											)+ '" '+   
+						'" style="fill:#' + oShaphe.fill + ';stroke:#' + oShaphe.color + '"' +
+						'/>');					
+				}
+			    break;
 		}
 	    /*
 		this.svgContent.push(	'<text x="'+(oShaphe.x*presentation.dpi.x+(oShaphe.w*presentation.dpi.x)/2
@@ -234,4 +248,50 @@ function getTextLength(sText,fs){
 	svgtext.textContent=sText;
 	svgtext.setAttribute('font-size',fs);
 	return svgtext.getComputedTextLength();
+}
+
+var angularSectorString = function(startX, startY, startAngle, endAngle, radius){
+	return annularSector(startX,startY,startAngle, endAngle,0,radius);
+}
+function deg2rad(deg) {
+	return deg * Math.PI / 180;
+}
+
+function annularSector(centerX, centerY, startAngle, endAngle, innerRadius, outerRadius) {
+	startAngle = deg2rad(startAngle + 180);
+	endAngle = deg2rad(endAngle + 180);
+	
+	var p = [
+			[centerX + innerRadius * Math.cos(startAngle),	centerY + innerRadius * Math.sin(startAngle)]
+		, [centerX + outerRadius * Math.cos(startAngle),	centerY + outerRadius * Math.sin(startAngle)]
+		, [centerX + outerRadius * Math.cos(endAngle),		centerY + outerRadius * Math.sin(endAngle)]
+		, [centerX + innerRadius * Math.cos(endAngle),		centerY + innerRadius * Math.sin(endAngle)]
+		];
+	
+	var angleDiff = endAngle - startAngle
+		, largeArc = (angleDiff % (Math.PI * 2)) > Math.PI ? 1 : 0;
+	
+	var commands = [];
+	
+	commands.push("M" + p[0].join());
+	commands.push("L" + p[1].join());
+	commands.push("A" + [outerRadius, outerRadius].join() + " 0 " + largeArc + " 1 " + p[2].join());
+	commands.push("L" + p[3].join());
+	commands.push("A" + [innerRadius, innerRadius].join() + " 0 " + largeArc + " 0 " + p[0].join());
+	commands.push("z");
+	
+	return commands.join(" ");
+}
+function saveSvg(svgEl, name) {
+    svgEl.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+    var svgData = svgEl.outerHTML;
+    var preface = '<?xml version="1.0" standalone="no"?>\r\n';
+    var svgBlob = new Blob([preface, svgData], {type:"image/svg+xml;charset=utf-8"});
+    var svgUrl = URL.createObjectURL(svgBlob);
+    var downloadLink = document.createElement("a");
+    downloadLink.href = svgUrl;
+    downloadLink.download = name;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
 }

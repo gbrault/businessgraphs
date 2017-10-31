@@ -93,7 +93,7 @@ function pivot2punchcard(pivotFile){
 			return titleCols;
 		})(),
 		"Colors":(function(){
-			var Colors={};
+			var Colors={rows:{},cols:{}};
 			var keys = Object.keys(pivotFile.colTotals);
 			for(var i=0; i<keys.length;i++){
 				var split = keys[i].split("\u0000");
@@ -104,11 +104,26 @@ function pivot2punchcard(pivotFile){
 					(pivotFile.pivotCustom[field][split[split.length-1]]!==undefined) && 
 					(pivotFile.pivotCustom[field][split[split.length-1]].color!==undefined)
 				  ){
-					Colors[keys[i]]= pivotFile.pivotCustom[field][split[split.length-1]].color.substr(1);
+					Colors.cols[keys[i]]= pivotFile.pivotCustom[field][split[split.length-1]].color.substr(1);
 				} else{
-					Colors[keys[i]]= "FFFFFF";
+					Colors.cols[keys[i]]= "FFFFFF";
 				}
 			}
+			keys = Object.keys(pivotFile.rowTotals);
+			for(var i=0; i<keys.length;i++){
+				var split = keys[i].split("\u0000");
+				// get the color of the inner element
+				var field = pivotFile.pivotConfig.rows[split.length-1];
+				if(	(pivotFile.pivotCustom!==undefined)&&
+					(pivotFile.pivotCustom[field]!==undefined) &&
+					(pivotFile.pivotCustom[field][split[split.length-1]]!==undefined) && 
+					(pivotFile.pivotCustom[field][split[split.length-1]].color!==undefined)
+				  ){
+					Colors.rows[keys[i]]= pivotFile.pivotCustom[field][split[split.length-1]].color.substr(1);
+				} else{
+					Colors.rows[keys[i]]= "FFFFFF";
+				}
+			}			
 			return Colors;
 		})(),		
 		"displayTitleRows":(function(){

@@ -117,10 +117,15 @@ if (punchcard.graphtype == "punchcard") {
 	var rows = contentRowCount(r);
 	var companies = contentRowCountLast(r);
 	var xtop=2;
-	var ytop=2.5;
+	var ytop=2;
+	
+	var raduiscorrection = pptx.layout.height/pptx.layout.width;
 
 	var sxb = sx - xtop;
 	var syb = sy - ytop;
+	syb = syb - (syb/rows/2);
+	
+	/* calculate maxRadius and set background grid */
 	var lCol = 1;
 	var maxRadius=0;
 	for(var cRow=0; cRow<rows; cRow++){
@@ -129,9 +134,9 @@ if (punchcard.graphtype == "punchcard") {
 				if(lCol==1){
 					slide.addText("",{	shape:pptx.shapes.LINE,
 										x1: (((cCol *sxb)/cols) + ((sxb/cols)/2) + xtop),
-										y1: ytop*0.8,
+										y1: ytop,
 										x2: (((cCol *sxb)/cols) + ((sxb/cols)/2) + xtop),
-										y2: (syb+ytop) * 0.8,
+										y2: (syb+ytop),
 										width:1,
 										color:color_header_text
 									 }
@@ -146,10 +151,20 @@ if (punchcard.graphtype == "punchcard") {
 				contentNextCol(c);
 			}
 		    lCol = 0;	
+		slide.addText("",{	shape:pptx.shapes.LINE,
+							x1: xtop,
+							y1: (((cRow *syb)/rows) + ((syb/rows)/2) + ytop),
+							x2: sxb + xtop,
+							y2: (((cRow *syb)/rows) + ((syb/rows)/2) + ytop),
+							width:1,
+							color:color_header_text
+						 }
+					);
 		}
 		contentNextRow(r);
 	}
 	
+	/* punch market disks */
 	lCol = 1;
 	c = contentFirstCol(punchcard);
 	r = contentFirstRow(punchcard);
@@ -162,7 +177,7 @@ if (punchcard.graphtype == "punchcard") {
 											  x:((cCol *sxb)/cols)+ xtop,
 											  y:0.5,
 											  w:(sxb/cols),
-											  h:(ytop)*0.6,
+											  h:(ytop*0.8),
 											  fill: color_header_fill,
 											  color: color_header_text
 											}
@@ -174,8 +189,8 @@ if (punchcard.graphtype == "punchcard") {
 							{	
 								shape:pptx.shapes.CIRCLE,
 								x:  (((cCol *sxb)/cols) + ((sxb/cols)/2) + xtop),  // cm
-								y:  (((cRow *syb)/rows) + ((syb/rows)/2) + ytop)*0.8,	 // cm
-								r:  ((Math.sqrt(radius(ptr.value,punchcard)/maxRadius))*(sx/cols)/4),  // cm
+								y:  (((cRow *syb)/rows) + ((syb/rows)/2) + ytop),	 // cm
+								r:  ((Math.sqrt(radius(ptr.value,punchcard)/maxRadius))*(sx/cols)/2)*raduiscorrection,  // cm
 								fill: color_header_fill,
 								color: color_header_text
 							}
@@ -186,9 +201,9 @@ if (punchcard.graphtype == "punchcard") {
 			lCol = 0;		
 		slide.addText(contentRowName(r),{ shape:pptx.shapes.RECTANGLE,
 											  x:0,
-											  y:(((cRow *syb)/rows) + ytop*0.8)*0.8,
+											  y:(((cRow *syb)/rows) - ((syb/rows)/2) + ytop),
 											  w: xtop,
-											  h:(syb/rows)*2,
+											  h:(syb/rows)*2*0.98,
 											  fill: color_header_fill,
 											  color: color_header_text
 											}
@@ -197,96 +212,59 @@ if (punchcard.graphtype == "punchcard") {
 		contentNextRow(r);
 	}
 	
-	/*
-    for (var rows = 0; rows < punchcard.rows.length; rows++) {
-        var fs = 12,
-            title, wcm, hcm;
-        wcm = punchcard.rows[rows].box.Width / scalex;
-        hcm = punchcard.rows[rows].box.Height / scaley;
-        if ((hcm < 0.3) || (wcm < 0.5)) {
-            fs = 4;
-        } else if ((hcm < 0.5) || (wcm < 1)) {
-            fs = 6;
-        } else if ((hcm < 1) || (wcm < 1.5)) {
-            fs = 8;
-        } else if ((hcm < 1.5) || (wcm < 2)) {
-            fs = 10;
-        }
-        title = displayTitleRows[punchcard.rows[rows].title];
-        if (title == undefined) {
-            title = punchcard.rows[rows].title;
-        }
-        if (wcm < 2.5) {
-            title = punchcard.shortTitleRows[punchcard.rows[rows].title];
-            if (title == undefined) {
-                title = displayTitleRows[punchcard.rows[rows].title];
-                if (title == undefined) {
-                    title = punchcard.rows[rows].title;
-                }
-                title = title.substr(0, 3);
-            }
-        }
-        title += " " + Math.round((punchcard.rows[rows].size / ratio) * 10) / 10;
-        slide.addText(title, {
-            shape: pptx.shapes.RECTANGLE,
-            x: punchcard.rows[rows].box.Left / scalex / inch,
-            y: punchcard.rows[rows].box.Top / scaley / inch,
-            w: wcm / inch,
-            h: hcm / inch,
-            fill: color_header_fill,
-            line: color_box_line,
-            color: color_header_text,
-            align: 'c',
-            margin: 0,
-            font_size: fs
-        });
-        for (var cols = 0; cols < punchcard.rows[rows].cols.length; cols++) {
-            var fs = 12,
-                title, wcm, hcm;
-            wcm = punchcard.rows[rows].cols[cols].box.Width / scalex;
-            hcm = punchcard.rows[rows].cols[cols].box.Height / scaley;
-            if ((hcm < 0.3) || (wcm < 0.5)) {
-                fs = 4;
-            } else
-            if ((hcm < 0.5) || (wcm < 1)) {
-                fs = 6;
-            } else if ((hcm < 1) || (wcm < 1.5)) {
-                fs = 8;
-            } else if ((hcm < 1.5) || (wcm < 2)) {
-                fs = 10;
-            }
-            title = punchcard.rows[rows].cols[cols].title;
-			if((displayTitleCols!==undefined)&&(displayTitleCols[title]!==undefined))
-				title=displayTitleCols[title];
-            if (wcm < 2.5) {
-				title = punchcard.rows[rows].cols[cols].title;
-                title = punchcard.shortTitleCols[title];
-                if (title == undefined) {
-                    title = punchcard.rows[rows].cols[cols].title.substr(0, 3);
-                }
-            }
-            title += " " + Math.round(punchcard.rows[rows].cols[cols].size) + "%";
-            var color = colors[punchcard.rows[rows].cols[cols].title];
-            if (color == undefined) {
-                color = 'FFFFFF';
-            }
-            slide.addText(title, {
-                shape: pptx.shapes.RECTANGLE,
-                x: ((punchcard.rows[rows].cols[cols].box.Left / scalex) - offsetx) / inch,
-                y: punchcard.rows[rows].cols[cols].box.Top / scaley / inch,
-                w: wcm / inch,
-                h: hcm / inch,
-                fill: color,
-                line: color_box_line,
-                color: color_columns_text,
-                margin: 0,
-                align: 'c',
-                font_size: fs
-            });
-        }
-    }
-	*/
+	/* calculate market impact of combined  => punchcard.combined structure*/
+	c = contentFirstCol(punchcard);
+	r = contentFirstRow(punchcard);
+	
+	for(var cRow=0; cRow<rows; cRow++){
+		if(r.p[r.q.length-1][r.q[r.q.length-1]]!="total"){			
+			for(var cCol=0; cCol<cols; cCol++){
+				var cptr=combinedPointer(punchcard,r,c);
+				if(cptr==undefined){
+					cptr=combinedCreatePointer(punchcard,r,c); cptr.value=0;
+				}
+				var ptr = contentPointer(punchcard,r,c);
+				if(ptr!=undefined){
+					cptr.value += ptr.value;
+				}
+				contentNextCol(c);
+			}
+		}
+		contentNextRow(r);
+	}
+	
+	/* draw combined sectors */
+	c = contentFirstCol(punchcard);
+	r = contentFirstRow(punchcard);
+	
+	for(var cRow=0; cRow<rows; cRow++){
+		if(r.p[r.q.length-1][r.q[r.q.length-1]]=="total"){
+			for(var cCol=0; cCol<cols; cCol++){
+				var cptr=combinedPointer(punchcard,r,c);
+				var ptr = contentPointer(punchcard,r,c);
+				if(ptr!=undefined){
+					// cptr.value = combined market size | ptr.value = total market size
+					if((cptr.value!=0)&&(ptr.value!=0)&&(presence(cptr.value/ptr.value)!=0)){
+						slide.addText("",{
+							shape:pptx.shapes.SECTOR,
+							x:(((cCol *sxb)/cols) + ((sxb/cols)/2) + xtop),
+							y:(((cRow *syb)/rows) + ((syb/rows)/2) + ytop),
+							a0:0,
+							a1:presence(cptr.value/ptr.value),
+							r:((Math.sqrt(radius(ptr.value,punchcard)/maxRadius))*(sx/cols)/2)*raduiscorrection,
+							fill:'339933',
+							color:'339933'
+						});						
+					}
+				}
+				contentNextCol(c);
+			}
+		}
+		contentNextRow(r);
+	}
+	
     /* add table for short name correspondance */
+	/*
     var slide2 = pptx.addNewSlide();
     slide2.addTable([
         [{
@@ -334,6 +312,7 @@ if (punchcard.graphtype == "punchcard") {
         tabOpts.x += ((tabOpts.w + 0.5 / inch) * k);
         slide2.addTable(rows, tabOpts);
     }
+	*/
     pptx.save('punchcard' + '_' + getTimestamp());
 }
 }
@@ -418,7 +397,7 @@ function contentNextRow(r){
 }
 function contentRowCount(r){
 	var n = 1;
-	for(var i=0;i<r.q.length-1;i++){  // last descriptor is not part of the deal
+	for(var i=0;i<r.q.length;i++){
 		n *= r.p[i].length;
 	}
 	return n;	
@@ -457,6 +436,38 @@ function contentRowPt(punchcard,r){
 	}
 	return rpt; 	
 }
+function combinedCreatePointer(punchcard,r,c){
+	if(punchcard.combined==undefined) punchcard.combined={};
+	var rpt = punchcard.combined;
+	for(var i=0; i<r.q.length-1; i++){  // last row descriptor is company
+		if(rpt[r.p[i][r.q[i]]]==undefined) rpt[r.p[i][r.q[i]]]={};
+		rpt = rpt[r.p[i][r.q[i]]];
+	}
+	var cpt = rpt;
+	for(var i=0;i<c.q.length;i++){
+		if(cpt[c.p[i][c.q[i]]]==undefined) cpt[c.p[i][c.q[i]]]={};
+			cpt = cpt[c.p[i][c.q[i]]];	
+	}
+	cpt['combined']={};
+	
+	return cpt['combined'];	
+}
+function combinedPointer(punchcard,r,c){
+	if(punchcard.combined==undefined) return undefined;
+	var rpt = punchcard.combined;
+	for(var i=0; i<r.q.length-1; i++){
+		if(rpt[r.p[i][r.q[i]]]==undefined){delete rpt; break;}
+		rpt = rpt[r.p[i][r.q[i]]];
+	}
+	if(rpt==undefined) return undefined;
+	var cpt = rpt;
+	for(var i=0;i<c.q.length;i++){
+		if(cpt[c.p[i][c.q[i]]]==undefined){delete cpt;break;}
+		cpt = cpt[c.p[i][c.q[i]]];	
+	}
+	if(cpt==undefined) return undefined;
+	return cpt['combined'];		
+}
 function totalsFirst(punchcard){
     p = [];
 	q = [];
@@ -489,4 +500,11 @@ function totalsPointer(punchcard,t){
 		}	
 	}
 	return tpt;	
+}
+function presence(a){
+	if(a<0.005) return 0;
+	if(a<0.02) return 90;
+	if(a<0.05) return 180;
+	if(a<0.1) return 270;
+	return 359.99;
 }

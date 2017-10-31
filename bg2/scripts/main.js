@@ -58,6 +58,9 @@ function BusinessGraph() {
   /* marimekko menu */
   this.menu_save_powerpoint = document.getElementById('menu_save_powerpoint');
   
+  /* punch card menu */
+  this.menu_save_punchcardsvg = document.getElementById('menu_save_punchcardsvg');
+  
   // TAB elements
   this.togglepivot = document.getElementById('togglepivot');
   this.togglemarimekko = document.getElementById('togglemarimekko');
@@ -85,7 +88,8 @@ function BusinessGraph() {
   this.menu_load_palette.addEventListener('click', this.load_palette_file.bind(this));
   this.menu_set_palette.addEventListener('click', this.set_palette.bind(this));
   this.menu_save_powerpoint.addEventListener('click', this.download_powerpoint.bind(this));
-  this.menu_make_pivot_from_dta.addEventListener('click', this.make_pivot_from_dta.bind(this));
+  this.menu_save_punchcardsvg.addEventListener('click', this.download_punchcardsvg.bind(this));
+  this.menu_make_pivot_from_dta.addEventListener('click', this.make_pivot_from_dta.bind(this));  
   this.menu_rename.addEventListener('click', this.rename_file.bind(this));
   this.menu_download_file.addEventListener('click', this.download_file.bind(this));
   this.menu_copy.addEventListener('click', this.copy_file.bind(this));
@@ -283,6 +287,11 @@ BusinessGraph.prototype.download_powerpoint = function(){
 		}
 	}	
 }
+BusinessGraph.prototype.download_punchcardsvg = function(){
+	if(this.checkSignedInWithMessage()){
+		// the punch card svg is in a frame ... harder to gain access to be implemented
+	}	
+}
 BusinessGraph.prototype.set_palette = function(){
 	if(this.checkSignedInWithMessage()){
 		palette.lastModified = Date.now();
@@ -339,7 +348,7 @@ BusinessGraph.prototype.do_togglemarimekko = function(){
 
 BusinessGraph.prototype.do_togglepunchcard = function(){
 	this.destroyEditor();
-	this.activateMenuItems('togglepunch');
+	this.activateMenuItems('togglepunchcard');
 };
 
 BusinessGraph.prototype.do_togglefiles = function(){
