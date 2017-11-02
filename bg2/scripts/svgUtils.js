@@ -21,13 +21,6 @@ function SVGGenJS(outputFrame) {
         height: (this.lheight / this.inch)
     };
     this.slides = [];
-    this.htmlbegin = "<!DOCTYPE html>" +
-        "<html>"+
-		"<header>"+
-		"<style>"+
-		"body {font-size:11px}"+
-		"</style>";
-    this.htmlend = "</html>";
     this.setLayout = function(o) {
         this.layout.name = o.name;
         this.layout.width =  o.width*this.dpi.x/this.inch;
@@ -47,22 +40,14 @@ function SVGGenJS(outputFrame) {
 		SECTOR:5
     };
     this.save = function(filename) {
-        var temp = this.htmlbegin + "\n";
+        var temp ="";
         for (var i = 0; i < this.slides.length; i++) {
             temp += this.slides[i].save();
             temp += "<br>\n";
         }
-        temp += this.htmlend + "\n";
-		// image/svg+xml?
-		this.outputFrame.src = "data:text/html;charset=utf-8," + temp;  // escape?
+		this.outputFrame.innerHTML = temp;
 		this.outputFrame.height = window.innerHeight;
 		this.outputFrame.width = window.innerWidth;	
-		/*
-        var blob = new Blob([temp], {type: "text/plain;charset=utf-8"});
-		var d = new Date();
-		var n = d.toString();	
-		saveAs(blob, "htmlsvg_"+n+".html");
-		*/
     };
 	this.xs = function (m){
 		return (m * this.dpi.x) / this.inch;
@@ -92,7 +77,7 @@ function Slide(presentation) {
 						'" width="' + presentation.xs(oShaphe.w) +
 						'" height="' + presentation.ys(oShaphe.h)+
 						'">'+
-						'<div style="text-align: center;display: flex;justify-content: center;align-items: center;height: inherit;">'+sText+'</div>'+
+						'<div class="text" style="text-align: center;display: flex;justify-content: center;align-items: center;height: inherit;">'+sText+'</div>'+
 						'</foreignobject>';						
 					}
 					this.svgContent.push('<rect x="' + presentation.xs(oShaphe.x) +
@@ -112,7 +97,7 @@ function Slide(presentation) {
 						'" width="' + presentation.xs(oShaphe.r) +
 						'" height="' + presentation.ys(oShaphe.r)+
 						'">'+
-						'<div style="text-align: center;display: flex;justify-content: center;align-items: center;height: inherit;">'+sText+'</div>'+
+						'<div class="text" style="text-align: center;display: flex;justify-content: center;align-items: center;height: inherit;">'+sText+'</div>'+
 						'</foreignobject>';
 					}
 					this.svgContent.push('<circle cx="' + presentation.xs(oShaphe.x) +
@@ -128,7 +113,7 @@ function Slide(presentation) {
 						'" width="' + presentation.xs(oShaphe.w) +
 						'" height="' + presentation.ys(oShaphe.h)+
 						'">'+
-						'<div style="text-align: left;display: flex;height: inherit;">'+sText+'</div>'+
+						'<div class="text" style="text-align: left;display: flex;height: inherit;">'+sText+'</div>'+
 						'</foreignobject>';
 				this.svgContent.push(txt);
 				break;
@@ -141,7 +126,7 @@ function Slide(presentation) {
 						'" width="' + presentation.xs(oShaphe.r) +
 						'" height="' + presentation.ys(oShaphe.r)+
 						'">'+
-						'<div style="text-align: center;display: flex;justify-content: center;align-items: center;height: inherit;">'+sText+'</div>'+
+						'<div class="text" style="text-align: center;display: flex;justify-content: center;align-items: center;height: inherit;">'+sText+'</div>'+
 						'</foreignobject>';
 					}
 					this.svgContent.push('<line x1="' + presentation.xs(oShaphe.x1) +
@@ -154,15 +139,15 @@ function Slide(presentation) {
                 break;
 			case 5: // SECTOR
 				{
-					this.svgContent.push('<path d="' + 
-						angularSectorString(presentation.xs(oShaphe.x),  // startX, startY, startAngle, endAngle, radius
+					var oPath = angularSectorString(presentation.xs(oShaphe.x),  // startX, startY, startAngle, endAngle, radius
 											presentation.ys(oShaphe.y),
 											oShaphe.a0,
 											oShaphe.a1,
-											presentation.xs(oShaphe.r)
-											)+ '" '+   
-						'" style="fill:#' + oShaphe.fill + ';stroke:#' + oShaphe.color + '"' +
-						'/>');					
+											presentation.xs(oShaphe.r));
+					this.svgContent.push(	'<path d="' + oPath +'" '+   
+											' style="fill:#' + oShaphe.fill + ';stroke:#' + oShaphe.color + '"' +
+											'/>'
+										);					
 				}
 			    break;
 		}

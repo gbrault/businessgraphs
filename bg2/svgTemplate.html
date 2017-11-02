@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="com.js"></script>
+<script src="scripts/svgUtils.js"></script>
+<script src="scripts/IOmodule.js"></script>
+<script id="lzutf8" src="https://unpkg.com/lzutf8@0.4.4"></script>
+<script src="scripts/svgPunchCard.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/3.7.2/firebase.js"></script>
+<script>
+if(window.oCom!=undefined){
+	if(window.oCom.who!="punchcard"){
+		window.oCom=new Com("punchcard");
+	}
+} else {
+		window.oCom=new Com("punchcard");
+}
+</script>
+<style>
+body {font-size:11px}
+</style>
+</head>
+<body>
+<div id="svg_container"></div>
+</body>
+</html>

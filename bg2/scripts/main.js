@@ -46,6 +46,7 @@ function BusinessGraph() {
   this.menu_copy = document.getElementById('menu_copy');
   
   /* Pivot menus */
+  this.menu_pivot_new = document.getElementById('menu_pivot_new');
   this.menu_pivot_save = document.getElementById('menu_pivot_save');
   this.menu_pivot_save_existing = document.getElementById('menu_pivot_save_existing');
   this.menu_pivot2marimekko = document.getElementById('menu_pivot2marimekko');
@@ -75,7 +76,8 @@ function BusinessGraph() {
   this.uploadFile.addEventListener('change', this.readSingleFile.bind(this));
   this.menu_delete.addEventListener('click', this.deleteFiles.bind(this));
   this.menu_show.addEventListener('click', this.showFile.bind(this));  
-  // this.menu_diff.addEventListener('click', this.diffFiles.bind(this));  
+  // this.menu_diff.addEventListener('click', this.diffFiles.bind(this));
+  this.menu_pivot_new.addEventListener('click', this.pivotNew.bind(this));  
   this.menu_pivot_save.addEventListener('click', this.pivotSave.bind(this));
   this.menu_pivot_save_existing.addEventListener('click', this.pivotSaveExisting.bind(this));
   this.menu_load_pivot.addEventListener('click', this.pivotLoad.bind(this));
@@ -290,6 +292,11 @@ BusinessGraph.prototype.download_powerpoint = function(){
 BusinessGraph.prototype.download_punchcardsvg = function(){
 	if(this.checkSignedInWithMessage()){
 		// the punch card svg is in a frame ... harder to gain access to be implemented
+	    firebase.database().ref('channels/'+this.channel+'/cmd').set(
+		{
+			type:"downloadpunchcard",
+			timestamp: Date.now(),
+		});
 	}	
 }
 BusinessGraph.prototype.set_palette = function(){
@@ -348,6 +355,13 @@ BusinessGraph.prototype.do_togglemarimekko = function(){
 
 BusinessGraph.prototype.do_togglepunchcard = function(){
 	this.destroyEditor();
+	var pf = document.getElementById('pivotframe');
+	pf.src="blank.html";
+	var pp = document.getElementById('punchcardframe');
+	if(pp.src.indexOf("svgTemplate")!=-1){
+		return;
+	}	
+	pp.src="svgTemplate.html?comuid="+getChannel();
 	this.activateMenuItems('togglepunchcard');
 };
 
@@ -362,10 +376,14 @@ BusinessGraph.prototype.do_toggleconsole = function(){
 };
 
 BusinessGraph.prototype.do_togglepivot = function(){
-	this.activateMenuItems('togglepivot');
+	this.activateMenuItems('togglepivot');	
+	var pp = document.getElementById('punchcardframe');
+	pp.src="";
 	var pf = document.getElementById('pivotframe');
-	pf.height = pf.contentWindow.document.body.scrollWidth;
-	pf.width = pf.contentWindow.document.body.scrollHeight;
+	if(pf.src.indexOf("pivot")!=-1){
+		return;
+	}
+	pf.src="pivot.html?comuid="+getChannel();
 };
 
 BusinessGraph.prototype.deleteFiles = function(){
@@ -431,6 +449,19 @@ BusinessGraph.prototype.save_palette_file = function(){
       dialog.close();
     }
 	dialog.querySelector('.cancel').addEventListener('click', window.nameDialog_cancel);
+}
+
+BusinessGraph.prototype.pivotNew = function(){
+	var pp = document.getElementById('punchcardframe');
+	pp.src="";
+	var pf = document.getElementById('pivotframe');
+	pf.src="pivot.html?comuid="+getChannel();	
+	firebase.database().ref('channels/'+this.channel+'/cmd').set(
+		{
+			type:"newpivot",
+			timestamp: Date.now()
+		}
+	);
 }
 
 BusinessGraph.prototype.pivotSave = function(){
@@ -581,15 +612,18 @@ BusinessGraph.prototype.punchcardLoad = function(){
 	if(checkedlabels.length>0){
 		var tr = checkedlabels[0].parentElement.parentElement;
 		var id = checkedlabels[0].id;
-		if((id!="")&&(tr.children[1].innerText.endsWith('.pcd'))){
 			// load the punch card file and render it
-			window.punchcardFileStructure = {id:id};
-			this.oIOmodule.readFile.bind(this.oIOmodule)(id,function(fileStructure){
-				window.punchcardFileStructure = fileStructure;
-				svgPunchCard(window.punchcardFileStructure.content, document.getElementById('punchcardframe'));
-				document.body.style.cursor  = 'default';
-			});
+		window.punchcardFileStructure = {id:id};
+		if((id!="")&&(tr.children[1].innerText.endsWith('.pcd'))){
+			firebase.database().ref('channels/'+this.channel+'/cmd').set(
+				{
+					type:"loadpunchcard",
+					timestamp: Date.now(),
+					fileID: id
+				}
+			);
 			this.toggleTab('togglepunchcard');
+			this.setHourGlassDialog();			
 		} else {			
 			data = selectpunchcard;
 		}
@@ -918,14 +952,11 @@ BusinessGraph.prototype.setHourGlassDialog  = function(){
 
 window.onload = function() {
   window.BusinessGraph = new BusinessGraph();
-  var channel = window.BusinessGraph.getCookie('channel');
-  if (channel==""){
-	  channel = window.BusinessGraph.UUID();
-	  window.BusinessGraph.setCookie('channel',channel,365*10);
-  }
-  window.BusinessGraph.channel = channel;
-  document.getElementById('pivotframe').src="pivot.html?comuid="+channel;
-  window.BusinessGraph.toggleTab('togglefiles');
+  var channel = getChannel();
+  
+  /* activate file menu */
+  
+  BusinessGraph.toggleTab('togglefiles');
   
   /* command feedback */
   
@@ -948,6 +979,24 @@ window.onload = function() {
 			// delete window.hwaithourglass;
 			// delete window.swaithourglass;			
 		}
+		// make sure iframe have the right size
+		var pf = document.getElementById('pivotframe');
+		pf.height = pf.contentWindow.document.body.scrollWidth;
+		pf.width = pf.contentWindow.document.body.scrollHeight;			
+		var pp = document.getElementById('punchcardframe');
+		pp.height = pp.contentWindow.document.body.scrollWidth;
+		pp.width = pp.contentWindow.document.body.scrollHeight;			
 	}	
   }.bind(window.BusinessGraph));
 };
+
+function getChannel(){
+  var channel = window.BusinessGraph.getCookie('channel');
+  if (channel==""){
+	  channel = window.BusinessGraph.UUID();
+	  window.BusinessGraph.setCookie('channel',channel,365*10);
+  }
+  window.BusinessGraph.channel = channel;
+  return channel;	
+}
+

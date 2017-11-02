@@ -1,7 +1,9 @@
 /**
 * This module manage communication between pivot and firebase
 */
-function Com(){
+function Com(who){
+	debugger;
+  this.who=who;
 	  // Initialize Firebase
   this.config = {
     apiKey: "AIzaSyBZJLQp5xaL0tdFvUsx3I97kfweCAQ2C4w",
@@ -50,6 +52,11 @@ Com.prototype.feedback = function(result) {
 
 Com.prototype.exec = function(cmd) {
 	switch(cmd.type){
+		case "newpivot":
+			if(cmd.done==undefined){
+				this.feedback(true);
+			}
+			break;
 		case "save": // actually save new pivot (two files: .dta = pivot input section, .pvt = pivot context + link to .dta (via id))
 			// debugger;
 			if(cmd.done==undefined){
@@ -118,7 +125,7 @@ Com.prototype.exec = function(cmd) {
 				}
 			}			
 			break;		
-			case "pivot2punchcard":
+		case "pivot2punchcard":
 			if(cmd.done==undefined){
 				document.body.style.cursor  = 'wait';
 				if(window.pivotData!=undefined){
@@ -142,6 +149,22 @@ Com.prototype.exec = function(cmd) {
 					this.feedback(false);
 				}
 			}			
+			break;
+		case "downloadpunchcard":
+			if(cmd.done==undefined){
+				document.body.style.cursor  = 'wait';
+				var svg = document.getElementById('slide_0');
+				if(svg!=undefined){
+					saveSvg(svg,"punchcard.pcd."+Date.now()+".svg");
+					this.feedback(true);
+				}				
+			}
+			break;
+		case "loadpunchcard":
+			if(cmd.done==undefined){  // actually loading a pivot resource
+				document.body.style.cursor  = 'wait';
+				this.loadPunchCard(cmd.fileID);
+			}
 			break;
 	}
 }
@@ -172,6 +195,14 @@ Com.prototype.saveNewPunchCard = function(fileStructure,punchcard){
 		this.oIOmodule.writeNewFile.bind(this.oIOmodule)(
 			{name:name,content:punchcard,type:type}
 		);
+};
+
+Com.prototype.loadPunchCard = function(fileID){		
+	this.oIOmodule.readFile.bind(this.oIOmodule)(fileID,function(fileStructure){		
+		window.punchcardFileStructure=fileStructure;
+		svgPunchCard(window.punchcardFileStructure.content, document.getElementById('svg_container'));
+		this.feedback(true);
+	}.bind(this));
 };
 
 Com.prototype.loadFile = function(fileID){		

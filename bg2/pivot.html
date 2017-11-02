@@ -9,8 +9,7 @@
 		<script type="text/javascript" src="scripts/pivot2punchcard.js"></script>
 		<script src="scripts/dialog-polyfill.js"></script>
 		<link rel="icon" href="favicon.ico" type="image/x-icon">
-		<script type="text/javascript" src="sugar.js"></script>
-		<script type="text/javascript" src="com.js"></script>
+		<script type="text/javascript" src="sugar.js"></script>		
         <!-- external libs from cdnjs -->
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -21,6 +20,8 @@
         <!-- PivotTable.js libs from ../dist -->
         <link rel="stylesheet" type="text/css" href="pivot.css">
         <script type="text/javascript" src="pivot.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/3.7.2/firebase.js"></script>
+		<script type="text/javascript" src="com.js"></script>
         <style>
             body {font-family: Verdana;}			
             html { height:100%; }
@@ -601,9 +602,11 @@ var justPivot = function() {
 </script>
 <script src="https://www.gstatic.com/firebasejs/3.7.2/firebase.js"></script>
 <script>
-    if (window.oCom==undefined){
-		// debugger;
-		window.oCom=new Com();
+	if(window.oCom!=undefined){
+		if(window.oCom.who!='pivot')
+			window.oCom=new Com('pivot');
+	} else {
+		window.oCom=new Com('pivot');
 	}
 </script>
 		<!--
@@ -669,6 +672,6 @@ var justPivot = function() {
 		 <button type="button" class="close">Ok</button>
 		 <button type="button" class="cancel">Cancel</button>
 	</div>
-</dialog>	
+</dialog>
     </body>
 </html>
