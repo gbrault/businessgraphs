@@ -21,6 +21,13 @@ function SVGGenJS(outputFrame) {
         height: (this.lheight / this.inch)
     };
     this.slides = [];
+	this.htmlbegin = "<!DOCTYPE html>" +
+        "<html>"+
+		"<header>"+
+		"<style>"+
+		"body {font-size:11px}"+
+		"</style>";
+    this.htmlend = "</html>";
     this.setLayout = function(o) {
         this.layout.name = o.name;
         this.layout.width =  o.width*this.dpi.x/this.inch;
@@ -49,18 +56,41 @@ function SVGGenJS(outputFrame) {
 		this.outputFrame.height = window.innerHeight;
 		this.outputFrame.width = window.innerWidth;	
     };
+	this.save1 = function(filename) {
+        var temp = this.htmlbegin + "\n";
+        for (var i = 0; i < this.slides.length; i++) {
+            temp += this.slides[i].save();
+            temp += "<br>\n";
+        }
+        temp += this.htmlend + "\n";
+		// image/svg+xml?
+		this.outputFrame.src = "data:text/html;charset=utf-8," + temp;  // escape?
+		this.outputFrame.height = window.innerHeight;
+		this.outputFrame.width = window.innerWidth;	
+		/*
+        var blob = new Blob([temp], {type: "text/plain;charset=utf-8"});
+		var d = new Date();
+		var n = d.toString();	
+		saveAs(blob, "htmlsvg_"+n+".html");
+		*/
+    };
 	this.xs = function (m){
 		return (m * this.dpi.x) / this.inch;
-	}
+	};
 	this.ys = function (m){
 		return (m * this.dpi.y) / this.inch;
-	}
+	};
+	
 }
 
 
 function Slide(presentation) {
     this.presentation = presentation;
-    this.svgbegin = "<svg id=\"slide_"+presentation.slides.length+"\"width=" + presentation.layout.width + " height=" + presentation.layout.height + ">";
+    this.svgbegin = "<svg id=\"slide_"+
+					presentation.slides.length+
+					"\"width=" + presentation.layout.width + 
+					" height=" + presentation.layout.height + ">"+
+					'<style>*{font-size:8pt;}</style>';
     this.svgend = "</svg>";
     this.svgContent = [];
     this.addText = function(sText, oShaphe) { // combinanison of text and shape
@@ -76,8 +106,8 @@ function Slide(presentation) {
 						'" y="' + presentation.ys(oShaphe.y) +
 						'" width="' + presentation.xs(oShaphe.w) +
 						'" height="' + presentation.ys(oShaphe.h)+
-						'">'+
-						'<div class="text" style="text-align: center;display: flex;justify-content: center;align-items: center;height: inherit;">'+sText+'</div>'+
+						'" >'+						
+						'<div xmlns="http://www.w3.org/1999/xhtml" style="text-align: center;display: flex;justify-content: center;align-items: center;height: inherit;">'+sText+'</div>'+						
 						'</foreignobject>';						
 					}
 					this.svgContent.push('<rect x="' + presentation.xs(oShaphe.x) +
@@ -96,8 +126,8 @@ function Slide(presentation) {
 						'" y="' + presentation.ys(oShaphe.y) +
 						'" width="' + presentation.xs(oShaphe.r) +
 						'" height="' + presentation.ys(oShaphe.r)+
-						'">'+
-						'<div class="text" style="text-align: center;display: flex;justify-content: center;align-items: center;height: inherit;">'+sText+'</div>'+
+						'">'+					
+						'<div xmlns="http://www.w3.org/1999/xhtml" style="text-align: center;display: flex;justify-content: center;align-items: center;height: inherit;">'+sText+'</div>'+
 						'</foreignobject>';
 					}
 					this.svgContent.push('<circle cx="' + presentation.xs(oShaphe.x) +
@@ -112,8 +142,8 @@ function Slide(presentation) {
 						'" y="' + presentation.ys(oShaphe.y) +
 						'" width="' + presentation.xs(oShaphe.w) +
 						'" height="' + presentation.ys(oShaphe.h)+
-						'">'+
-						'<div class="text" style="text-align: left;display: flex;height: inherit;">'+sText+'</div>'+
+						'">'+						
+						'<div xmlns="http://www.w3.org/1999/xhtml" style="text-align: left;display: flex;height: inherit;">'+sText+'</div>'+						
 						'</foreignobject>';
 				this.svgContent.push(txt);
 				break;
@@ -125,8 +155,8 @@ function Slide(presentation) {
 						'" y="' + presentation.ys(oShaphe.y) +   
 						'" width="' + presentation.xs(oShaphe.r) +
 						'" height="' + presentation.ys(oShaphe.r)+
-						'">'+
-						'<div class="text" style="text-align: center;display: flex;justify-content: center;align-items: center;height: inherit;">'+sText+'</div>'+
+						'>'+
+						'<div xmlns="http://www.w3.org/1999/xhtml" style="text-align: center;display: flex;justify-content: center;align-items: center;height: inherit;">'+sText+'</div>'+						
 						'</foreignobject>';
 					}
 					this.svgContent.push('<line x1="' + presentation.xs(oShaphe.x1) +

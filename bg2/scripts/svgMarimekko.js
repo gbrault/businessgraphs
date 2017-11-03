@@ -243,7 +243,7 @@ if (marimekko.graphtype == "marimekko") {
         tabOpts.x += ((tabOpts.w + 0.5 / inch) * k);
         slide2.addTable(rows, tabOpts);
     }
-    pptx.save('Marimekko' + '_' + getTimestamp());
+    pptx.save1('Marimekko' + '_' + getTimestamp());
 }
 }
 
