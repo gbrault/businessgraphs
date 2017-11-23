@@ -129,7 +129,7 @@ if (punchcard.graphtype == "punchcard") {
 	var lCol = 1;
 	var maxRadius=0;
 	for(var cRow=0; cRow<rows; cRow++){
-		if(r.p[r.q.length-1][r.q[r.q.length-1]]=="total"){
+		if(r.p[r.q.length-1][r.q[r.q.length-1]].toLowerCase()=="total"){
 			for(var cCol=0; cCol<cols; cCol++){
 				if(lCol==1){
 					slide.addText("",{	shape:pptx.shapes.LINE,
@@ -170,19 +170,19 @@ if (punchcard.graphtype == "punchcard") {
 	r = contentFirstRow(punchcard);
 	
 	for(var cRow=0; cRow<rows; cRow++){
-		if(r.p[r.q.length-1][r.q[r.q.length-1]]=="total"){
+		if(r.p[r.q.length-1][r.q[r.q.length-1]].toLowerCase()=="total"){
 			for(var cCol=0; cCol<cols; cCol++){
-				if(lCol==1){
-					slide.addText(contentColName(c),{ shape:pptx.shapes.RECTANGLE,
-											  x:((cCol *sxb)/cols)+ xtop,
-											  y:0.5,
-											  w:(sxb/cols),
-											  h:(ytop*0.8),
-											  fill: color_header_fill,
-											  color: color_header_text
-											}
-								 );					
-				}
+				// if(lCol==1){
+				// 	slide.addText(contentColName(c),{ shape:pptx.shapes.RECTANGLE,
+				//							  x:((cCol *sxb)/cols)+ xtop,
+				//							  y:0.5,
+				//							  w:(sxb/cols),
+				//							  h:(ytop*0.8),
+				//							  fill: color_header_fill,
+				//							  color: color_header_text
+				//							}
+				//				 );					
+				//}
 				var ptr = contentPointer(punchcard,r,c);
 				if(ptr!=undefined){				
 						slide.addText("",
@@ -199,15 +199,15 @@ if (punchcard.graphtype == "punchcard") {
 				contentNextCol(c);
 			}
 			lCol = 0;		
-		slide.addText(contentRowName(r),{ shape:pptx.shapes.RECTANGLE,
-											  x:0,
-											  y:(((cRow *syb)/rows) - ((syb/rows)/2) + ytop),
-											  w: xtop,
-											  h:(syb/rows)*2*0.98,
-											  fill: color_header_fill,
-											  color: color_header_text
-											}
-								 );
+			// slide.addText(contentRowName(r),{ shape:pptx.shapes.RECTANGLE,
+			// 								  x:0,
+			// 								  y:(((cRow *syb)/rows) - ((syb/rows)/2) + ytop),
+			// 								  w: xtop,
+			// 								  h:(syb/rows)*2*0.98,
+			// 								  fill: color_header_fill,
+			// 								  color: color_header_text
+			//								}
+			//					 );
         }								 
 		contentNextRow(r);
 	}
@@ -217,7 +217,7 @@ if (punchcard.graphtype == "punchcard") {
 	r = contentFirstRow(punchcard);
 	
 	for(var cRow=0; cRow<rows; cRow++){
-		if(r.p[r.q.length-1][r.q[r.q.length-1]]!="total"){			
+		if(r.p[r.q.length-1][r.q[r.q.length-1]].toLowerCase()!="total"){			
 			for(var cCol=0; cCol<cols; cCol++){
 				var cptr=combinedPointer(punchcard,r,c);
 				if(cptr==undefined){
@@ -238,7 +238,7 @@ if (punchcard.graphtype == "punchcard") {
 	r = contentFirstRow(punchcard);
 	
 	for(var cRow=0; cRow<rows; cRow++){
-		if(r.p[r.q.length-1][r.q[r.q.length-1]]=="total"){
+		if(r.p[r.q.length-1][r.q[r.q.length-1]].toLowerCase()=="total"){
 			for(var cCol=0; cCol<cols; cCol++){
 				var cptr=combinedPointer(punchcard,r,c);
 				var ptr = contentPointer(punchcard,r,c);
@@ -262,6 +262,67 @@ if (punchcard.graphtype == "punchcard") {
 		}
 		contentNextRow(r);
 	}
+	
+	/* add row maket value */
+	c = contentFirstCol(punchcard);
+	r = contentFirstRow(punchcard);
+	
+	for(var cRow=0; cRow<rows; cRow++){
+		if(r.p[r.q.length-1][r.q[r.q.length-1]].toLowerCase()=="total"){
+			var rowTotal=0;
+			for(var cCol=0; cCol<cols; cCol++){
+				var ptr = contentPointer(punchcard,r,c);
+				if(ptr!=undefined){
+					// ptr.value = total market size for this segment
+					rowTotal += ptr.value;
+					if(cCol==(cols-1)){
+						var rowTotal = Math.round(rowTotal/ratio*10)/10;
+						slide.addText(contentRowName(r)+'('+rowTotal+')',{ shape:pptx.shapes.RECTANGLE,
+									  x:0,
+									  y:(((cRow *syb)/rows) - ((syb/rows)/2) + ytop),
+									  w: xtop,
+									  h:(syb/rows)*2*0.98,
+									  fill: color_header_fill,
+									  color: color_header_text
+									}
+						);					
+					}
+				}
+				contentNextCol(c);
+			}
+		}
+		contentNextRow(r);
+	}
+	
+	/* add Col maket value */
+	c = contentFirstCol(punchcard);
+	r = contentFirstRow(punchcard);
+	
+	for(var cCol=0; cCol<cols; cCol++){
+			var colTotal=0;
+			for(var cRow=0; cRow<rows; cRow++){				
+				var ptr = contentPointer(punchcard,r,c);
+				if((r.p[r.q.length-1][r.q[r.q.length-1]].toLowerCase()=="total")&&(ptr!=undefined)){
+					// ptr.value = total market size for this segment
+					colTotal += ptr.value;
+					if(cRow==(rows-1)){
+						var colTotal = Math.round(colTotal/ratio*10)/10;
+						slide.addText(contentColName(c)+'('+colTotal+')',{ shape:pptx.shapes.RECTANGLE,
+									  x:((cCol *sxb)/cols)+ xtop,
+									  y:0.5,
+									  w:(sxb/cols),
+									  h:(ytop*0.8),
+									  fill: color_header_fill,
+									  color: color_header_text
+									}
+						);			
+					}
+				}
+				contentNextRow(r);
+			}		
+		contentNextCol(c);
+	}
+
 	
     /* add table for short name correspondance */
 	/*
@@ -468,39 +529,7 @@ function combinedPointer(punchcard,r,c){
 	if(cpt==undefined) return undefined;
 	return cpt['combined'];		
 }
-function totalsFirst(punchcard){
-    p = [];
-	q = [];
-	for(var path =0; path<punchcard.content.cols.path.length; path++){
-		p.push(punchcard.content.cols[punchcard.content.cols.path[path]]);
-		q.push(0);
-	}
-	return {p,q}	
-}
-function totalsNext(t){
-	var ccarry=0;
-	for(var i=1;i<=c.q.length;i++){
-		if((ccarry==1)||(i==1)){
-			c.q[c.q.length-i]++;
-			if(c.q[c.q.length-i]>=c.p[c.q.length-i].length){
-				ccarry=1;
-				c.q[c.q.length-i]=0;
-			} else {
-				ccarry = 0;
-			}
-		}
-	}		
-}
-function totalsPointer(punchcard,t){
-	var tpt = punchcard.totals;
-	if(tpt!=undefined){
-		for(var i=0;i<t.q.length;i++){
-			cpt = cpt[t.p[i][t.q[i]]];
-			if(cpt==undefined) break;
-		}	
-	}
-	return tpt;	
-}
+
 function presence(a){
 	if(a<0.005) return 0;
 	if(a<0.02) return 90;
