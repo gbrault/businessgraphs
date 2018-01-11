@@ -174,7 +174,9 @@ var PptxGenJS = function(){
 			zip.generateAsync({type:'nodebuffer'}).then(function(content){ fs.writeFile(strExportName, content, callback(strExportName)); });
 		}
 		else {
-			zip.generateAsync({type:'blob'}).then(function(content){ saveAs(content, strExportName); });
+			zip.generateAsync({type:'blob'}).then(function(content){ 
+				saveAs(content, strExportName); 
+			});
 		}
 	}
 
